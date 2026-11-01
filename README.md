@@ -4,7 +4,8 @@
 
 线上：https://daybreak-morning-ritual.onrender.com/
 
-- 1909 年原版 Rider–Waite–Smith 牌面，78 张牌正逆位都有白话解析
+- 1909 年原版 Rider–Waite–Smith 彩色牌面，78 张牌正逆位都有白话解析
+- 抽完牌不满意，每天可以换三次
 - 首页月亮按当天真实月相绘制
 - 填一次生辰，每天多一份按八字推算的今日运势
 - 五种牌阵，凯尔特十字的位置含义按 Waite《The Pictorial Key to the Tarot》（1911）原文
@@ -41,7 +42,7 @@ npm run build      # 静态导出到 dist/
 
 ## 素材与许可
 
-- 牌面：1909 年 Rider–Waite–Smith 扫描，公有领域，来自 [metabismuth/tarot-json](https://github.com/metabismuth/tarot-json)
+- 牌面：1909 年 Rider–Waite–Smith 彩色扫描，公有领域，来自[维基共享资源](https://commons.wikimedia.org/wiki/Category:Rider-Waite-Smith_tarot_deck_(TaionWC))
 - Waite 原文：公有领域，引自 [Wikisource](https://en.wikisource.org/wiki/The_Pictorial_Key_to_the_Tarot)
 - 月面贴图：three.js 示例素材（MIT）
 - 天文计算：[Astronomy Engine](https://github.com/cosinekitty/astronomy)（MIT）

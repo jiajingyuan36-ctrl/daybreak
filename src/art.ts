@@ -1,5 +1,5 @@
 import type {Card} from './types.ts';
-/** 牌面：1909 年 Rider–Waite–Smith 原版扫描（Pamela Colman Smith 绘，公有领域），处理成黑白 WebP。thumb 为 160 宽小图。 */
+/** 牌面：1909 年 Rider–Waite–Smith 原版扫描（Pamela Colman Smith 绘，公有领域），彩色 WebP，600×1029；thumb 为 320 宽小图。来源：维基共享资源。 */
 export const cardImageUrl=(id:string,thumb=false)=>`/rws/${thumb?'thumb/':''}${id}.webp`;
 export function cardImage(card:Card,thumb=false):string{return `<img class="rws" src="${cardImageUrl(card.id,thumb)}" alt="${card.nameZh}" width="${thumb?160:350}" height="${thumb?274:600}" decoding="async"${thumb?' loading="lazy"':''}>`}
 // 下面的几何图形只用于牌背（未翻开的牌）和图片加载失败时的后备。
