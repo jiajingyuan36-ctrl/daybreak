@@ -1,0 +1,2 @@
+export function LaurelDivider(){return <svg className="laurel-divider" viewBox="0 0 320 32" aria-hidden="true"><path d="M12 16h112m72 0h112M144 16l16-10 16 10-16 10Z"/><path d="M130 16q-20-20-40-10m40 10q-20 20-40 10M190 16q20-20 40-10m-40 10q20 20 40 10"/></svg>}
+export function OrbitMarks(){return <g className="astrolabe-ring">{Array.from({length:60},(_,i)=><path key={i} d={`M0 -${i%5===0?104:108}V-114`} transform={`rotate(${i*6})`}/>)}<circle r="100"/><circle r="117"/>{[0,90,180,270].map(a=><path key={a} d="M0 -126l4 7-4 7-4-7Z" transform={`rotate(${a})`}/>)}</g>}

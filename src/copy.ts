@@ -1,0 +1,2 @@
+import type {Card,Day,Preferences,Reading} from './types.ts';
+export function composeReading(d:Pick<Day,'cardId'|'reversed'|'mood'|'intent'>,_p:Preferences,c:Card):Reading{const meaning=d.reversed?c.meaningReversed:c.meaningUpright;return {title:`${c.nameZh} · ${d.reversed?'逆位':'正位'}`,message:meaning,personal:'',action:c.action,observe:'记录实际发生的事，再判断牌义是否适用。',question:c.reflectionPrompt,quote:meaning}}

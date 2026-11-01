@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {nextVisit} from '../src/lib/visit.ts';
+test('first source is kept and later ones do not overwrite it',()=>{const a=nextVisit(null,'XHS','2026-11-01');assert.equal(a.source,'xhs');const b=nextVisit(a,'ig','2026-11-02');assert.equal(b.source,'xhs');assert.deepEqual(b.days,['2026-11-01','2026-11-02']);assert.equal(b.firstDay,'2026-11-01')});
+test('no source means direct; same day counts once; unsafe characters are dropped',()=>{const a=nextVisit(null,null,'2026-11-01');assert.equal(a.source,'direct');assert.equal(nextVisit(a,null,'2026-11-01').days.length,1);assert.equal(nextVisit(null,'<script>fb','2026-11-01').source,'scriptfb')});
+test('keeps at most the last 60 visit days',()=>{let v=nextVisit(null,'fb','2026-01-01');for(let i=2;i<=80;i++)v=nextVisit(v,null,`2026-03-${String(i).padStart(3,'0')}`);assert.equal(v.days.length,60);assert.equal(v.source,'fb')});

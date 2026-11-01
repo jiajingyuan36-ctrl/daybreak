@@ -1,0 +1,32 @@
+{
+  "name": "daybreak",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "dev": "node prepare-legacy.mjs && next dev --webpack --hostname 0.0.0.0",
+    "prebuild": "node --experimental-strip-types scripts/seed-tarot-data.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "autoprefixer": "^10.4.21",
+    "esbuild": "^0.24.2",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "astronomy-engine": "2.1.19",
+    "html-to-image": "^1.11.13",
+    "lucide-react": "^0.577.0",
+    "lunar-javascript": "1.7.7",
+    "next": "16.4.3",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  }
+}

@@ -1,0 +1,6 @@
+import {signs,symbolicHoroscope} from './sky.ts';
+import type {Preferences} from './types.ts';
+export interface Fortune {method?:string;at?:string;number?:number;date:string;sign:string;headline:string;summary:string;areas:{name:string;label:string;message:string}[];color:string;word:string;action:string}
+export function validBirth(value:unknown){if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const d=new Date(value+'T12:00:00');return !Number.isNaN(d.valueOf())&&d.getFullYear()>=1900&&value<=`${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2,'0')}-${String(new Date().getDate()).padStart(2,'0')}`&&d.getFullYear()===Number(value.slice(0,4))&&d.getMonth()+1===Number(value.slice(5,7))&&d.getDate()===Number(value.slice(8))}
+export function zodiac(birth:string){const m=Number(birth.slice(5,7)),d=Number(birth.slice(8));const cutoff=[20,19,21,20,21,22,23,23,23,24,23,22];const names=['摩羯座','水瓶座','双鱼座','白羊座','金牛座','双子座','巨蟹座','狮子座','处女座','天秤座','天蝎座','射手座'];return names[(m-1+(d>=cutoff[m-1]?1:0))%12]}
+export function dailyFortune(date:string,p:Preferences):Fortune|undefined {const selected=p.zodiacSign|| (p.birthDate&&validBirth(p.birthDate)?signs.find(s=>s[1]===zodiac(p.birthDate!))?.[0]:undefined);if(!selected)return;return symbolicHoroscope(date,selected)}

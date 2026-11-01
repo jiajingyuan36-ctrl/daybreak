@@ -1,0 +1,2 @@
+import type {Config} from 'tailwindcss';
+export default {content:['./app/**/*.{ts,tsx}','./src/components/**/*.{ts,tsx}'],theme:{extend:{colors:{midnight:'#0A1020',paper:'#F3F4F6',muted:'#8E95A5',gold:'#D4AF37',ice:'#93C5FD'},fontFamily:{display:['var(--font-ui)'],philosophy:['var(--font-ui)'],sans:['var(--font-ui)'],mono:['var(--font-ui)']},backgroundColor:{glass:'rgba(255,255,255,0.03)'},borderColor:{hairline:'rgba(255,255,255,0.08)'},backdropBlur:{glass:'16px'}}},plugins:[]} satisfies Config;

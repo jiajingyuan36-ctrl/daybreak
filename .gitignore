@@ -1,0 +1,18 @@
+node_modules/
+.next/
+out/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# 构建时生成
+public/js/
+public/style.css
+public/epic.css
+public/fonts/
+public/icon*.svg
+public/icon-*.png
+public/manifest.webmanifest
+public/ASTRONOMY-LICENSE.txt
+public/LUNAR-LICENSE.txt
+src/data/
