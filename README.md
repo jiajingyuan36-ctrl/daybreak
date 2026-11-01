@@ -6,6 +6,7 @@
 
 - 1909 年原版 Rider–Waite–Smith 彩色牌面，78 张牌正逆位都有白话解析
 - 抽完牌不满意，每天可以换三次
+- 每张牌标注金色黎明会《Book T》的星座、行星或元素对应；首页显示当天太阳和月亮所在的星座
 - 首页月亮按当天真实月相绘制
 - 填一次生辰，每天多一份按八字推算的今日运势
 - 五种牌阵，凯尔特十字的位置含义按 Waite《The Pictorial Key to the Tarot》（1911）原文
@@ -43,6 +44,8 @@ npm run build      # 静态导出到 dist/
 ## 素材与许可
 
 - 牌面：1909 年 Rider–Waite–Smith 彩色扫描，公有领域，来自[维基共享资源](https://commons.wikimedia.org/wiki/Category:Rider-Waite-Smith_tarot_deck_(TaionWC))
+- 占星对应：金色黎明会《Book T》（S. L. MacGregor Mathers 编，约 1888 年；收录于 Israel Regardie《The Golden Dawn》），只用七颗古典行星
+- 星座定义：托勒密《四书》，公有领域，见[古腾堡计划 Ashmand 译本](https://gutenberg.org/files/70850/70850-h/70850-h.htm)
 - Waite 原文：公有领域，引自 [Wikisource](https://en.wikisource.org/wiki/The_Pictorial_Key_to_the_Tarot)
 - 月面贴图：three.js 示例素材（MIT）
 - 天文计算：[Astronomy Engine](https://github.com/cosinekitty/astronomy)（MIT）
