@@ -9,6 +9,7 @@ function Thumb({id,role,note}:{id:string;role:string;note?:string}){const c=card
 export default function Zodiac(){return <main className="page-shell legal-page zodiac-page"><h1>十二星座与塔罗</h1><p className="legal-date">元素 · 性质 · 守护星 · 对应的牌</p>
 <p>韦特塔罗的作者 Waite 和画师 Pamela Colman Smith 都属于金色黎明会。这个组织给每个星座都配了塔罗牌：一张大阿卡纳代表星座本身，守护星也有自己的大牌；星座的 30 度再分成三段（每段 10 度，叫一个「旬」），各对应一张小牌。</p>
 <ZodiacToday/>
+<a className="zodiac-pair-link" href="/pair/"><span>两个人的星座</span><span className="muted">填上你和 TA 的生日，看看你们怎么相处 →</span></a>
 <nav className="zodiac-index" aria-label="十二星座">{ZODIAC.map(z=><a key={z.sign.id} href={`#${z.sign.id}`}>{z.sign.zh.replace('座','')}</a>)}</nav>
 {ZODIAC.map(z=><section key={z.sign.id} id={z.sign.id} className="zodiac-sign">
  <h2>{z.sign.zh}<span className="z-en">{z.sign.en}</span></h2><p className="z-dates">{z.dates}</p>
