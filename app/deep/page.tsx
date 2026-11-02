@@ -1,7 +1,7 @@
 import type {Metadata} from 'next';
 import {DeepContact} from '../../src/components/deep-reading';
 import {DEEP_READING} from '../../src/site';
-export const metadata:Metadata={title:'深度解读 · DAYBREAK 晨启'};
+export const metadata:Metadata={title:'深度解读'};
 // 具体形式、时长和价格由经营者确定后再写进来，这里不预先承诺。
 export default function Deep(){return <main className="page-shell legal-page deep-page"><h1>深度解读</h1><p className="legal-date">付费 · 一对一</p>
 <section><h2>是什么</h2><p>网站上的抽牌和牌阵是自助的。深度解读由解读师和你一对一进行：先听你说清楚问题和处境，再用合适的牌阵逐张解读，把几张牌连起来讲，最后落到你能做的具体事情上。</p></section>

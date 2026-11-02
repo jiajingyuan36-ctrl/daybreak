@@ -49,3 +49,16 @@ main,#app main{animation:none}.card-detail-dialog.closing{animation:dialog-out .
 .astro-sky{font-size:13px;color:var(--muted)}
 .astro-source{font-size:12px;line-height:1.7;margin-top:10px;color:var(--muted)}.astro-source a{color:var(--muted)!important;text-decoration:underline;text-underline-offset:3px}
 .astro-tag{font-size:12px;color:var(--muted);letter-spacing:.08em;margin:-4px 0 8px}
+
+/* 十二星座页 */
+.zodiac-today{font-size:15px;color:var(--muted);margin:20px 0 8px;line-height:1.9}.zodiac-today a{color:var(--fg)!important;text-decoration:underline;text-underline-offset:4px}
+.zodiac-index{display:flex;flex-wrap:wrap;gap:6px 18px;margin:18px 0 8px;font-size:14px;letter-spacing:.08em}.zodiac-index a{color:var(--muted)!important}
+.zodiac-sign{padding-top:40px;margin-top:40px;border-top:1px solid var(--line);scroll-margin-top:72px}
+.zodiac-sign h2{font-size:26px;margin:0;letter-spacing:.06em}.z-en{font-family:var(--font-prose),Georgia,serif;font-size:15px;color:var(--muted);letter-spacing:.12em;margin-left:12px}
+.z-dates{font-size:13px;color:var(--muted);margin:6px 0 16px;letter-spacing:.06em}
+.z-plain{font-size:16px;line-height:1.95;margin:0 0 18px}
+.z-facts{display:grid;gap:8px;margin:0 0 22px;font-size:14px}.z-facts div{display:flex;gap:14px}.z-facts dt{color:var(--muted);min-width:3.5em;flex:none}.z-facts dd{margin:0;line-height:1.75}
+.z-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:18px 14px}
+.z-card{margin:0}.z-card img{display:block;width:80px;height:137px;object-fit:cover;border-radius:4px}
+.z-card figcaption{display:grid;gap:2px;margin-top:8px;font-size:12px;line-height:1.5}.z-card strong{font-weight:400;font-size:14px}.z-role{color:var(--muted);letter-spacing:.06em}.z-note{color:var(--muted)}
+.zodiac-sources{margin-top:56px;padding-top:32px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);line-height:1.9}.zodiac-sources a{color:var(--muted)!important;text-decoration:underline}

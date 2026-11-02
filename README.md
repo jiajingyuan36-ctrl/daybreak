@@ -1,4 +1,4 @@
-# DAYBREAK 晨启
+# 晨启塔罗 DAYBREAK
 
 每天早上抽一张塔罗，用大白话说说今天的状态，和一件十分钟就能做完的小事。
 
@@ -7,6 +7,7 @@
 - 1909 年原版 Rider–Waite–Smith 彩色牌面，78 张牌正逆位都有白话解析
 - 抽完牌不满意，每天可以换三次
 - 每张牌标注金色黎明会《Book T》的星座、行星或元素对应；首页显示当天太阳和月亮所在的星座
+- 十二星座页：每个星座的元素、性质、守护星、入旺，以及对应的大牌、守护星牌和三个旬的小牌
 - 首页月亮按当天真实月相绘制
 - 填一次生辰，每天多一份按八字推算的今日运势
 - 五种牌阵，凯尔特十字的位置含义按 Waite《The Pictorial Key to the Tarot》（1911）原文
@@ -36,6 +37,7 @@ npm run build      # 静态导出到 dist/
 | `src/lib/bazi-fortune.ts` | 按生辰的今日运势 |
 | `src/lib/tarot-catalog.ts` | 牌阵与位置含义 |
 | `src/components/real-moon.tsx` | 真实月面 |
+| `src/astro.ts` / `src/zodiac.ts` | 星座对应、日月位置、十二星座页内容 |
 | `src/app.ts` | 今日抽牌、回望、设置页面 |
 | `src/components/tarot/tarot-workbench.tsx` | 牌阵与图鉴 |
 | `app/` | Next.js 页面 |
