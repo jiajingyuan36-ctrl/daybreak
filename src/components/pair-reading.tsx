@@ -1,7 +1,7 @@
 'use client';
 import {useEffect,useState} from 'react';
 import {SIGNS,birthSign,type Sign} from '../astro';
-import {pairReading,signById} from '../synastry';
+import {pairReading,signById,PAIR_SOURCES} from '../synastry';
 import {ZODIAC} from '../zodiac';
 import {cards,cardById} from '../cards';
 import {cardImageUrl} from '../art';
@@ -27,14 +27,16 @@ export function PairReading(){const [a,setA]=useState<Sign|null>(null),[b,setB]=
   {r&&a&&b&&<section className="pair-result" aria-live="polite">
    <h2>{a.zh}<span className="pair-x">×</span>{b.zh}</h2><p className="pair-tag">{r.tag}</p>
    <p className="pair-one">{r.one}</p>
-   <h3>你们的相处底色</h3><p>{r.base}</p>
-   <h3>容易卡住的地方</h3><p>{r.stuck}</p>
+   <h3>你们的相处底色</h3>{r.base.map(t=><p key={t}>{t}</p>)}
+   <h3>古典里的你们</h3>{r.classical.map(t=><p key={t}>{t}</p>)}
+   <h3>容易卡住的地方</h3>{r.stuck.map(t=><p key={t}>{t}</p>)}
    <h3>相处小建议</h3>{r.tips.map(t=><p key={t}>{t}</p>)}
    <h3>你们的代表牌</h3>
    <div className="pair-majors">{[a,b].map((s,i)=>{const c=cardById(major(s));return <figure key={i}><img src={cardImageUrl(c.id)} alt={c.nameZh} width={150} height={257}/><figcaption><span>{i===0?'你':'TA'} · {s.zh}</span><strong>{c.nameZh}</strong></figcaption></figure>})}</div>
+   {[a,b].map((s,i)=>{const c=cardById(major(s));return <p key={i} className="pair-love"><span>{i===0?'你':'TA'}的{c.nameZh}，在感情里：</span>{c.lifeAspects.love}</p>})}
    <h3>抽三张牌，看看你们之间</h3>
    {!drawn?<button className="outline-button pair-draw" onClick={draw}>抽三张牌</button>:<div className="pair-spread">{drawn.map((d,i)=><article key={d.card.id}><img src={cardImageUrl(d.card.id,true)} alt={d.card.nameZh} width={96} height={164} style={d.reversed?{transform:'rotate(180deg)'}:undefined}/><div><p className="pair-pos">{['你','TA','你们之间'][i]}</p><strong>{d.card.nameZh} · {d.reversed?'逆位':'正位'}</strong><p>{i<2?(d.reversed?d.card.keywordsReversed:d.card.keywordsUpright).join('、'):d.card.lifeAspects.love}</p></div></article>)}<button className="text-button" onClick={draw}>再抽一次</button></div>}
    <div className="pair-actions"><button className="outline-button" onClick={share}>{copied?'链接已复制':'发给 TA'}</button></div>
-   <p className="pair-note">这里只看太阳星座，是简化版的相处参考，不是对关系的判断。完整的合盘还要看月亮、金星、火星和上升星座。相位按古典占星（60°、120° 和谐，90°、180° 有张力），代表牌依金色黎明会的塔罗对应。</p>
+   <p className="pair-note">这里只看太阳星座，是简化版的相处参考，不是对关系的判断。完整的合盘还要看月亮、金星、火星和上升星座。依据：{PAIR_SOURCES}</p>
   </section>}
  </div>}

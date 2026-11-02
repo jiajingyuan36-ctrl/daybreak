@@ -84,3 +84,4 @@ main,#app main{animation:none}.card-detail-dialog.closing{animation:dialog-out .
 .text-button{justify-self:start;font:inherit;font-size:13px;color:var(--muted);background:none!important;border:0!important;padding:0!important;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
 .pair-actions{margin:32px 0 0;text-align:center}
 .pair-note{font-size:12px;color:var(--muted);line-height:1.8!important;margin-top:28px}
+.pair-love{font-size:14px;margin:14px 0 0}.pair-love span{color:var(--muted)}
