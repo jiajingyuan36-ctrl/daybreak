@@ -164,3 +164,71 @@ html:root[data-theme=light]{--bg-primary:#f1ebe0;--bg-surface:#f1ebe0;
   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='900'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006' numOctaves='3' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .48 0 0 0 0 .36 0 0 0 0 .18 0 0 0 .16 -.04'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E") 0 0/900px 900px,
   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .27 0 0 0 0 .15 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0/240px 240px,
   var(--bg-primary)}
+/* ===== 每日抽牌 · 石墨金属薄片（2026-11）=====
+   静止时先有材质：石墨底色 + 极细拉丝 + 一道冷银反光（随牌的角度与指针位置移动）+ 1–2px 侧边厚度。
+   金色只留给按住洗牌时的进度弧；微粒与反光负责呼吸。 */
+.shared-header label{white-space:nowrap;flex-shrink:0}
+.minimal-ritual{--metal-edge:rgba(206,212,222,.2);--metal-edge-hi:rgba(226,232,240,.42);--fn-text:color-mix(in srgb,var(--fg) 80%,transparent)}
+.minimal-ritual .ritual-date{margin-bottom:32px;color:var(--fn-text)}
+.minimal-ritual h1{font-size:clamp(32px,4.8vw,58px)!important;margin-bottom:40px}
+.shared-header nav a{color:color-mix(in srgb,var(--fg) 74%,transparent)}
+.ritual-hint{color:var(--fn-text)}
+.mood-chip{color:var(--fn-text)!important;border-color:color-mix(in srgb,var(--fg) 22%,transparent)!important}
+.mood-chip.on{color:var(--fg)!important;border-color:color-mix(in srgb,var(--fg) 62%,transparent)!important;background:color-mix(in srgb,var(--fg) 8%,transparent)!important}
+.pick-hint{color:color-mix(in srgb,var(--fg) 88%,transparent);letter-spacing:.14em}
+
+/* 牌堆放大约 40% */
+.ritual-scene{height:300px}
+.deck-pile{width:280px;height:280px;margin-left:-140px}
+.pile-card{width:123px;height:213px;margin:-106px 0 0 -61px;border-color:var(--metal-edge);box-shadow:0 10px 28px rgba(0,0,0,.45)}
+.fan-card{left:-53px;width:106px;height:185px;border-color:var(--metal-edge)!important;box-shadow:1px 1px 0 #26282c,2px 2px 0 #141518,0 8px 20px rgba(0,0,0,.35)}
+.card-scene .tarot.chosen-card{width:230px!important;margin-left:-115px!important;top:-40px;border-color:var(--metal-edge-hi)!important;box-shadow:1px 1px 0 #2a2c30,2px 2px 0 #161719,0 14px 36px rgba(0,0,0,.5)}
+.drawing .fan-card.picked{translate:0 -150px}
+.pile-card,.fan-card,.card-scene .tarot.chosen-card{background:#0b0b0c!important}
+.pile-card svg,.fan-card svg,.chosen-card svg{opacity:.85}
+
+/* 材质层：叠在牌背 SVG 之上 */
+.pile-card::after,.fan-card::after,.chosen-card::before{content:'';position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+ background:
+  linear-gradient(118deg,transparent 34%,rgba(214,222,234,.07) 45%,rgba(236,242,250,.16) 50%,rgba(214,222,234,.07) 55%,transparent 66%) calc(50% + var(--tilt,0) * 1% + var(--lx,0) * -26%) 0/260% 100% no-repeat,
+  repeating-linear-gradient(90deg,rgba(255,255,255,.022) 0 1px,transparent 1px 2px,rgba(0,0,0,.06) 2px 3px),
+  linear-gradient(165deg,rgba(132,138,148,.16),rgba(30,31,34,0) 42%,rgba(100,106,116,.035));
+ animation:none;transition:background-position .5s cubic-bezier(.2,.7,.2,1),opacity .3s}
+.pile-card{--tilt:calc(var(--j) * 6)}
+.fan-card{--tilt:calc((var(--i) - 6) * 9)}
+.chosen-card::before{z-index:1}
+/* 呼吸：只在最上面那张牌的反光上 */
+.pile-card:last-of-type::after{animation:metal-breathe 5.2s ease-in-out infinite}
+@keyframes metal-breathe{0%,100%{opacity:.7}50%{opacity:1}}
+
+/* 进度弧：平时隐去，按住时才出现并走进度；洗好后淡出 */
+.shuffle-ring{opacity:0;transition:opacity .45s}
+.deck-pile.shuffling .shuffle-ring{opacity:1}
+.ritual-scene[data-stage=cut] .shuffle-ring,.ritual-scene[data-stage=cutting] .shuffle-ring{opacity:0}
+.ring-track{stroke:rgba(214,206,190,.14)}
+.ring-fill{stroke:#dcc79a;filter:drop-shadow(0 0 2px rgba(240,214,160,.55))}
+.cut-flash{background:linear-gradient(90deg,transparent,rgba(232,238,246,.9),transparent);filter:drop-shadow(0 0 5px rgba(214,222,234,.7))}
+
+/* 牌堆附近的微粒：很淡、错开呼吸 */
+.mote{position:absolute;width:2px;height:2px;border-radius:50%;background:#dfe5ee;opacity:0;pointer-events:none;
+ left:calc(50% + (var(--k) - 3) * 34px);top:30%;animation:mote-breathe 6s calc(var(--k) * -.9s) ease-in-out infinite}
+.mote:nth-of-type(2){top:62%}.mote:nth-of-type(3){top:16%}.mote:nth-of-type(4){top:8%}.mote:nth-of-type(5){top:20%}.mote:nth-of-type(6){top:58%}.mote:nth-of-type(7){top:34%}
+@keyframes mote-breathe{0%,100%{opacity:0;translate:0 4px}50%{opacity:.45;translate:0 -6px}}
+.deck-pile.shuffling .mote,.ritual-scene[data-stage=pick] .mote{animation-play-state:paused;opacity:0;transition:opacity .3s}
+
+/* 牌扇：滑到哪张，哪张清晰、轻轻抬起；其余压暗 */
+.ritual-scene[data-stage=pick] .deck-fan:has(.lift) .fan-card:not(.lift){filter:brightness(.42) saturate(.6)}
+.fan-card.lift,.fan-card:focus-visible{z-index:3;translate:0 -14px;border-color:var(--metal-edge-hi)!important;box-shadow:1px 1px 0 #2c2e32,2px 2px 0 #18191c,0 16px 30px rgba(0,0,0,.5)}
+.fan-card.lift::after{opacity:1;background-position:calc(50% + var(--lx,0) * -26%) 0,0 0,0 0}
+.minimal-ritual:not(.drawing) .ritual-scene[data-stage=pick] .fan-card{transition:translate .2s cubic-bezier(.2,.7,.2,1),box-shadow .2s,filter .25s,opacity .25s!important}
+@keyframes aura-breathe{0%,100%{box-shadow:1px 1px 0 #2a2c30,2px 2px 0 #161719,0 0 0 rgba(214,222,234,0),0 14px 36px rgba(0,0,0,.5)}50%{box-shadow:1px 1px 0 #2a2c30,2px 2px 0 #161719,0 0 24px rgba(214,222,234,.12),0 14px 36px rgba(0,0,0,.5)}}
+
+@media(max-width:560px){
+ .ritual-scene{height:270px}
+ .deck-pile{width:250px;height:250px;margin-left:-125px}
+ .pile-card{width:110px;height:190px;margin:-95px 0 0 -55px}
+ .fan-card{left:-46px;width:92px;height:160px;rotate:calc((var(--i) - 6) * 3.3deg)}
+ .card-scene .tarot.chosen-card{width:200px!important;margin-left:-100px!important}
+ .mote{left:calc(50% + (var(--k) - 3) * 28px)}
+}
+@media(prefers-reduced-motion:reduce){.pile-card::after,.mote{animation:none!important}}
