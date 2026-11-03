@@ -85,3 +85,29 @@ main,#app main{animation:none}.card-detail-dialog.closing{animation:dialog-out .
 .pair-actions{margin:32px 0 0;text-align:center}
 .pair-note{font-size:12px;color:var(--muted);line-height:1.8!important;margin-top:28px}
 .pair-love{font-size:14px;margin:14px 0 0}.pair-love span{color:var(--muted)}
+
+/* 抽牌仪式：静心一句、心情、扇形牌堆、选中的牌、金色流光 */
+.ritual-hint{font-size:15px;color:var(--muted);letter-spacing:.06em;margin:-8px 0 18px}
+.mood-row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0 auto 26px;max-width:420px}
+.mood-chip{font:inherit;font-size:13px!important;letter-spacing:.08em;padding:5px 14px!important;min-height:0!important;border:1px solid var(--line)!important;border-radius:999px!important;background:transparent!important;color:var(--muted)!important;transition:color .2s,border-color .2s,background .2s}
+.mood-chip.on{color:var(--fg)!important;border-color:#c9a96a!important;background:rgba(201,169,106,.10)!important}
+.ritual-scene{height:215px;margin:0 0 6px!important;overflow:visible}
+.deck-fan{position:absolute;left:50%;bottom:0;width:0;height:0;transition:opacity .5s}
+.fan-card{position:absolute;left:-38px;bottom:0;width:76px;height:132px;padding:0!important;min-height:0!important;border:1px solid rgba(201,169,106,.55)!important;border-radius:6px!important;background:var(--bg)!important;overflow:hidden;transform-origin:50% 230%;rotate:calc((var(--i) - 6) * 4deg);transition:translate .45s cubic-bezier(.2,.7,.2,1),rotate .45s cubic-bezier(.2,.7,.2,1),scale .45s,opacity .45s,box-shadow .3s!important;box-shadow:0 8px 24px rgba(0,0,0,.35);cursor:pointer;animation:fan-in .7s calc(var(--i) * 45ms) cubic-bezier(.2,.7,.2,1) both}
+.fan-card svg{width:100%;height:100%;display:block}
+.fan-card::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(240,206,140,.28) 50%,transparent 65%);background-size:250% 100%;animation:sheen-idle 4.5s calc(var(--i) * 230ms) ease-in-out infinite;pointer-events:none}
+.fan-card:hover,.fan-card:focus-visible{translate:0 -16px;box-shadow:0 14px 32px rgba(201,169,106,.25)}
+.drawing .fan-card{opacity:0;translate:0 40px}
+.drawing .fan-card.picked{opacity:1;rotate:0deg;translate:0 -120px;scale:1.25;z-index:2}
+.chosen-card{position:absolute!important;left:50%;top:-30px;width:180px!important;margin-left:-90px!important;opacity:0;transform:scale(.6);transition:opacity .5s,transform .7s cubic-bezier(.2,.7,.2,1);pointer-events:none;border-color:rgba(201,169,106,.7)!important}
+.chosen-card.shown{opacity:1;transform:scale(1)}
+.drawing .chosen-card.shown~.deck-fan,.drawing .fan-card.picked{transition-delay:.15s}
+.pick-hint{font-size:14px;color:#c9a96a;letter-spacing:.2em;margin:18px 0 22px}
+.drawing .pick-hint,.drawing .ritual-hint,.drawing .mood-row{opacity:.25;transition:opacity .4s}
+.minimal-result .tarot.sheen::after{content:'';position:absolute;inset:0;display:block!important;background:linear-gradient(115deg,transparent 30%,rgba(255,236,190,.55) 48%,rgba(255,250,235,.8) 50%,rgba(255,236,190,.55) 52%,transparent 70%);background-size:300% 100%;animation:sheen-pass 1.3s .45s cubic-bezier(.3,.1,.3,1) both;pointer-events:none;mix-blend-mode:screen}
+@keyframes fan-in{from{opacity:0;translate:0 30px}}
+@keyframes sheen-idle{0%,55%{background-position:120% 0}85%,100%{background-position:-20% 0}}
+@keyframes sheen-pass{from{background-position:130% 0}to{background-position:-30% 0}}
+@media (prefers-reduced-motion:reduce){.fan-card,.fan-card::after,.minimal-result .tarot.sheen::after{animation:none!important}}
+.card-scene .tarot.chosen-card{width:180px!important}
+.ritual-scene.lifted .fan-card.picked{opacity:0!important;transition-duration:.35s!important}
