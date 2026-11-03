@@ -4,6 +4,7 @@ import {SIGNS,birthSign,type Sign} from '../astro';
 import {pairReading,signById,PAIR_SOURCES} from '../synastry';
 import {ZODIAC} from '../zodiac';
 import {cards,cardById} from '../cards';
+import {shuffleDeck} from '../random';
 import {cardImageUrl} from '../art';
 import type {Card} from '../types';
 // 两个人的星座：选生日或直接选星座，看相处方式；再抽三张牌看你们之间。
@@ -13,13 +14,13 @@ function Person({label,sign,onSign}:{label:string;sign:Sign|null;onSign:(s:Sign|
  return <div className="pair-person"><p className="pair-label">{label}</p>
   <label className="pair-field"><span>生日</span><input type="date" min="1900-01-01" max="2100-12-31" value={birth} onChange={e=>{setBirth(e.target.value);const s=e.target.value?birthSign(e.target.value):null;if(s)onSign(s)}}/></label>
   <label className="pair-field"><span>或者直接选星座</span><select value={sign?.id||''} onChange={e=>{setBirth('');onSign(signById(e.target.value))}}><option value="">请选择</option>{SIGNS.map(s=><option key={s.id} value={s.id}>{s.zh}</option>)}</select></label></div>}
-function randomIndex(n:number){const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]%n}
+
 type Drawn={card:Card;reversed:boolean};
 export function PairReading(){const [a,setA]=useState<Sign|null>(null),[b,setB]=useState<Sign|null>(null),[drawn,setDrawn]=useState<Drawn[]|null>(null),[copied,setCopied]=useState(false);
  useEffect(()=>{const q=new URLSearchParams(location.search);const qa=signById(q.get('a')),qb=signById(q.get('b'));if(qa)setA(qa);else{const bd=storedBirth();if(bd)setA(birthSign(bd))}if(qb)setB(qb)},[]);
  useEffect(()=>{setDrawn(null)},[a,b]);
  const r=a&&b?pairReading(a,b):null;
- function draw(){const pool=[...cards],out:Drawn[]=[];for(let i=0;i<3;i++){const k=randomIndex(pool.length);out.push({card:pool.splice(k,1)[0],reversed:randomIndex(10)<3})}setDrawn(out)}
+ function draw(){setDrawn(shuffleDeck(cards).slice(0,3))}
  async function share(){if(!a||!b)return;const url=`${location.origin}/pair/?a=${a.id}&b=${b.id}`;try{if(navigator.share){await navigator.share({title:`${a.zh} × ${b.zh} · 晨启塔罗`,url});return}}catch{return}try{await navigator.clipboard.writeText(url)}catch{const t=document.createElement('textarea');t.value=url;document.body.appendChild(t);t.select();try{document.execCommand('copy')}catch{}t.remove()}setCopied(true);setTimeout(()=>setCopied(false),1800)}
  const major=(s:Sign)=>ZODIAC.find(z=>z.sign.id===s.id)!.major;
  return <div className="pair-reading">
