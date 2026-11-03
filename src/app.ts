@@ -3,7 +3,7 @@ import {isDark} from './theme.ts';
 import {validBirth} from './fortune.ts';
 import {monthSummary,shiftMonth} from './insights.ts';
 import {particles} from './particles.ts';
-import {silk} from './silk.ts';
+import {aura} from './aura.ts';
 import {dustReveal} from './reveal.ts';
 import {moods} from './engine.ts';
 import type {ParticleHandle} from './particles.ts';
@@ -50,16 +50,16 @@ function birthForm(){const g=gravityStore(),date=g.birth||data.preferences.birth
 function settings(){draft={...data.preferences,themes:[...data.preferences.themes]};return `<div class="page-heading"><h1>设置</h1></div><section class="minimal-settings"><form id="preferences"><label for="nickname">称呼</label><input id="nickname" value="${esc(data.preferences.nickname)}" maxlength="40"><button type="submit">保存</button></form>${birthForm()}<label class="field theme-setting">外观<select id="theme-mode"><option value="auto" ${data.preferences.themeMode==='auto'?'selected':''}>自动</option><option value="dark" ${data.preferences.themeMode==='dark'?'selected':''}>深色</option><option value="light" ${data.preferences.themeMode==='light'?'selected':''}>浅色</option></select></label><button class="setting-row export-data">导出记录</button><label class="setting-row file-label">导入记录<input id="import-data" type="file" accept="application/json,.json"></label><button class="setting-row clear">清除历史记录</button><button class="setting-row reset">重置偏好</button><details class="source-archive"><summary>资料来源</summary><a href="https://github.com/6tail/lunar-javascript">lunar-javascript</a><a href="https://github.com/cosinekitty/astronomy">Astronomy Engine</a><a href="https://github.com/mrdoob/three.js">three.js 月面贴图（MIT）</a><a href="https://commons.wikimedia.org/wiki/Category:Rider-Waite-Smith_tarot_deck_(TaionWC)">1909 年韦特塔罗牌面扫描（公有领域，维基共享资源）</a><a href="/encyclopedia/">塔罗原典与牌义</a></details></section>`}
 
 function bind(){const tm=root.querySelector<HTMLSelectElement>('#theme-mode');if(tm)tm.onchange=()=>{data.preferences.themeMode=tm.value as 'auto'|'dark'|'light';save();window.dispatchEvent(new CustomEvent('daybreak-theme',{detail:tm.value}));render()};root.querySelectorAll<HTMLAnchorElement>('a[href="/ritual/"],a[href="/history"],a[href="/settings"]').forEach(a=>a.onclick=e=>{e.preventDefault();go(a.pathname)});
-// 抽牌仪式：选中的牌升到中间，金色丝带绕着它收拢，再翻开；翻开时一道金光扫过牌面，丝带向外散开。
+// 抽牌仪式：选中的牌升到中间，细碎的金属光尘随呼吸绕着它收拢，再揭开；揭开后光尘从牌边慢慢散去。
 // 选哪一张只是仪式，抽到什么仍由洗好的牌决定，和线下从牌堆里抽一张是一样的。
 const beginDraw=(picked?:HTMLElement)=>{if(revealing)return;revealing=true;const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
  const fan=[...root.querySelectorAll<HTMLElement>('.fan-card')];(picked??fan[Math.floor(Math.random()*fan.length)])?.classList.add('picked');
  root.querySelector('.minimal-ritual')?.classList.add('drawing');root.querySelectorAll<HTMLButtonElement>('.draw,.draw-pick,.mood-chip').forEach(el=>{el.disabled=true});
  const big=root.querySelector<HTMLElement>('.chosen-card');let swirl:{stop():void}|null=null;
- setTimeout(()=>{big?.classList.add('shown');root.querySelector('.ritual-scene')?.classList.add('lifted');swirl=silk(big,'swirl')},reduced?0:420);
+ setTimeout(()=>{big?.classList.add('shown');root.querySelector('.ritual-scene')?.classList.add('lifted');swirl=aura(big,'gather')},reduced?0:420);
  setTimeout(()=>{swirl?.stop();today=localDate();const d=ensureDay(data.days,today,data.preferences,mood,intent);data.days[today]=d;save();render();scrollTo({top:0,behavior:'instant'});const card=document.querySelector<HTMLElement>('.minimal-result .tarot');document.querySelector('.minimal-result')?.classList.add('just-drawn');
   // 牌面化作光尘重新拼起，再由金光扫出；做不了时退回原来的翻牌
-  if(dustReveal(card))setTimeout(()=>silk(card,'burst'),900);else{card?.classList.add('flip','sheen');particles(card,'reveal');silk(card,'burst')}revealing=false},reduced?0:2400)};
+  if(dustReveal(card))setTimeout(()=>aura(card,'release'),1400);else{card?.classList.add('flip','sheen');particles(card,'reveal');aura(card,'release')}revealing=false},reduced?0:2400)};
 root.querySelectorAll<HTMLButtonElement>('.draw-pick').forEach(b=>b.onclick=()=>beginDraw(b));
 // 线下的顺序：按住牌堆洗牌（金环走满一圈）→ 划一下切牌 → 在牌扇上滑，松手取一张。「替我选一张」随时可以跳过。
 const scene=root.querySelector<HTMLElement>('.ritual-scene'),pile=root.querySelector<HTMLElement>('.deck-pile'),hint=root.querySelector<HTMLElement>('.pick-hint');

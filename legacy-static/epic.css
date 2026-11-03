@@ -148,3 +148,7 @@ main,#app main{animation:none}.card-detail-dialog.closing{animation:dialog-out .
 @keyframes scan-in-rev{from{-webkit-mask-position:-30% 0;mask-position:-30% 0}to{-webkit-mask-position:130% 0;mask-position:130% 0}}
 @media (prefers-reduced-motion:reduce){.ritual-scene .fan-card{opacity:1;pointer-events:auto}.deck-pile,.pile-card,.cut-flash{animation:none!important}}
 .drawing .ritual-scene[data-stage] .fan-card:not(.picked){opacity:0;translate:0 40px;pointer-events:none}
+/* 选中的牌边缘随光尘一起呼吸：很淡的一圈金光，3.6 秒一次 */
+.chosen-card.shown{animation:aura-breathe 3.6s .6s ease-in-out infinite}
+@keyframes aura-breathe{0%,100%{box-shadow:0 0 0 rgba(201,169,106,0),0 10px 30px rgba(0,0,0,.4)}50%{box-shadow:0 0 26px rgba(214,184,128,.16),0 10px 30px rgba(0,0,0,.4)}}
+@media (prefers-reduced-motion:reduce){.chosen-card.shown{animation:none}}
