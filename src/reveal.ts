@@ -9,7 +9,8 @@ const SCAN_AT=.95,SCAN_DELAY=.45,SCAN_DUR=1.3;
 export function dustReveal(card:HTMLElement|null):boolean{
  if(!card||reduced())return false;const img=card.querySelector<HTMLImageElement>('img');if(!img)return false;
  card.classList.add('veiled');
- const finish=()=>card.classList.remove('veiled','scan');
+ // sheen 也一起去掉：否则 ::after 的动画名换回 sheen-pass，会再扫一遍
+ const finish=()=>card.classList.remove('veiled','scan','sheen');
  const safety=setTimeout(finish,(SCAN_AT+SCAN_DELAY+SCAN_DUR)*1000+800);
  const run=()=>{
   const rect=card.getBoundingClientRect(),W=Math.max(1,Math.round(rect.width)),H=Math.max(1,Math.round(rect.height));
@@ -30,7 +31,7 @@ export function dustReveal(card:HTMLElement|null):boolean{
   const frame=(now:number)=>{const t=(now-start)/1000;ctx.clearRect(0,0,CW,CH);
    if(!scanned&&t>SCAN_AT){scanned=true;card.classList.add('scan','sheen')}
    // 光带中心的横坐标（牌内像素），与 sheen-pass 的移动大致同步；光带是斜的，越往下越靠后
-   const u=Math.min(1,Math.max(0,(t-SCAN_AT-SCAN_DELAY)/SCAN_DUR)),band=-1.1*W+3.2*W*(1-Math.pow(1-u,2));
+   const u=Math.min(1,Math.max(0,(t-SCAN_AT-SCAN_DELAY)/SCAN_DUR)),band=-.5*W+2*W*(1-Math.pow(1-u,2));
    if(t>SCAN_AT+SCAN_DELAY+SCAN_DUR+.2){end();return}
    for(const p of dust){const k=Math.min(1,Math.max(0,(t-p.delay)/.85)),e=ease(k);if(k<=0)continue;
     // 光带扫过之后，这颗光尘在 0.12 个牌宽内退去，露出下面真正的牌面
