@@ -4,6 +4,7 @@ import {validBirth} from './fortune.ts';
 import {monthSummary,shiftMonth} from './insights.ts';
 import {particles} from './particles.ts';
 import {silk} from './silk.ts';
+import {dustReveal} from './reveal.ts';
 import {moods} from './engine.ts';
 import type {ParticleHandle} from './particles.ts';
 import type {Day,Preferences} from './types.ts';
@@ -31,7 +32,8 @@ function syncTheme(){try{data.preferences.themeMode=JSON.parse(localStorage.getI
 // 看解析时牌四周的微光；每次重绘前先停掉旧的。
 let ambient:ParticleHandle|null=null;
 function render(){syncTheme();ambient?.stop();root.innerHTML=header()+`${error?`<aside role="alert" class="error">${esc(error)}</aside>`:''}<main>${route()==='settings'?settings():route()==='history'?journal():home()}</main>`+footer();bind();ambient=particles(root.querySelector('.minimal-result .tarot'),'ambient');}
-function home(){const day=data.days[today];return day?reading(day):`<section class="minimal-ritual"><p class="ritual-date">${today}</p><h1>今日塔罗</h1><p class="ritual-hint">先深呼吸，想一想今天最在意的一件事</p><div class="mood-row" role="group" aria-label="此刻的心情（可不选）">${moods.map(m=>`<button class="mood-chip${m===mood?' on':''}" data-mood="${m}">${m}</button>`).join('')}</div><div class="card-scene ritual-scene"><div class="deck-fan">${Array.from({length:13},(_,i)=>`<button class="fan-card draw-pick" style="--i:${i}" aria-label="选这一张">${art()}</button>`).join('')}</div><div class="tarot face-down chosen-card" aria-hidden="true">${art()}</div></div><p class="pick-hint">凭直觉，选一张</p><button class="primary draw">替我选一张</button></section>`}
+function home(){const day=data.days[today];return day?reading(day):`<section class="minimal-ritual"><p class="ritual-date">${today}</p><h1>今日塔罗</h1><p class="ritual-hint">先深呼吸，想一想今天最在意的一件事</p><div class="mood-row" role="group" aria-label="此刻的心情（可不选）">${moods.map(m=>`<button class="mood-chip${m===mood?' on':''}" data-mood="${m}">${m}</button>`).join('')}</div><div class="card-scene ritual-scene" data-stage="shuffle"><div class="deck-pile" role="button" tabindex="0" aria-label="按住洗牌"><svg class="shuffle-ring" viewBox="0 0 100 100" aria-hidden="true"><path class="ring-track" d="M-20 80A70 70 0 0 1 120 80"/><path class="ring-fill" d="M-20 80A70 70 0 0 1 120 80" pathLength="100"/><circle class="ring-sun" r="2.2" cx="-20" cy="80"/></svg>${Array.from({length:5},(_,j)=>`<div class="pile-card" style="--j:${j}">${art()}</div>`).join('')}<span class="cut-flash" aria-hidden="true"></span></div><div class="deck-fan">${Array.from({length:13},(_,i)=>`<button class="fan-card draw-pick" style="--i:${i}" aria-label="选这一张">${art()}</button>`).join('')}</div><div class="tarot face-down chosen-card" aria-hidden="true">${art()}</div></div><p class="pick-hint" aria-live="polite">${STAGE_HINT.shuffle}</p><button class="primary draw">替我选一张</button></section>`}
+const STAGE_HINT={shuffle:'按住牌堆，等晨光走满这道弧',cut:'向任意一侧轻轻一划，把牌分开',pick:'指尖划过牌扇，停在哪张就是哪张'};
 
 function roman(n:number):string{if(n===0)return '0';let out='';for(const [value,label] of [[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']] as const){while(n>=value){out+=label;n-=value}}return out}
 // 星象对应：这张牌在金色黎明体系里的星座/行星，加上当天太阳、月亮的位置和用户的太阳星座。
@@ -55,8 +57,34 @@ const beginDraw=(picked?:HTMLElement)=>{if(revealing)return;revealing=true;const
  root.querySelector('.minimal-ritual')?.classList.add('drawing');root.querySelectorAll<HTMLButtonElement>('.draw,.draw-pick,.mood-chip').forEach(el=>{el.disabled=true});
  const big=root.querySelector<HTMLElement>('.chosen-card');let swirl:{stop():void}|null=null;
  setTimeout(()=>{big?.classList.add('shown');root.querySelector('.ritual-scene')?.classList.add('lifted');swirl=silk(big,'swirl')},reduced?0:420);
- setTimeout(()=>{swirl?.stop();today=localDate();const d=ensureDay(data.days,today,data.preferences,mood,intent);data.days[today]=d;save();render();const card=document.querySelector('.minimal-result .tarot');card?.classList.add('flip','sheen');document.querySelector('.minimal-result')?.classList.add('just-drawn');particles(card,'reveal');silk(card,'burst');revealing=false;scrollTo(0,0)},reduced?0:2400)};
+ setTimeout(()=>{swirl?.stop();today=localDate();const d=ensureDay(data.days,today,data.preferences,mood,intent);data.days[today]=d;save();render();scrollTo({top:0,behavior:'instant'});const card=document.querySelector<HTMLElement>('.minimal-result .tarot');document.querySelector('.minimal-result')?.classList.add('just-drawn');
+  // 牌面化作光尘重新拼起，再由金光扫出；做不了时退回原来的翻牌
+  if(dustReveal(card))setTimeout(()=>silk(card,'burst'),900);else{card?.classList.add('flip','sheen');particles(card,'reveal');silk(card,'burst')}revealing=false},reduced?0:2400)};
 root.querySelectorAll<HTMLButtonElement>('.draw-pick').forEach(b=>b.onclick=()=>beginDraw(b));
+// 线下的顺序：按住牌堆洗牌（金环走满一圈）→ 划一下切牌 → 在牌扇上滑，松手取一张。「替我选一张」随时可以跳过。
+const scene=root.querySelector<HTMLElement>('.ritual-scene'),pile=root.querySelector<HTMLElement>('.deck-pile'),hint=root.querySelector<HTMLElement>('.pick-hint');
+if(scene&&pile){const ring=pile.querySelector<SVGPathElement>('.ring-fill'),sun=pile.querySelector<SVGCircleElement>('.ring-sun'),setStage=(s:keyof typeof STAGE_HINT)=>{scene.dataset.stage=s;if(hint)hint.textContent=STAGE_HINT[s];pile.setAttribute('aria-label',s==='cut'?'切牌':'按住洗牌')};
+ let progress=0,holding=false,last=0,downX=0,downId=-1,downStage='';
+ const tick=(now:number)=>{if(!holding||scene.dataset.stage!=='shuffle')return;progress=Math.min(1,progress+(now-last)/1700);last=now;ring?.style.setProperty('stroke-dashoffset',String(100-progress*100));const a=Math.PI*(1-progress);sun?.setAttribute('cx',(50+70*Math.cos(a)).toFixed(2));sun?.setAttribute('cy',(80-70*Math.sin(a)).toFixed(2));
+  if(progress>=1){holding=false;pile.classList.remove('shuffling');navigator.vibrate?.(12);setStage('cut');return}requestAnimationFrame(tick)};
+ const hold=(on:boolean)=>{if(scene.dataset.stage!=='shuffle'||holding===on)return;holding=on;pile.classList.toggle('shuffling',on);if(on){last=performance.now();requestAnimationFrame(tick)}};
+ const cut=(dir:number)=>{if(scene.dataset.stage!=='cut')return;scene.dataset.stage='cutting';pile.style.removeProperty('--dx');pile.classList.add(dir<0?'cut-l':'cut-r');navigator.vibrate?.(8);setTimeout(()=>{pile.classList.remove('cut-l','cut-r');setStage('pick')},700)};
+ pile.onpointerdown=e=>{e.preventDefault();try{pile.setPointerCapture(e.pointerId)}catch{}downId=e.pointerId;downX=e.clientX;downStage=scene.dataset.stage||'';hold(true)};
+ pile.onpointermove=e=>{if(e.pointerId!==downId||scene.dataset.stage!=='cut')return;pile.style.setProperty('--dx',`${Math.max(-60,Math.min(60,e.clientX-downX))}px`)};
+ pile.onpointerup=pile.onpointercancel=e=>{if(e.pointerId!==downId)return;downId=-1;const dx=e.clientX-downX;hold(false);// 洗好时手指还按着，这次松手不算切牌；之后划一下（或轻点）才切
+ if(downStage==='cut'&&scene.dataset.stage==='cut'&&e.type==='pointerup')cut(Math.abs(dx)>24?dx:1);else pile.style.removeProperty('--dx')};
+ // 键盘：按住空格或回车洗牌，洗好后再按一次切牌
+ pile.onkeydown=e=>{if(e.key!==' '&&e.key!=='Enter')return;e.preventDefault();if(scene.dataset.stage==='cut')cut(1);else hold(true)};
+ pile.onkeyup=e=>{if(e.key===' '||e.key==='Enter')hold(false)};
+ // 选牌：手指（或鼠标）在牌扇上滑，离得最近的那张升起来；松手就取它
+ const fanCards=[...scene.querySelectorAll<HTMLElement>('.fan-card')];let lifted:HTMLElement|null=null,sliding=false;
+ const liftAt=(x:number)=>{let best:HTMLElement|null=null,bd=Infinity;for(const c of fanCards){const r=c.getBoundingClientRect(),d=Math.abs(r.left+r.width/2-x);if(d<bd){bd=d;best=c}}if(best!==lifted){lifted?.classList.remove('lift');best?.classList.add('lift');lifted=best;if(sliding)navigator.vibrate?.(4)}};
+ const picking=()=>scene.dataset.stage==='pick'&&!revealing;
+ scene.addEventListener('pointerdown',e=>{if(!picking()||!(e.target as Element).closest('.deck-fan'))return;e.preventDefault();sliding=true;try{scene.setPointerCapture(e.pointerId)}catch{}liftAt(e.clientX)});
+ scene.addEventListener('pointermove',e=>{if(picking()&&(sliding||e.pointerType==='mouse'&&(e.target as Element).closest('.deck-fan')))liftAt(e.clientX)});
+ scene.addEventListener('pointerup',()=>{if(!sliding)return;sliding=false;if(picking()&&lifted)beginDraw(lifted)});
+ scene.addEventListener('pointercancel',()=>{sliding=false;lifted?.classList.remove('lift');lifted=null});
+ scene.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse'&&!sliding){lifted?.classList.remove('lift');lifted=null}})}
 root.querySelectorAll<HTMLButtonElement>('.draw').forEach(b=>b.onclick=()=>beginDraw());
 root.querySelectorAll<HTMLButtonElement>('.mood-chip').forEach(b=>b.onclick=()=>{mood=mood===b.dataset.mood?'':b.dataset.mood!;root.querySelectorAll<HTMLElement>('.mood-chip').forEach(x=>x.classList.toggle('on',x.dataset.mood===mood))});
 root.querySelectorAll<HTMLButtonElement>('.export-image,.export-story').forEach(b=>b.onclick=async()=>{b.disabled=true;try{const layout=root.querySelector<HTMLSelectElement>('.share-layout')?.value as ShareLayout||'classic';await shareCard(data.days[b.dataset.date!],b.classList.contains('export-story'),layout);toast('卡片已生成。')}catch(e){toast(e instanceof Error?e.message:'图片导出失败，请重试')}finally{b.disabled=false}});
