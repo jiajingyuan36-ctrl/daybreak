@@ -16,3 +16,22 @@ test('big dipper spread copy: seven positions named after the stars, plain lengt
  const seen=new Set<string>();
  for(const [title,meaning] of DIPPER_SPREAD.positions){assert.ok(len(meaning)>=18&&len(meaning)<=40,`${title}: ${len(meaning)}`);assert.doesNotMatch(meaning,banned,title);assert.ok(!seen.has(meaning),title);seen.add(meaning)}
  for(const t of [DIPPER_SPREAD.description,DIPPER_SPREAD.note])assert.doesNotMatch(t,banned)});
+
+test('mood leads: every mood × card group has its own plain line and a full section order',async()=>{
+ const {MOOD_LEAD,MOOD_ORDER,moodLead}=await import('../src/mood-copy.ts');const {moods}=await import('../src/engine.ts');
+ assert.deepEqual(Object.keys(MOOD_LEAD).sort(),[...moods].sort());assert.deepEqual(Object.keys(MOOD_ORDER).sort(),[...moods].sort());
+ const seen=new Set<string>();
+ for(const m of moods){assert.deepEqual([...MOOD_ORDER[m]].sort(),['action','intro','reading'],m);
+  for(const g of ['major','权杖','圣杯','宝剑','星币'] as const){const t=MOOD_LEAD[m][g];assert.ok(len(t)>=25&&len(t)<=50,`${m}/${g}: ${len(t)}`);assert.doesNotMatch(t,banned,`${m}/${g}`);assert.ok(!seen.has(t),`${m}/${g}`);seen.add(t)}}
+ // 每张牌都能找到开场白；没选心情、或旧记录里的心情不认识时不显示
+ for(const m of moods)for(const c of cards)assert.ok(moodLead(m,c)?.text,`${m} ${c.id}`);
+ assert.equal(moodLead('',cards[0]),null);assert.equal(moodLead('开心',cards[0]),null)});
+
+test('card history: earlier draws of the same card, newest first, notes trimmed',async()=>{
+ const {pastDraws,noteExcerpt,shortDate}=await import('../src/card-history.ts');const d=fresh();
+ const mk=(date:string,cardId:string,note?:string)=>{d.days[date]={...draw(date,d.preferences,'','',()=>0),cardId,...(note?{review:{resonance:'有一点共鸣',note}}:{})}};
+ mk('2026-08-01','cups-2');mk('2026-09-03','cups-2','今晚和朋友吃了饭');mk('2026-09-10','wands-3');mk('2026-11-04','cups-2');mk('2026-11-05','cups-2');
+ const past=pastDraws(d.days,'cups-2','2026-11-04');assert.deepEqual(past.map(x=>x.date),['2026-09-03','2026-08-01']);
+ assert.equal(pastDraws(d.days,'wands-3','2026-09-10').length,0);
+ assert.equal(noteExcerpt('一'.repeat(50)),'一'.repeat(40)+'…');assert.equal(noteExcerpt(' 短 句 '),'短 句');
+ assert.equal(shortDate('2026-09-03','2026-11-04'),'9 月 3 日');assert.equal(shortDate('2025-12-31','2026-11-04'),'2025 年 12 月 31 日')});

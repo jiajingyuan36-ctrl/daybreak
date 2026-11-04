@@ -614,3 +614,18 @@ html:root[data-theme=dark] .insp-dossier p,html:root[data-theme=dark] .insp-doss
 .deck-pile,.ritual-scene[data-stage=pick] .deck-fan{touch-action:none!important}
 /* 牌背只是图案，不接收指针事件，触摸直接落到外层的牌堆和牌上 */
 svg.card-back{pointer-events:none}
+/* 站点承诺：抽牌页标题下、日历页顶部。细金线 + 两行，手机上冒号后换行 */
+.brand-promise{--bp:#9C7A3C;display:flex;flex-wrap:wrap;justify-content:center;gap:0 .2em;margin:2px auto 22px;max-width:30em;padding:10px 0;border-top:1px solid rgba(197,160,89,.28);border-bottom:1px solid rgba(197,160,89,.28);font-size:14px;line-height:1.9;letter-spacing:.12em;color:var(--bp);text-align:center}
+html:root[data-theme=dark] .brand-promise{--bp:#D9C29A}
+.brand-promise span{white-space:nowrap}
+.home-promise{margin:0 auto 26px}
+@media (max-width:520px){.brand-promise{flex-direction:column;align-items:center;font-size:13px;letter-spacing:.08em}}
+/* 心情开场白：在解读最前面，左侧一道金线 */
+.daily-reading .mood-lead{margin:0 0 26px;padding:2px 0 2px 16px;border-left:1px solid rgba(197,160,89,.6);line-height:1.9}
+.mood-lead .mood-tag{display:block;margin-bottom:4px;font-size:12px;letter-spacing:.24em;color:#9C7A3C}
+html:root[data-theme=dark] .mood-lead .mood-tag{color:#C5A059}
+/* 这张牌你以前抽到过 */
+.daily-reading .card-past{margin-top:30px;padding-top:18px;border-top:1px solid var(--line)}
+.card-past blockquote{margin:10px 0 6px;padding:0 0 0 14px;border-left:1px solid var(--line);color:var(--fg);font-style:normal}
+.card-past .past-empty{color:var(--muted);font-size:14px}
+.card-past .past-day{margin-top:8px}
