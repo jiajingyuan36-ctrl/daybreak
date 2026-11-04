@@ -182,6 +182,7 @@ html:root[data-theme=light] .minimal-ritual{--gold-hi:#8A6D3B;--gold:#9C7A3C;--r
 .minimal-ritual .ritual-date{margin:0 0 28px;font-size:13px;letter-spacing:.2em;color:var(--rt-small)}
 .minimal-ritual h1{font-size:clamp(30px,4.4vw,52px)!important;font-weight:300!important;letter-spacing:.25em;padding-left:.25em;color:var(--rt-title);margin:0 0 28px}
 .ritual-hint{font-size:14px;line-height:1.8;letter-spacing:.08em;color:var(--rt-sub);margin:0 0 18px}
+.fan-replay .keep-card{display:block;margin:16px auto 0;min-height:40px;letter-spacing:.12em}
 
 /* 情绪胶囊 */
 .mood-row{gap:10px;max-width:520px}
