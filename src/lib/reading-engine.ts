@@ -56,7 +56,10 @@ export function understand(question:string):QuestionInfo{
  const hit=SUBJECTS.find(w=>q.includes(w));
  // 去掉问法，只留「这件事」本身：按逗号拆开，丢掉只剩问法的半句，取第一段有内容的
  const tail=/(我们|我)?(最|最该|需要|应该|该|要|可以|能|还)*(先)?(留意|注意|弄清|看清|做|知道|关注|调整|推进|坚持|处理|面对)?(些|一下)?(什么|哪些|怎样|怎么办|怎么样|如何|下去|会怎样)$/;
- const short=clean(q).split(/[，,；;]/).map(s=>clean(s.replace(/^(为什么|为何|怎么会|请问)/,'').replace(/^(我们|我)/,'').replace(tail,'').replace(/(可以|应该|该|要)?(怎样|怎么|如何)/,'').replace(/^(我们|我)/,''))).find(s=>s.length>=2)??'';
+ // 有好几段时，优先取说到这个领域的那一段（「接下来半年，我会遇到喜欢的人吗」取后半句）
+ const parts=clean(q).split(/[，,；;]/).map(s=>clean(s.replace(/^(为什么|为何|怎么会|请问)/,'').replace(/^(我们|我)/,'').replace(tail,'').replace(/(可以|应该|该|要)?(怎样|怎么|如何)/,'').replace(/^(我们|我)/,'').replace(/^(还会|还能|会|能)/,''))).filter(s=>s.length>=2);
+ const domRe=DOMAIN_WORDS.find(([d])=>d===domain)?.[1];
+ const short=(domRe&&parts.find(s=>s.match(domRe)))??parts[0]??'';
  // 问的是自己和「他 / 她」之间、又没点出具体的事（比如「我跟她有结果么」），这件事就是你们的关系
  const subject=kind==='mind'?(/他|她|对方|TA|对象|前任|网友/i.test(who?.[1]??'')?(domain==='love'?'你们的关系':'你和对方'):`你和${who![1]}`):options&&!m?options[0]:options?`${options[0]}还是${options[1]}`:hit||(domain==='love'&&(PERSON.test(q)||/我们/.test(q))&&kind!=='how'?'你们的关系':short&&short.length<=12?short:q?'这件事':'今天');
  const S=`「${subject}」`;

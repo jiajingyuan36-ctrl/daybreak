@@ -18,6 +18,7 @@ test('understands the domain, kind and subject of common questions',()=>{
   ['我跟她有结果么','love','will','你们的关系'],
   ['我们会走到最后么','love','will','你们的关系'],
   ['我们能在一起吗','love','will','你们的关系'],
+  ['接下来半年，我会遇到喜欢的人吗？','love','will','遇到喜欢的人'],
   ['这周我最需要留意什么？','self','focus','这周']];
  for(const [q,domain,kind,subject] of cases){const r=understand(q);assert.equal(r.domain,domain,q);assert.equal(r.kind,kind,q);assert.equal(r.subject,subject,q)}
  assert.deepEqual(understand('留在北京还是回老家？').options,['留在北京','回老家']);
