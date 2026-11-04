@@ -321,11 +321,7 @@ html:root[data-theme=light] .nav-mark{background:var(--fg)}
 ::view-transition-new(site-header){animation:none}
 @media(prefers-reduced-motion:reduce){::view-transition-old(root),::view-transition-new(root){animation:none!important}}
 
-/* 换一张：旧内容淡出后整块移除，新内容再进场 */
-.minimal-result{transition:opacity .18s var(--spring-press),transform .18s var(--spring-press),filter .18s var(--spring-press)}
-.minimal-result.is-exiting{opacity:0;transform:translateY(-8px);filter:blur(4px);pointer-events:none}
-.minimal-result.is-entering{animation:result-enter .44s var(--spring-release) both}
-@keyframes result-enter{from{opacity:0;transform:translateY(10px);filter:blur(3px)}}
+/* 换一张与首次抽牌的淡出、翻面、浮现都由 src/draw-motion.ts 用 Web Animations API 驱动，样式见文末“抽牌揭晓” */
 .sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .ticker{display:inline-block;height:1.3em;line-height:1.3em;overflow:hidden;vertical-align:-.3em}
 .tick-col{display:flex;flex-direction:column;animation:tick-roll .55s var(--spring-release) .3s both}
@@ -393,3 +389,21 @@ html body #toast.show{opacity:1;transform:translate(-50%,0) scale(1);animation:n
 .copy-contact{interpolate-size:allow-keywords;transition:width var(--release-ms) var(--spring-release),color .3s,border-color .3s!important}
 .copy-contact.is-done{color:var(--gold-hi)!important;border-color:rgba(212,175,55,.55)!important}
 @media(prefers-reduced-motion:reduce){.install-hint,.install-hint.leaving,.mood-chip.on,.tick-col{animation:none!important}.tick-col{transform:translateY(-50%)}}
+
+/* ===== 抽牌揭晓（src/draw-motion.ts）=====
+   只在动画期间存在：锁定交互、待揭晓时把结果页的大牌和文字暂时设为透明（布局不变，不会跳动）、飞行中的双面牌浮层。 */
+.minimal-ritual.draw-locked .ritual-scene,.minimal-ritual.draw-locked button{pointer-events:none}
+.fan-card.is-drawn,.pile-card.is-drawn{z-index:4;border-color:rgba(212,175,55,.6)!important;box-shadow:0 24px 48px rgba(0,0,0,.8),0 0 20px rgba(197,160,89,.25)!important;transition:box-shadow .32s var(--spring-release),border-color .32s!important}
+.minimal-result.reveal-pending>:not(.tarot),.minimal-result.card-pending>.tarot{opacity:0}
+.minimal-result.reveal-pending .tick-col{animation-play-state:paused}
+.draw-flight{position:fixed;z-index:70;pointer-events:none;perspective:1200px;transform-origin:50% 50%;will-change:transform,opacity}
+.flight-card{position:absolute;inset:0;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;will-change:transform}
+.flight-face{position:absolute;inset:0;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.flight-back{background:#0E0D12;border:1px solid rgba(212,175,55,.42)!important;border-radius:8px!important}
+.flight-back svg{display:block;width:100%;height:100%}
+.flight-front{transform:rotateY(180deg);background:var(--bg);border:1px solid var(--line)!important}
+.flight-front img{display:block;width:100%;height:100%;object-fit:cover}
+.flight-front.is-reversed img{transform:rotate(180deg)}
+.flight-sheen{position:absolute;inset:0;pointer-events:none;opacity:0;transform:translateX(-120%);background:linear-gradient(115deg,transparent 25%,rgba(255,248,231,.26) 50%,transparent 75%)}
+.flight-shadow{position:absolute;left:6%;right:6%;bottom:-7%;height:20%;border-radius:50%!important;opacity:0;filter:blur(16px);background:radial-gradient(ellipse at center,rgba(0,0,0,.75) 0%,rgba(197,160,89,.14) 45%,transparent 72%)}
+html:root[data-theme=light] .flight-shadow{background:radial-gradient(ellipse at center,rgba(40,30,15,.35) 0%,rgba(156,122,60,.12) 45%,transparent 72%)}
