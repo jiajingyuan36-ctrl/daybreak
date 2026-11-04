@@ -1,16 +1,14 @@
 'use client';
-import {useEffect,useRef,useState} from 'react';import {cardAstro,ASTRO_SOURCE_LEAD,ASTRO_SOURCE_LINK,ASTRO_SOURCE_URL} from '../../astro';import {toPng} from 'html-to-image';import {tarotCards,tarotSpreads,visibleSpreads,findSpread} from '../../lib/tarot-catalog';import {shuffleTarotDeck} from '../../lib/tarot-engine';import {readSpread,understand,suggestSpread,DOMAIN_LABEL,domainToTopic,topicToDomain,type Domain} from '../../lib/reading-engine';import {particles} from '../../particles';import {DeepReadingNote} from '../deep-reading';import {DipperBoard} from './dipper-board';import type {DrawnCard,Topic,TarotCard} from '../../types/tarot';
+import {readConsultations,CONSULT_KEY,type Saved} from '../../lib/consultation-history';
+import {useEffect,useRef,useState} from 'react';import {cardAstro,ASTRO_SOURCE_LEAD,ASTRO_SOURCE_LINK,ASTRO_SOURCE_URL} from '../../astro';import {toPng} from 'html-to-image';import {tarotCards,visibleSpreads,findSpread} from '../../lib/tarot-catalog';import {shuffleTarotDeck} from '../../lib/tarot-engine';import {readSpread,understand,suggestSpread,DOMAIN_LABEL,domainToTopic,topicToDomain,type Domain} from '../../lib/reading-engine';import {particles} from '../../particles';import {DeepReadingNote} from '../deep-reading';import {DipperBoard} from './dipper-board';import type {DrawnCard,Topic,TarotCard} from '../../types/tarot';
 import {cardBackSprite} from '../../card-back';
 import {RibbonDeck} from './ribbon-deck';
 // 78 张牌共用一份牌背图案：页面里放一份定义，每张牌只引用它（引用在 ribbon-deck.tsx 里）
 const BACK_SPRITE=cardBackSprite();
-const topics:readonly [Topic,string][]=[['general','综合梳理'],['daily','今日指引'],['love','关系与情感'],['career','学业与工作'],['wealth','资源与消费'],['decision','二选一']];
 const elementNames={fire:'火',water:'水',air:'风',earth:'土',spirit:'大牌'};
 const suits={none:'大阿尔卡那',wands:'权杖',cups:'圣杯',swords:'宝剑',pentacles:'星币'};
 // 提问示例与建议：综合主流塔罗师的共识——用“什么/怎样”开头，问自己能做的，同一件事不反复抽。
 const EXAMPLES=['我可以怎样改善和他的沟通？','换工作这件事，我最该先弄清什么？','这周我最需要留意什么？'];
-interface Saved {id:string;at:string;question:string;topic:Topic;spreadId:string;cards:{id:string;reverse:boolean}[]}
-function restore(v:unknown):Saved[]{if(!Array.isArray(v))return [];return v.filter((x):x is Saved=>{if(!x||typeof x!=='object')return false;const r=x as Partial<Saved>;const spread=tarotSpreads.find(s=>s.id===r.spreadId);return typeof r.id==='string'&&typeof r.at==='string'&&Number.isFinite(Date.parse(r.at))&&typeof r.question==='string'&&r.question.length<=1000&&topics.some(([t])=>t===r.topic)&&!!spread&&Array.isArray(r.cards)&&r.cards.length===spread.positions.length&&r.cards.every(c=>c&&typeof c.id==='string'&&tarotCards.some(k=>k.id===c.id)&&typeof c.reverse==='boolean')&&new Set(r.cards.map(c=>c.id)).size===r.cards.length}).slice(0,30)}
 export function TarotWorkbench({encyclopedia=false}:{encyclopedia?:boolean}){
 const [question,setQuestion]=useState(''),[spreadId,setSpread]=useState('three-card-state'),[deck,setDeck]=useState<Awaited<ReturnType<typeof shuffleTarotDeck>>>([]),[chosen,setChosen]=useState<number[]>([]),[shuffleKey,setShuffleKey]=useState(0),[drawn,setDrawn]=useState<DrawnCard[]>([]),[busy,setBusy]=useState(false),[message,setMessage]=useState(''),[history,setHistory]=useState<Saved[]>([]),[query,setQuery]=useState(''),[suit,setSuit]=useState('all'),[element,setElement]=useState('all'),[selected,setSelected]=useState<TarotCard|null>(null),[reversedDetail,setReversedDetail]=useState(false),[domainPick,setDomainPick]=useState<Domain|null>(null);
 const modal=useRef<HTMLDialogElement>(null),poster=useRef<HTMLDivElement>(null),deckRef=useRef<HTMLDivElement>(null),working=useRef(false);const spread=findSpread(spreadId);const complete=drawn.length===spread.positions.length;
@@ -19,7 +17,7 @@ const asked=understand(question),domain=domainPick??asked.domain;const reading=d
 // 像塔罗师一样按问题挑牌阵；用户自己点过牌阵就不再替他换
 const spreadTouched=useRef(false);
 function ask(q:string){setQuestion(q);setDomainPick(null);if(!spreadTouched.current&&!deck.length&&!drawn.length&&q.trim())setSpread(suggestSpread(understand(q).kind))}
-useEffect(()=>{try{setHistory(restore(JSON.parse(localStorage.getItem('daybreak:consultations:v1')||'[]')))}catch{setMessage('本机记录读不出来，仍然可以抽牌。')}},[]);
+useEffect(()=>{try{const records=readConsultations(localStorage);setHistory(records);const id=new URLSearchParams(location.hash.slice(1)).get('record');if(id){const record=records.find(r=>r.id===id);if(record)load(record);else setMessage('未找到这次牌阵，请查看本机最近的记录。')}}catch{setMessage('本机记录读不出来，仍然可以抽牌。')}},[]);
 useEffect(()=>{if(selected){modal.current?.showModal()}else modal.current?.close()},[selected]);
 // 牌翻开时从牌边散开一圈光；详情弹窗里牌的四周缓慢浮着微光。
 useEffect(()=>{if(!drawn.length||!deck.length)return;particles(document.querySelector('.drawn-card:last-child img'),'reveal')},[drawn.length]);
@@ -27,7 +25,7 @@ useEffect(()=>{if(!selected||!modal.current)return;let h:ReturnType<typeof parti
 function openDetail(card:TarotCard,isReversed=false){setReversedDetail(isReversed);setSelected(card)}
 // 关闭时先播放淡出，再卸载内容。
 function closeDetail(){const m=modal.current;if(!m||m.classList.contains('closing'))return;if(matchMedia('(prefers-reduced-motion: reduce)').matches){setSelected(null);return}m.classList.add('closing');setTimeout(()=>{m.classList.remove('closing');setSelected(null)},180)}
-function save(records:Saved[]){setHistory(records);try{localStorage.setItem('daybreak:consultations:v1',JSON.stringify(records))}catch{setMessage('浏览器存不下这次记录。')}}
+function save(records:Saved[]){setHistory(records);try{localStorage.setItem(CONSULT_KEY,JSON.stringify(records))}catch{setMessage('浏览器存不下这次记录。')}}
 function choose(id:string){spreadTouched.current=true;setSpread(id);setDeck([]);setDrawn([]);setChosen([])}
 async function shuffle(){if(working.current)return;working.current=true;setBusy(true);setDrawn([]);setChosen([]);setMessage('正在洗牌…');try{const d=await shuffleTarotDeck(true);setDeck(d);setShuffleKey(k=>k+1);setMessage('')}catch(e){setMessage(e instanceof Error?e.message:'洗牌失败，请再试一次。')}finally{working.current=false;setBusy(false)}}
 // 牌位都放满、按下「确认牌面」后才一起翻开；单张牌在落进牌位后自动翻开
