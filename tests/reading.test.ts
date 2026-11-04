@@ -16,6 +16,8 @@ test('understands the domain, kind and subject of common questions',()=>{
   ['老板对我是什么态度？','career','mind','你和老板'],
   ['他到底喜不喜欢我？','love','mind','你们的关系'],
   ['我跟她有结果么','love','will','你们的关系'],
+  ['我们会走到最后么','love','will','你们的关系'],
+  ['我们能在一起吗','love','will','你们的关系'],
   ['这周我最需要留意什么？','self','focus','这周']];
  for(const [q,domain,kind,subject] of cases){const r=understand(q);assert.equal(r.domain,domain,q);assert.equal(r.kind,kind,q);assert.equal(r.subject,subject,q)}
  assert.deepEqual(understand('留在北京还是回老家？').options,['留在北京','回老家']);
@@ -43,7 +45,7 @@ test('the answer keeps coming back to the question',()=>{
 
 test('direct answers follow the kind of question',()=>{
  const spread=findSpread('three-card-time');const drawn=spread.positions.map((position,i)=>({card:tarotCards[i*9+3],isReversed:false,position}));
- assert.match(readSpread('我跟她有结果么',spread,drawn).answer,/^关于「你们的关系」，(整体牌面|牌面)/);
+ assert.match(readSpread('我跟她有结果么',spread,drawn).answer,/^关于「你们的关系」，.+最关键的一张是/);
  const state=findSpread('three-card-state');const d3=state.positions.map((position,i)=>({card:tarotCards[i*13+2],isReversed:i===1,position}));
  assert.match(readSpread('为什么我总是存不下钱',state,d3).answer,/多半卡在/);
  assert.match(readSpread('怎么和领导沟通',state,d3).answer,/第一步|先别急着找办法/);

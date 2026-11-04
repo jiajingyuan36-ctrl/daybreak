@@ -26,7 +26,7 @@ const EVAL:[string,string,string][]=[
  ['怎么判断他是不是真心的','love','mind|how'],['我应该辞职吗','career','choice'],['面试官对我印象怎么样','career','mind'],['这份offer值得接吗','career','will|choice'],['我能考上研究生吗','career','will'],
  ['怎么平衡工作和生活','career|self','how'],['搬家的事怎么决定','self|wealth','how'],['要不要养猫','self','choice'],['我适合一个人生活吗','self','will'],['减肥能成功吗','self','will'],
  ['他在想什么','love','mind'],['我们的关系会怎样发展','love','will'],['和网友见面安全吗','love|people|self','open|will'],['怎么挽回他','love','how'],['为什么他不回我消息','love','why'],
- ['我需要换个城市生活吗','self','choice|will|open'],['考研和工作哪个更适合我','career','choice'],['怎么跟喜欢的人聊天','love','how'],['我这周的财运怎么样','wealth','will'],['今天适合表白吗','love','will'],
+ ['我们会走到最后么','love','will'],['考研和工作哪个更适合我','career','choice'],['怎么跟喜欢的人聊天','love','how'],['我这周的财运怎么样','wealth','will'],['今天适合表白吗','love','will'],
 ];
 
 test('understands at least 90% of 100 real-style questions (topic, question type and subject)',()=>{
