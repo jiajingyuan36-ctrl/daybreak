@@ -29,7 +29,8 @@ npm run build
 - prepare-legacy.mjs 用 esbuild 把 src/app.ts 打包成 public/js/app.js。
 - src/lib/tarot-catalog.ts、src/types/tarot.ts：现代牌库与类型。
 - src/app.ts：今日塔罗、回望、设置的旧版渲染入口。
-- src/components/tarot/tarot-workbench.tsx：图鉴与牌阵。
+- src/components/tarot/compendium.tsx：图鉴（/encyclopedia/）：分段筛选、搜索、「我的收集」（只读 daybreak:v1 的抽牌记录），点开是检视台（倾斜跟手 + 金箔反光、正逆位、翻牌背、放大、上一张下一张）。数据全部读 cards/plain/knowledge/astro，不另存文案。
+- src/components/tarot/tarot-workbench.tsx：牌阵（其中 encyclopedia 模式已不再被页面使用）。
 - src/lib/tarot-consultation.ts：牌阵解释组合。
 - src/share.ts：Canvas 分享图。
 - src/components/almanac-dashboard.tsx：日历与日签导出。
