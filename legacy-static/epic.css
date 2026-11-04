@@ -832,3 +832,9 @@ html:root[data-theme=light] .minimal-ritual .primary.draw{background:rgba(255,25
 
 /* 直接回答：结论的第一句，比后面的整体描述更醒目 */
 .consultation-reading .reading-answer{font-size:20px;line-height:1.85;margin:0 0 12px;color:var(--rt-title,var(--fg))}
+
+.almanac-plaque .home-draw{display:inline-flex;align-items:center;gap:.7em;min-height:44px;margin-top:12px;border-bottom:1px solid var(--line);color:var(--fg);font-size:16px;letter-spacing:.08em;text-decoration:none}
+.home-draw:hover,.home-fortune summary:hover{color:var(--muted)}
+.home-fortune{max-width:46ch;margin:40px auto 24px;text-align:center}
+.home-fortune summary{display:list-item;width:fit-content;margin:auto;padding:12px 0;cursor:pointer}
+.home-fortune .birth-inline{margin-top:12px;padding-top:24px}
