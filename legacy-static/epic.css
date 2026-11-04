@@ -629,3 +629,81 @@ html:root[data-theme=dark] .mood-lead .mood-tag{color:#C5A059}
 .card-past blockquote{margin:10px 0 6px;padding:0 0 0 14px;border-left:1px solid var(--line);color:var(--fg);font-style:normal}
 .card-past .past-empty{color:var(--muted);font-size:14px}
 .card-past .past-day{margin-top:8px}
+/* ============ 日历 · 天文历书（左天象 · 右人文） ============
+   基础样式是竖排（手机、以及导出日签图片时）；≥1024px 且不在导出时换成左右两栏。 */
+.minimal-calendar{--al-gold:#C5A56E;--al-gold-hi:#E6D2B5;--al-ring:rgba(197,165,110,.28);--al-line:rgba(197,165,110,.25);--al-text:#E5DFD5;--al-sub:#A89F91;--al-body:#D8D2C7;--al-hero:#F4EFE6;--al-pill:rgba(255,255,255,.02);--al-hi:rgba(255,255,255,.1);--moon:220px}
+html:root[data-theme=light] .minimal-calendar{--al-gold:#8A6D3B;--al-gold-hi:#9C7A3C;--al-ring:rgba(138,109,59,.38);--al-line:rgba(138,109,59,.3);--al-text:#2E2A24;--al-sub:#6E665A;--al-body:#3A352E;--al-hero:#1F1B16;--al-pill:rgba(255,255,255,.45);--al-hi:rgba(255,255,255,.8)}
+.almanac-grid{display:flex;flex-direction:column;align-items:center;padding:20px 0 0;text-align:center}
+.almanac-sky,.almanac-text{display:contents}
+.almanac-text .date-line{order:1;flex-wrap:wrap}
+.almanac-grid .moon-stage{order:2;margin:26px auto 0}
+.almanac-plaque{order:3;display:flex;flex-direction:column;align-items:center}
+.almanac-fade{order:4;width:100%;display:flex;flex-direction:column;align-items:center}
+.almanac-grid .export-date{order:5}
+/* 月相与观测刻度环 */
+.almanac-grid .minimal-moon{width:var(--moon);height:var(--moon)}
+.almanac-grid .real-moon{left:20.833%;top:20.833%;width:58.333%;height:58.333%}
+.almanac-grid .real-moon.shown{filter:drop-shadow(0 0 2px rgba(232,224,208,.16)) drop-shadow(0 0 18px rgba(232,224,208,.08))}
+html:root[data-theme=light] .almanac-grid .real-moon.shown{filter:drop-shadow(0 0 2px rgba(60,50,30,.18)) drop-shadow(0 6px 16px rgba(60,50,30,.12))}
+.almanac-grid .reticle{color:var(--al-gold)}
+/* 农历与节气铭牌 */
+.almanac-grid .calendar-caption{margin:26px 0 14px;font-size:15px;letter-spacing:.18em;color:var(--al-text)}
+.almanac-grid .calendar-season{position:relative;display:inline-flex;align-items:center;gap:10px;margin:0;padding:6px 18px;font-size:13px;letter-spacing:.15em;color:var(--al-sub);border:1px solid var(--al-line);border-radius:999px!important}
+.almanac-grid .calendar-season::before,.almanac-grid .calendar-season::after{content:'';position:absolute;top:50%;width:48px;height:1px}
+.almanac-grid .calendar-season::before{right:100%;margin-right:10px;background:linear-gradient(90deg,transparent,var(--al-line))}
+.almanac-grid .calendar-season::after{left:100%;margin-left:10px;background:linear-gradient(90deg,var(--al-line),transparent)}
+.almanac-grid .season-dot{width:5px;height:5px;border:1px solid var(--al-gold);border-radius:50%!important;flex:none}
+/* 日期控制条：克制的微圆角，顶部一道受光线 */
+.minimal-calendar .date-line{gap:12px}
+.minimal-calendar .date-pill,.minimal-calendar .date-line input{border:1px solid rgba(197,165,110,.24)!important;border-radius:10px!important;background:var(--al-pill)!important;box-shadow:inset 0 1px 0 var(--al-hi)!important}
+.minimal-calendar .date-pill{--press-scale:.96;color:var(--al-body)}
+.minimal-calendar .date-line input{width:168px;color:var(--al-text)}
+.minimal-calendar .today-reset{margin:0;font-size:13px}
+/* 星历信息带 */
+.almanac-grid .calendar-sky{display:flex;flex-wrap:wrap;justify-content:center;row-gap:6px;width:100%;max-width:560px;margin:26px 0 0;padding:11px 0;border-top:.5px solid var(--al-line);border-bottom:.5px solid var(--al-line);font-size:13px;letter-spacing:.08em;color:var(--al-sub)}
+.calendar-sky>*{display:inline-flex;align-items:center;padding:0 16px;white-space:nowrap;color:inherit}
+.calendar-sky>*+*{border-left:1px solid var(--al-line)}
+.calendar-sky a{border-bottom:0!important;text-decoration:underline;text-decoration-color:var(--al-line);text-underline-offset:4px}
+.sky-mark{width:13px;height:13px;margin-right:8px;color:var(--al-gold);flex:none}
+/* 大字核心词 */
+.keyword-kicker{display:flex;align-items:center;gap:12px;margin:30px 0 0;font-family:var(--font-display);font-size:10px;letter-spacing:.3em;color:var(--al-gold)}
+.keyword-kicker::after{content:'';width:32px;height:1px;background:var(--al-gold);opacity:.6}
+.almanac-grid h1{margin:6px 0 24px!important;font-size:clamp(52px,15vw,64px)!important;font-weight:300;letter-spacing:.12em;color:var(--al-hero)}
+/* 两条行动建议 */
+.almanac-grid .daily-actions{list-style:none;width:100%;max-width:30em;margin:0 auto;padding:0;font-size:16px;line-height:1.75}
+.daily-actions li{display:flex;align-items:baseline;gap:14px;margin:0 0 10px;padding:12px 20px;border-left:1px solid rgba(197,165,110,.35);background:linear-gradient(90deg,rgba(197,165,110,.05) 0%,transparent 100%);color:var(--al-body);letter-spacing:.06em;text-align:left}
+.daily-actions .action-no{flex:none;font-family:var(--font-display);font-size:11px;letter-spacing:.2em;color:var(--al-gold)}
+.almanac-grid .export-date{margin:28px 0 0}
+/* 手机：首屏放下月相、农历、节气和星历带 */
+@media(max-width:1023px){body .page-shell.minimal-calendar{padding-top:20px!important}.minimal-calendar .home-promise{margin-bottom:6px}}
+@media(max-width:520px){.minimal-calendar{--moon:min(196px,52vw)}.almanac-grid{padding-top:14px}.almanac-grid .moon-stage{margin-top:18px}.almanac-grid .calendar-caption{margin:18px 0 10px;font-size:14px}.almanac-grid .calendar-season{font-size:12px;padding:5px 14px}.almanac-grid .calendar-season::before,.almanac-grid .calendar-season::after{width:28px}.almanac-grid .calendar-sky{font-size:12px;margin-top:20px}.calendar-sky>*{padding:0 10px}.minimal-calendar .date-line{gap:8px}.minimal-calendar .date-line input{width:150px}.daily-actions li{padding:10px 14px;font-size:15px}}
+/* 导出日签：固定竖版宽度，日期控件已在导出时滤掉 */
+.almanac-grid.exporting{width:600px;max-width:none;margin:0 auto;padding:44px 40px 36px;--moon:240px}
+/* 桌面：左天象 · 右人文 */
+@media(min-width:1024px){
+ body .page-shell.minimal-calendar{max-width:1340px!important;padding:24px 56px 56px!important}
+ .minimal-calendar .home-promise{margin:0 auto 4px}
+ .almanac-grid:not(.exporting){--moon:min(32vw,calc(100vh - 380px),470px);display:grid;grid-template-columns:52fr 48fr;align-items:center;column-gap:clamp(40px,5vw,96px);padding:18px 0 8px;text-align:left}
+ .almanac-grid:not(.exporting) .almanac-sky{display:flex;flex-direction:column;align-items:center}
+ .almanac-grid:not(.exporting) .almanac-text{display:flex;flex-direction:column;align-items:flex-start;max-width:600px}
+ .almanac-grid:not(.exporting) .moon-stage{margin:0 auto}
+ .almanac-grid:not(.exporting) .almanac-fade{align-items:flex-start}
+ .almanac-grid:not(.exporting) .date-line{justify-content:flex-start}
+ .almanac-grid:not(.exporting) .calendar-sky{justify-content:flex-start;max-width:none;margin-top:34px}
+ .almanac-grid:not(.exporting) .calendar-sky>:first-child{padding-left:0}
+ .almanac-grid:not(.exporting) .keyword-kicker{margin-top:36px}
+ .almanac-grid:not(.exporting) h1{font-size:clamp(3.75rem,5.5vw,5.25rem)!important;margin:8px 0 30px!important;text-align:left}
+ .almanac-grid:not(.exporting) .daily-actions{max-width:none;margin:0;font-size:17px}
+ .almanac-grid:not(.exporting) .export-date{grid-column:1/-1;text-align:center;margin:14px 0 0}
+}
+/* 星历带：桌面一行「☉ 太阳 · 天蝎座」；手机三等分，上标签下星座 */
+.calendar-sky .eph-v::before{content:'·';margin:0 .45em;opacity:.7}
+@media(min-width:1024px) and (max-width:1279px){.almanac-grid:not(.exporting) .calendar-sky{font-size:12px;letter-spacing:.04em}.almanac-grid:not(.exporting) .calendar-sky>*{padding:0 11px}}
+@media(min-width:1024px){body .page-shell.minimal-calendar{max-width:1212px!important}}
+@media(max-width:520px){.almanac-grid .calendar-sky{display:grid;grid-template-columns:repeat(3,1fr);padding:10px 0}.calendar-sky>.eph{flex-direction:column;gap:3px;padding:0 4px;white-space:normal}.calendar-sky .eph-k{display:inline-flex;align-items:center;font-size:11px;letter-spacing:.16em;opacity:.85}.calendar-sky .eph-v{color:var(--al-body);letter-spacing:.06em}.calendar-sky .eph-v::before{display:none}.sky-mark{width:11px;height:11px;margin-right:5px}}
+@media(max-width:360px){.minimal-calendar{--moon:150px}.minimal-calendar .date-line{gap:6px}.minimal-calendar .date-pill{padding:5px 9px!important;letter-spacing:.04em}.minimal-calendar .date-line input{width:128px;font-size:15px;padding:5px 8px!important}.almanac-grid .moon-stage{margin-top:12px}.almanac-grid .calendar-caption{margin:12px 0 8px}.minimal-calendar .home-promise{padding:6px 0}}
+.calendar-sky .eph-k{display:inline-flex;align-items:center}.calendar-sky .sky-mark{display:inline-block}
+/* 导出时两栏各自是普通竖排块（不用 display:contents，截图库处理它不稳） */
+.almanac-grid.exporting .almanac-sky,.almanac-grid.exporting .almanac-text{display:flex;flex-direction:column;align-items:center;width:100%}
+.almanac-grid.exporting .almanac-sky{order:1}.almanac-grid.exporting .almanac-text{order:2}
+html:root[data-theme=light] .almanac-grid .reticle{color:#5E4A28}
