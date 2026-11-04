@@ -1,4 +1,4 @@
-// 从耶鲁亮星表第五版（Yale Bright Star Catalogue, 5th Revised Ed., Hoffleit & Warren 1991，公有领域）
+// 从Yale 亮星表第五版（Yale Bright Star Catalogue, 5th Revised Ed., Hoffleit & Warren 1991，公有领域）
 // 生成北天背景星表 src/lib/dipper-stars.ts。只在更新星表时手动运行一次，构建时不需要。
 // 用法：node scripts/build-star-catalog.mjs <bsc5-short.json 路径>
 // 数据文件来源：https://github.com/brettonw/YaleBrightStarCatalog（把 BSC5 转成 JSON 的脚本，MIT；星表本身为公有领域，原始 ASCII 见 http://tdc-www.harvard.edu/catalogs/bsc5.html）

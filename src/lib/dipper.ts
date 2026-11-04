@@ -6,7 +6,7 @@ import {BACKGROUND_STARS} from './dipper-stars.ts';
 export interface CatalogStar {id:string;zh:string;bayer:string;en:string;hr:number;ra:number;dec:number;mag:number;order?:number}
 const hms=(h:number,m:number,s:number)=>(h+m/60+s/3600)*15;
 const dms=(d:number,m:number,s:number)=>Math.sign(d||1)*(Math.abs(d)+m/60+s/3600);
-/** 北斗七星（按天枢→摇光的顺序）、辅、北极星。J2000 坐标，取自耶鲁亮星表第五版（BSC5，公有领域），
+/** 北斗七星（按天枢→摇光的顺序）、辅、北极星。J2000 坐标，取自 Yale 亮星表第五版（BSC5，公有领域），
  * 与任务说明表格（Hipparcos 近似值）逐颗核对，差别都在 0.1″ 以内；星等用 Hipparcos 的 V 值。 */
 export const DIPPER:readonly CatalogStar[]=[
  {id:'dubhe',zh:'天枢',bayer:'α UMa',en:'Dubhe',hr:4301,ra:hms(11,3,43.7),dec:dms(61,45,3),mag:1.79,order:1},
@@ -74,7 +74,8 @@ export function bearingLabel(b:number){const d=((b%360)+360)%360,n=Math.round(d)
 /** 《鹖冠子·环流》：斗柄东指，天下皆春；南指皆夏；西指皆秋；北指皆冬。以黄昏时的斗柄方向判断。 */
 export type Season='春'|'夏'|'秋'|'冬';
 export function seasonOf(bearing:number):Season{const d=((bearing%360)+360)%360;return d>=45&&d<135?'春':d>=135&&d<225?'夏':d>=225&&d<315?'秋':'冬'}
-export const HEGUANZI={text:'斗柄东指，天下皆春；斗柄南指，天下皆夏；斗柄西指，天下皆秋；斗柄北指，天下皆冬。',source:'《鹖冠子·环流》',url:'https://ctext.org/he-guan-zi/huan-liu/zh'};
+// 原文已在维基文库《鹖冠子》“环流”一节核对（那里收的是繁体本，四句与下面一致）。
+export const HEGUANZI={text:'斗柄东指，天下皆春；斗柄南指，天下皆夏；斗柄西指，天下皆秋；斗柄北指，天下皆冬。',source:'《鹖冠子·环流》',url:'https://zh.wikisource.org/wiki/%E9%B6%A1%E5%86%A0%E5%AD%90#%E7%92%B0%E6%B5%81'};
 /** 当天黄昏（太阳落到地平线下 12°，航海昏影终）时的天空；找不到（极昼极夜）时返回 null */
 export function duskSky(date:Date,lat:number,lon:number):DipperSky|null{
  const noon=new Date(date);noon.setHours(12,0,0,0);

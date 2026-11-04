@@ -25,6 +25,7 @@ npm run build
 - tests/plain.test.ts：文案字数、禁用词、重复句与旧历史兼容检查。
 - public/rws/：78 张 1909 年 Rider–Waite–Smith 原版牌面（公有领域，来自维基共享资源 Wikimedia Commons），彩色 WebP，600×1029；thumb/ 为 320 宽小图。src/art.ts 的 cardImage() 生成标签，几何 art() 只用于后备。
 - src/card-back.ts：全站牌背「星盘月相 · 双向对称」（viewBox 240×400）。上半部分画一次、下半部分旋转 180° 复用，牌倒过来完全一样；颜色读 epic.css 里的 --cb-* 变量（深色黑金、浅色羊皮暗金）。每日抽牌用 cardBack()，牌阵页 78 张用 cardBackSprite() + cardBackUse()。
+- src/lib/dipper.ts：北斗七星、辅、北极星与 128 颗背景星（BSC5，背景星由 scripts/build-star-catalog.mjs 生成 src/lib/dipper-stars.ts）；dipperSky(date,lat,lon) 算此刻此地的星空。src/lib/dipper-draw.ts 是仪式里的洗牌/切牌/选位，只用 crypto 随机数，**不得读取任何天文数据**（同一时刻同城的人抽到的牌必须互不相干）。src/dipper-ritual.ts 是北斗仪式的画面与交互；北斗牌阵文案在 src/dipper-copy.ts（也走 plain.test.ts 的检查）；scripts/check-dipper-layout.mjs 检查牌阵四种宽度不重叠。
 - src/lib/bazi-fortune.ts：按生辰的今日运势（lunar-javascript 排盘）；src/components/real-moon.tsx：真实月面（three.js 贴图 + Astronomy Engine）。
 - prepare-legacy.mjs 用 esbuild 把 src/app.ts 打包成 public/js/app.js。
 - src/lib/tarot-catalog.ts、src/types/tarot.ts：现代牌库与类型。

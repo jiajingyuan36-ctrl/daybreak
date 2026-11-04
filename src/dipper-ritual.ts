@@ -40,7 +40,8 @@ ${dusk&&season?`<p class="dipper-season dipper-away">今天黄昏，斗柄指向
  el('circle',{r:1,class:'dp-rim'},svg);
  for(const dec of [80,70,60,50])el('circle',{r:fmt((90-dec)/50),class:'dp-grid'},svg);
  for(let h=0;h<24;h+=2){const ra=h*15,ha=sky.lst-ra,[x,y]=project(ha,40);el('line',{x1:0,y1:0,x2:fmt(x),y2:fmt(y),class:'dp-grid'},svg)}
- if(sky.horizon.length>1){el('path',{d:'M'+sky.horizon.map(([x,y])=>`${fmt(x)} ${fmt(y)}`).join('L'),class:'dp-horizon'},svg);const at=sky.horizon[Math.floor(sky.horizon.length*0.22)];el('text',{x:fmt(at[0]),y:fmt(at[1]+0.06),class:'dp-label dp-horizon-label','text-anchor':'middle'},svg).textContent='地平线'}
+ if(sky.horizon.length>1){el('path',{d:'M'+sky.horizon.map(([x,y])=>`${fmt(x)} ${fmt(y)}`).join('L'),class:'dp-horizon'},svg);// “地平线”标签放在弧线两端里离北斗更远的那一端，免得压住低空的星名
+  const cx=pos.reduce((a,p)=>a+p[0],0)/7,cy=pos.reduce((a,p)=>a+p[1],0)/7,ends=[sky.horizon[Math.floor(sky.horizon.length*0.15)],sky.horizon[Math.floor(sky.horizon.length*0.85)]],at=ends.reduce((a,b)=>Math.hypot(b[0]-cx,b[1]-cy)>Math.hypot(a[0]-cx,a[1]-cy)?b:a);el('text',{x:fmt(at[0]),y:fmt(at[1]+0.06),class:'dp-label dp-horizon-label','text-anchor':'middle'},svg).textContent='地平线'}
  // 面向正北看天：下方是北方地平，右边东，左边西，上方朝天顶、往南
  for(const [t,x,y] of [['北',0,1.075],['东',1.07,0.02],['西',-1.07,0.02],['南',0,-1.045]] as const)el('text',{x,y,class:'dp-label dp-compass','text-anchor':'middle'},svg).textContent=t;
  const ring=el('g',{class:'dp-ring'},svg),slots:SVGRectElement[]=[];
