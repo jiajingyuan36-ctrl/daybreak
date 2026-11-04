@@ -8,7 +8,8 @@
     "lint": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "dev": "node prepare-legacy.mjs && next dev --webpack --hostname 0.0.0.0",
-    "prebuild": "node --experimental-strip-types scripts/seed-tarot-data.ts"
+    "prebuild": "node --experimental-strip-types scripts/seed-tarot-data.ts",
+    "covers": "node scripts/xhs-covers.mjs"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

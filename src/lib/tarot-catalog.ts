@@ -1,4 +1,4 @@
-import rows from '../data/tarot_cards_78.json' with {type:'json'};import type {TarotCard,TarotSpread,SpreadPosition,Topic} from '../types/tarot.ts';
+import rows from '../data/tarot_cards_78.json' with {type:'json'};import type {TarotCard,TarotSpread,SpreadPosition,Topic} from '../types/tarot.ts';import {DIPPER_SPREAD} from '../dipper-copy.ts';
 export const tarotCards:readonly TarotCard[]=rows as TarotCard[];
 type Pos=readonly [title:string,meaning:string,source?:{en:string;zh:string}];
 function spread(id:string,name:string,en:string,description:string,titles:readonly Pos[],topics:Topic[],extra:Partial<TarotSpread>={}):TarotSpread{return {id,name_zh:name,name_en:en,description,difficulty:titles.length>=5?'intermediate':'beginner',recommended_topics:topics,positions:titles.map(([title,meaning,source],index):SpreadPosition=>({index,title,meaning,coords:{x:index%3,y:Math.floor(index/3)},...(source?{source}:{})})),...extra}}
@@ -22,6 +22,8 @@ spread('three-card-state','三张牌 · 现状、阻碍、建议','Situation / O
 spread('three-card-time','三张牌 · 过去、现在、未来','Past / Present / Future','看看这件事从哪里来、现在在哪、照这样会往哪去。',[['过去','已经发生过的事里，有什么到现在还在影响你。'],['现在','眼下的状态，和你还能自己拿主意的部分。'],['未来','照现在的做法走下去，可能的方向。它是提醒，不是定局。']],['love','general']),
 spread('two-paths','二选一','Two Paths','两条路各自的好处和代价，最后由你来选。',[['共同处境','不管选哪条，你都要面对的情况。'],['A 的好处','选 A 能满足你什么需要。'],['A 的代价','选 A 要付出什么，还有哪些没弄清楚。'],['B 的好处','选 B 能满足你什么需要。'],['B 的代价','选 B 要付出什么，还有哪些没弄清楚。']],['decision']),
 spread('celtic-cross','凯尔特十字','Celtic Cross','十张牌，把一件复杂的事完整地理一遍。',celtic,['general'],{hint:'依据 Waite 1911 原著',sourceUrl:WAITE_CELTIC_URL,sourceNote:'位置含义依据 A. E. Waite《The Pictorial Key to the Tarot》（1911）第三部分 §7。原法先选一张“指示牌”代表求问者，现代多数读者省略，本站也省略。'}),
+// 北斗七星牌阵：位置用星名，含义为本站设计（文案见 src/dipper-copy.ts）
+spread('big-dipper',DIPPER_SPREAD.name,DIPPER_SPREAD.nameEn,DIPPER_SPREAD.description,DIPPER_SPREAD.positions,['general','decision'],{hint:DIPPER_SPREAD.hint,sourceNote:DIPPER_SPREAD.note}),
 // 已下线，只为旧记录还能打开而保留。
 spread('four-elements','四元素','Four Elements','从做事、心情、想法、资源四个角度盘点。',[['行动','从做事和往前推进的角度看这张牌。'],['感受','从心情、关系和分寸的角度看这张牌。'],['思考','从判断、沟通和想法的角度看这张牌。'],['资源','从时间、钱和身体状态的角度看这张牌。']],['wealth'],{hidden:true})];
 export const visibleSpreads=tarotSpreads.filter(s=>!s.hidden);

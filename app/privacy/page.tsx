@@ -1,5 +1,6 @@
 import type {Metadata} from 'next';
-export const metadata:Metadata={title:'隐私说明'};
+import {pageMeta} from '../../src/meta';
+export const metadata:Metadata=pageMeta('/privacy/','隐私说明');
 // 按网站当前的真实做法写；推出账号、云同步或付费功能时必须同步更新。
 export default function Privacy(){return <main className="page-shell legal-page"><h1>隐私说明</h1><p className="legal-date">更新于 2026 年 11 月 2 日</p>
 <section><h2>你的记录存在哪里</h2><p>目前使用晨启塔罗不需要注册。你的抽牌记录、晚间回顾、生辰、称呼和外观设置，都只保存在你自己设备的浏览器里，不会上传到我们的服务器，我们也看不到。</p></section>

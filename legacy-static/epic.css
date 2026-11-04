@@ -164,3 +164,523 @@ html:root[data-theme=light]{--bg-primary:#f1ebe0;--bg-surface:#f1ebe0;
   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='900'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006' numOctaves='3' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .48 0 0 0 0 .36 0 0 0 0 .18 0 0 0 .16 -.04'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E") 0 0/900px 900px,
   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .27 0 0 0 0 .15 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0/240px 240px,
   var(--bg-primary)}
+/* ===== 每日抽牌 · 黑金卡纸与香槟金（2026-11）=====
+   层次自下而上：丝绒暗底与胶片噪点 → 牌阵正后方的柔光与星轨 → 不透明黑金卡纸牌 → 牌下方的提示与按钮。
+   金色只用低饱和的香槟金、古董金和暗金；光只在牌的后面呼吸，不压在牌面上。 */
+.shared-header label{white-space:nowrap;flex-shrink:0}
+
+/* 深色主题的背景：午夜曜石黑到深空靛的微弱径向渐变，叠一层很淡的胶片噪点 */
+html:root[data-theme=dark]{background:radial-gradient(ellipse at 50% 30%,#16151C 0%,#0B0A0E 65%,#050507 100%) fixed #0B0A0E}
+html:root[data-theme=dark] body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.035;
+ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* 文字层级：浅色主题沿用原有墨色，深色主题用象牙白 / 亚麻灰 / 暗灰 */
+.minimal-ritual{--rt-title:var(--fg);--rt-sub:var(--muted);--rt-small:var(--muted);--rt-hint:var(--muted);--rt-pill:var(--fg);
+ --gold-hi:#E6D2B5;--gold:#C5A059;--gold-deep:#6E5832;--gold-line:rgba(212,175,55,.3)}
+html:root[data-theme=dark] .minimal-ritual{--rt-title:#F4EFE6;--rt-sub:#A39E93;--rt-small:#6E6A63;--rt-hint:#8C857B;--rt-pill:#C8C2B8}
+html:root[data-theme=light] .minimal-ritual{--gold-hi:#8A6D3B;--gold:#9C7A3C;--rt-pill:#4a4640}
+.minimal-ritual .ritual-date{margin:0 0 28px;font-size:13px;letter-spacing:.2em;color:var(--rt-small)}
+.minimal-ritual h1{font-size:clamp(30px,4.4vw,52px)!important;font-weight:300!important;letter-spacing:.25em;padding-left:.25em;color:var(--rt-title);margin:0 0 28px}
+.ritual-hint{font-size:14px;line-height:1.8;letter-spacing:.08em;color:var(--rt-sub);margin:0 0 18px}
+.fan-replay .keep-card{display:block;margin:16px auto 0;min-height:40px;letter-spacing:.12em}
+
+/* 情绪胶囊 */
+.mood-row{gap:10px;max-width:520px}
+.mood-chip{color:var(--rt-pill)!important;border:1px solid rgba(197,160,89,.22)!important;background:rgba(255,255,255,.02)!important;-webkit-backdrop-filter:blur(4px)!important;backdrop-filter:blur(4px)!important;
+ padding:6px 16px!important;transition:color .3s cubic-bezier(.2,.7,.2,1),border-color .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s cubic-bezier(.2,.7,.2,1),background .3s!important}
+.mood-chip.on{color:var(--rt-title)!important;border-color:rgba(212,175,55,.65)!important;background:rgba(212,175,55,.04)!important;box-shadow:inset 0 0 12px rgba(212,175,55,.12)!important}
+@media(hover:hover){.mood-chip:hover:not(:disabled){color:var(--rt-title)!important;border-color:rgba(212,175,55,.65)!important;box-shadow:inset 0 0 12px rgba(212,175,55,.12)!important}}
+
+/* 抽牌区：比原来大约 40% */
+.ritual-scene{height:300px;margin:36px 0 0!important}
+.deck-pile{z-index:1;width:280px;height:280px;margin-left:-140px}
+.ritual-scene .deck-fan{z-index:1}
+
+/* 牌阵正后方的柔光与星轨：在牌下面，不挡牌面 */
+.ritual-aura{position:absolute;left:50%;bottom:148px;width:0;height:0;z-index:0;pointer-events:none}
+.ritual-glow{position:absolute;left:-190px;top:-190px;width:380px;height:380px;border-radius:50%!important;background:radial-gradient(circle,rgba(197,160,89,.12) 0%,transparent 70%);filter:blur(24px);animation:glow-breathe 6s cubic-bezier(.45,0,.55,1) infinite}
+.ritual-orbit{position:absolute;left:-180px;top:-180px;width:360px;height:360px;overflow:visible;animation:orbit-turn 60s linear infinite;opacity:.9}
+.ritual-orbit circle{fill:none;stroke:rgba(197,160,89,.34);stroke-width:.5;vector-effect:non-scaling-stroke}
+.ritual-orbit .orbit-star{fill:#E6D2B5;stroke:none;opacity:.45}
+@keyframes glow-breathe{0%,100%{transform:scale(.92);opacity:.75}50%{transform:scale(1.06);opacity:1}}
+@keyframes orbit-turn{to{transform:rotate(360deg)}}
+.ritual-scene[data-stage=pick] .ritual-aura{bottom:96px}
+.ritual-aura{transition:bottom .8s cubic-bezier(.2,.7,.2,1)}
+html:root[data-theme=light] .ritual-glow{background:radial-gradient(circle,rgba(156,122,60,.16) 0%,transparent 70%)}
+html:root[data-theme=light] .ritual-orbit circle{stroke:rgba(110,88,50,.4)}
+
+/* 黑金卡纸：不透明深色卡面、细金边、深投影 */
+.pile-card,.fan-card,.card-scene .tarot.chosen-card{background:#0E0D12!important;border:1px solid var(--gold-line)!important;border-radius:6px!important;overflow:hidden}
+.pile-card{width:123px;height:213px;margin:-106px 0 0 -61px;box-shadow:0 20px 40px -15px rgba(0,0,0,.85)!important}
+.fan-card{left:-53px;width:106px;height:185px;box-shadow:0 20px 40px -15px rgba(0,0,0,.85)!important}
+.card-scene .tarot.chosen-card{width:190px!important;margin-left:-95px!important;top:-31px;border-color:rgba(212,175,55,.42)!important;border-radius:8px!important;box-shadow:0 28px 56px -18px rgba(0,0,0,.9),0 0 32px rgba(197,160,89,.10)!important;animation:none!important}
+.pile-card svg,.fan-card svg,.chosen-card svg{display:block;width:100%;height:100%;opacity:1}
+.pile-card::after,.chosen-card::before{content:none}
+/* 牌扇：滑到哪张，哪张向上浮起、边缘泛起香槟金微光；其余压暗 */
+.fan-card::after{content:'';position:absolute;inset:0;pointer-events:none;animation:none;opacity:0;transition:opacity .4s cubic-bezier(.2,.7,.2,1);
+ background:linear-gradient(115deg,transparent 38%,rgba(230,210,181,.10) 50%,transparent 62%)}
+.fan-card.lift,.fan-card:focus-visible{z-index:3;translate:0 -14px;border-color:rgba(230,210,181,.55)!important;box-shadow:0 24px 44px -16px rgba(0,0,0,.9),0 0 18px rgba(197,160,89,.20)!important}
+.fan-card.lift::after{opacity:1}
+.ritual-scene[data-stage=pick] .deck-fan:has(.lift) .fan-card:not(.lift){filter:brightness(.55)}
+.minimal-ritual:not(.drawing) .ritual-scene[data-stage=pick] .fan-card{transition:translate .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s cubic-bezier(.2,.7,.2,1),filter .35s cubic-bezier(.2,.7,.2,1),border-color .35s!important}
+.drawing .fan-card.picked{translate:0 -150px}
+
+/* 洗牌进度弧：只在按住时出现，香槟金细线 */
+.shuffle-ring{opacity:0;transition:opacity .6s cubic-bezier(.2,.7,.2,1)}
+.deck-pile.shuffling .shuffle-ring{opacity:1}
+.ritual-scene[data-stage=cut] .shuffle-ring,.ritual-scene[data-stage=cutting] .shuffle-ring{opacity:0}
+.shuffle-ring path{stroke-width:.8}
+.ring-track{stroke:rgba(197,160,89,.12)}
+.ring-fill{stroke:#C5A059;filter:none}
+.ring-sun{fill:#E6D2B5;filter:drop-shadow(0 0 3px rgba(230,210,181,.6))}
+.cut-flash{background:linear-gradient(90deg,transparent,rgba(230,210,181,.75),transparent);filter:none}
+
+/* 提示：牌阵正下方 24px，两侧渐隐短线 */
+.pick-hint{display:flex;align-items:center;justify-content:center;gap:14px;margin:24px 0 28px;font-size:13px;letter-spacing:.12em;color:var(--rt-hint)}
+.pick-hint::before,.pick-hint::after{content:'';flex:0 0 32px;height:1px;background:linear-gradient(90deg,transparent,rgba(197,160,89,.4))}
+.pick-hint::after{background:linear-gradient(90deg,rgba(197,160,89,.4),transparent)}
+
+/* 「替我选一张」：居中的幽灵胶囊按钮 */
+.minimal-ritual .primary.draw{display:inline-flex!important;align-items:center;justify-content:center!important;gap:10px;width:auto!important;min-width:0!important;min-height:0!important;font-weight:400!important;margin:0 auto;padding:10px 28px!important;font-size:14px;letter-spacing:.2em;
+ color:var(--gold-hi)!important;border:1px solid rgba(197,160,89,.35)!important;border-radius:999px!important;background:transparent!important;
+ transition:border-color .4s cubic-bezier(.2,.7,.2,1),box-shadow .4s cubic-bezier(.2,.7,.2,1),color .4s,transform .2s cubic-bezier(.2,.7,.2,1)!important}
+.minimal-ritual .primary.draw span{font-size:11px;color:var(--gold);transition:color .4s}
+@media(hover:hover){.minimal-ritual .primary.draw:hover:not(:disabled){border-color:rgba(212,175,55,.62)!important;box-shadow:0 0 22px rgba(197,160,89,.12),inset 0 0 12px rgba(212,175,55,.08)!important;color:var(--rt-title)!important}
+ .minimal-ritual .primary.draw:hover span{color:var(--gold-hi)}}
+.minimal-ritual .primary.draw:active:not(:disabled){transform:scale(.97)}
+
+/* 页脚：两侧渐隐的细分割线 */
+.shared-footer{position:relative;border-top:0!important}
+.shared-footer::before{content:'';position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(197,160,89,.2),transparent)}
+
+@media(max-width:560px){
+ .ritual-scene{height:270px}
+ .deck-pile{width:250px;height:250px;margin-left:-125px}
+ .pile-card{width:110px;height:190px;margin:-95px 0 0 -55px}
+ .fan-card{left:-46px;width:92px;height:160px;rotate:calc((var(--i) - 6) * 3.3deg)}
+ .card-scene .tarot.chosen-card{width:165px!important;margin-left:-82px!important;top:-18px}
+ .ritual-aura{bottom:133px}
+ .ritual-glow{left:-160px;top:-160px;width:320px;height:320px}
+ .ritual-orbit{left:-150px;top:-150px;width:300px;height:300px}
+}
+@media(prefers-reduced-motion:reduce){.ritual-glow,.ritual-orbit{animation:none!important}}
+
+/* ===== 全站按压手感与浮层（2026-11）=====
+   按下：110ms 快速下沉；松开：420ms 弹簧回弹（src/tactile.ts 加 .is-pressed / .is-releasing）。
+   胶囊控件顶部有 1px 受光高光，按下时泛起一点暖金内光。全局 body * 去掉了投影，这里一律用更具体的选择器加 !important。 */
+:root{--spring-press:cubic-bezier(.32,.72,0,1);--spring-release:cubic-bezier(.22,1,.36,1);--press-ms:110ms;--release-ms:420ms;
+ --specular:inset 0 1px 0 0 rgba(255,255,255,.14);--press-glow:inset 0 0 16px rgba(197,160,89,.18);--pill-line:rgba(197,160,89,.28);--pill-bg:rgba(255,255,255,.025);--pill-fg:#C8C2B8;--gold-hi:#E6D2B5;--gold:#C5A059;
+ --glass-bg:rgba(22,21,28,.62);--glass-line:rgba(212,175,55,.45);--glass-hover:rgba(255,255,255,.06)}
+html:root[data-theme=light]{--specular:inset 0 1px 0 0 rgba(255,255,255,.75);--press-glow:inset 0 0 14px rgba(156,122,60,.16);--pill-line:rgba(110,88,50,.3);--pill-bg:rgba(255,255,255,.35);--pill-fg:#4a4640;--gold-hi:#6E5832;--gold:#8A6D3B;
+ --glass-bg:rgba(250,247,240,.72);--glass-line:rgba(110,88,50,.35);--glass-hover:rgba(0,0,0,.045)}
+html:root[data-theme=dark]{--text-secondary:#A8A297}
+button,a,select,summary,label,[role=button],[role=option]{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button,[role=button],[role=option],.glass-trigger{-webkit-user-select:none;user-select:none}
+.shared-header nav a,.shared-footer a,.calendar-links a,.zodiac-index a,a.shared-brand{display:inline-block}
+
+/* 按压 */
+.is-pressed{transform:scale(var(--press-scale,.96))!important;transition:transform var(--press-ms) var(--spring-press),box-shadow var(--press-ms) var(--spring-press),color .2s,border-color .2s,background-color .2s,opacity .2s!important}
+.is-releasing{transition:transform var(--release-ms) var(--spring-release),box-shadow var(--release-ms) var(--spring-release),color .3s,border-color .3s,background-color .3s,opacity .3s!important}
+.shared-header nav a,.mood-chip,.copy-contact,.date-pill,.glass-trigger,.zodiac-index a{--press-scale:.94}
+.catalog-card,.history-item,.day.has-card,.zodiac-pair-link,.z-card{--press-scale:.985}
+@media(prefers-reduced-motion:reduce){.is-pressed{transform:none!important}}
+
+/* 胶囊控件：受光高光 + 按下暖金内光 */
+.mood-chip,.minimal-ritual .primary.draw,.glass-trigger,.date-pill,.result-tools button,.review-save,.copy-contact,.install-hint button{box-shadow:var(--specular)!important}
+.is-pressed:is(.mood-chip,.primary.draw,.glass-trigger,.date-pill,.review-save,.copy-contact,.install-hint button),.result-tools button.is-pressed{box-shadow:var(--specular),var(--press-glow)!important}
+
+/* 情绪胶囊 */
+.mood-chip{color:var(--pill-fg)!important;border:1px solid rgba(197,160,89,.24)!important;background:var(--pill-bg)!important}
+.mood-chip.on{color:var(--rt-title,var(--fg))!important;border-color:rgba(212,175,55,.7)!important;background:rgba(212,175,55,.05)!important;box-shadow:inset 0 1px 0 rgba(255,248,231,.25),inset 0 0 14px rgba(197,160,89,.2)!important;animation:chip-glow 4s ease-in-out infinite}
+@keyframes chip-glow{50%{box-shadow:inset 0 1px 0 rgba(255,248,231,.25),inset 0 0 20px rgba(197,160,89,.3)}}
+html:root[data-theme=light] .mood-chip.on{box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 0 0 14px rgba(156,122,60,.22)!important}
+
+/* 「替我选一张」：触发后锁住并淡出 */
+.minimal-ritual.drawing .primary.draw{opacity:0!important;transform:scale(.96);pointer-events:none;transition:opacity .45s var(--spring-release),transform .45s var(--spring-release)!important}
+
+/* 牌堆：按住时缓缓下沉、阴影收紧；中途松手弹回；走满时一次金色脉冲 */
+.deck-pile{transition:opacity .45s,scale var(--release-ms) var(--spring-release)}
+.deck-pile.shuffling{scale:.96;transition:opacity .45s,scale .6s var(--spring-press)}
+.pile-card{transition:translate .35s cubic-bezier(.2,.7,.2,1),box-shadow .5s var(--spring-release)}
+.deck-pile.shuffling .pile-card{box-shadow:0 10px 18px -10px rgba(0,0,0,.95)!important}
+.deck-pile::after{content:'';position:absolute;left:50%;top:58%;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%!important;pointer-events:none;opacity:0;background:radial-gradient(circle,rgba(230,210,181,.32) 0%,rgba(197,160,89,.12) 38%,transparent 68%)}
+.deck-pile.charged::after{animation:charge-pulse .9s var(--spring-release) both}
+@keyframes charge-pulse{0%{opacity:0;transform:scale(.6)}35%{opacity:1}100%{opacity:0;transform:scale(1.25)}}
+
+/* 顶部导航：选中项下面的金线；跨页面时作为独立图层滑过去 */
+.shared-header nav a[aria-current=page]::after{transform:scaleX(0)!important}
+.nav-mark{position:absolute;left:0;right:0;bottom:-1px;height:1px;background:var(--gold);view-transition-name:nav-indicator;pointer-events:none}
+html:root[data-theme=light] .nav-mark{background:var(--fg)}
+::view-transition-group(nav-indicator){animation-duration:.42s;animation-timing-function:var(--spring-release)}
+
+/* 页面与视图切换：先让旧画面完整淡出（180ms，向上、轻微模糊），再淡入新画面，两层不再同时出现 */
+::view-transition-old(root){animation:vt-exit .18s var(--spring-press) both!important}
+::view-transition-new(root){animation:vt-enter .26s var(--spring-release) .18s both!important}
+@keyframes vt-exit{to{opacity:0;transform:translateY(-8px);filter:blur(4px)}}
+@keyframes vt-enter{from{opacity:0;transform:translateY(8px)}}
+::view-transition-old(site-header){display:none}
+::view-transition-new(site-header){animation:none}
+@media(prefers-reduced-motion:reduce){::view-transition-old(root),::view-transition-new(root){animation:none!important}}
+
+/* 换一张与首次抽牌的淡出、翻面、浮现都由 src/draw-motion.ts 用 Web Animations API 驱动，样式见文末“抽牌揭晓” */
+.sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.ticker{display:inline-block;height:1.3em;line-height:1.3em;overflow:hidden;vertical-align:-.3em}
+.tick-col{display:flex;flex-direction:column;animation:tick-roll .55s var(--spring-release) .3s both}
+.tick-col>span{display:block;height:1.3em}
+@keyframes tick-roll{to{transform:translateY(-50%)}}
+
+/* 结果页工具：幽灵胶囊 */
+.result-tools{align-items:center}
+.result-tools button{display:inline-flex!important;align-items:center;gap:8px;min-height:0!important;padding:8px 18px!important;border:1px solid var(--pill-line)!important;border-radius:999px!important;background:var(--pill-bg)!important;font-size:13px;letter-spacing:.08em;color:var(--fg)!important}
+.result-tools .tool-field{display:inline-flex;align-items:center;gap:10px}
+.result-tools .tool-field .glass-pop{left:0;right:auto;transform-origin:top left}
+.done-mark{color:var(--gold);margin-right:6px}
+.is-done{color:var(--gold-hi)!important;border-color:rgba(212,175,55,.55)!important}
+.is-busy{pointer-events:none;opacity:.85}
+.is-busy::before{content:'';width:14px;height:14px;flex:none;border-radius:50%!important;background:conic-gradient(from 0deg,transparent 0 12%,currentColor);-webkit-mask:radial-gradient(farthest-side,transparent 55%,#000 58%);mask:radial-gradient(farthest-side,transparent 55%,#000 58%);animation:ios-spin .9s steps(12) infinite}
+@keyframes ios-spin{to{transform:rotate(1turn)}}
+
+/* 晚间回望：没写 → 柔和；写了新内容 → 香槟金；已保存 → ✓ 已珍藏 */
+.review-save{min-height:0!important;padding:8px 20px!important;border:1px solid var(--pill-line)!important;border-radius:999px!important;background:var(--pill-bg)!important;letter-spacing:.1em;transition:opacity .3s,color .3s,border-color .3s,box-shadow .3s var(--spring-release)!important}
+.review-save.is-empty{opacity:.45;cursor:default}
+.review-save.is-active{color:var(--gold-hi)!important;border-color:rgba(212,175,55,.62)!important;box-shadow:var(--specular),inset 0 0 12px rgba(212,175,55,.12)!important}
+.review-save.is-saved{color:var(--gold)!important;cursor:default}
+.review-save.just-saved{animation:saved-pop .6s var(--spring-release)}
+@keyframes saved-pop{0%{transform:scale(.94)}100%{transform:scale(1)}}
+
+/* 灵动岛式提示：顶部居中的毛玻璃胶囊，弹簧落下 */
+html body #toast{top:calc(env(safe-area-inset-top,0px) + 12px);bottom:auto;left:50%;max-width:min(92vw,420px);width:max-content;padding:10px 20px;border-radius:999px!important;font-size:14px;letter-spacing:.04em;line-height:1.5;text-align:center;
+ color:var(--fg);background:var(--glass-bg);border:.5px solid var(--glass-line);-webkit-backdrop-filter:blur(24px) saturate(180%)!important;backdrop-filter:blur(24px) saturate(180%)!important;box-shadow:0 18px 40px -14px rgba(0,0,0,.55),var(--specular)!important;
+ opacity:0;transform:translate(-50%,-160%) scale(.86);transition:transform .3s var(--spring-press),opacity .22s!important;z-index:120}
+html body #toast.show{opacity:1;transform:translate(-50%,0) scale(1);animation:none;transition:transform .5s var(--spring-release),opacity .25s!important}
+
+/* 毛玻璃浮层（外观、配色）：src/popover.ts 与 site-chrome.tsx 共用 */
+.glass-select{position:relative;display:inline-flex;align-items:center;gap:8px}
+.glass-native{position:absolute!important;width:1px;height:1px;opacity:0;pointer-events:none;clip-path:inset(50%)}
+.glass-trigger{display:inline-flex!important;align-items:center;gap:8px;min-height:0!important;padding:6px 12px 6px 10px!important;border:1px solid var(--pill-line)!important;border-radius:999px!important;background:var(--pill-bg)!important;font-size:13px;letter-spacing:.08em;color:var(--fg)!important;white-space:nowrap;cursor:pointer}
+.glass-chevron{width:12px;height:12px;flex:none;opacity:.7;transition:transform var(--release-ms) var(--spring-release)}
+.glass-select.open .glass-chevron{transform:rotate(180deg)}
+.swatch{width:12px;height:12px;flex:none;border-radius:50%!important;background:var(--swatch);box-shadow:inset 0 0 0 .5px rgba(197,160,89,.65),0 0 0 .5px rgba(0,0,0,.25)!important}
+.glass-pop{position:absolute;top:calc(100% + 8px);right:0;z-index:90;min-width:150px;margin:0;padding:6px;list-style:none;text-align:left;border-radius:16px!important;background:var(--glass-bg);border:.5px solid var(--glass-line);
+ -webkit-backdrop-filter:blur(24px) saturate(180%)!important;backdrop-filter:blur(24px) saturate(180%)!important;box-shadow:0 24px 48px -12px rgba(0,0,0,.6),var(--specular)!important;
+ transform-origin:top right;transform:scale(.9);opacity:0;visibility:hidden;transition:transform .18s var(--spring-press),opacity .14s,visibility 0s .18s}
+.glass-select.open .glass-pop{transform:scale(1);opacity:1;visibility:visible;transition:transform var(--release-ms) var(--spring-release),opacity .2s,visibility 0s}
+.glass-pop li{display:flex;align-items:center;gap:10px;padding:10px 12px;white-space:nowrap;border-radius:10px!important;font-size:14px;letter-spacing:.06em;color:var(--fg);cursor:pointer;outline:none;transition:background-color .2s}
+.glass-pop li:hover,.glass-pop li:focus-visible{background:var(--glass-hover)}
+.glass-check{margin-left:auto;padding-left:12px;color:var(--gold);opacity:0}
+.glass-pop li[aria-selected=true] .glass-check{opacity:1}
+.theme-label{font-size:13px;color:var(--muted);white-space:nowrap}
+.shared-header .theme-picker{flex-shrink:0}
+@media(max-width:650px){.shared-header .theme-picker{margin-left:auto}}
+
+/* 日历：前日 / 后日幽灵胶囊，尖括号向按下的方向微移 */
+.date-pill{display:inline-flex!important;align-items:center;gap:6px;min-height:0!important;padding:6px 14px!important;border:1px solid var(--pill-line)!important;border-radius:999px!important;background:var(--pill-bg)!important;font-size:13px;letter-spacing:.1em}
+.date-pill .chev{display:inline-block;font-size:16px;line-height:1;color:var(--gold);transition:transform var(--release-ms) var(--spring-release)}
+.date-pill.prev.is-pressed .chev{transform:translateX(-2px);transition:transform var(--press-ms) var(--spring-press)}
+.date-pill.next.is-pressed .chev{transform:translateX(2px);transition:transform var(--press-ms) var(--spring-press)}
+.date-pill:disabled{opacity:.35}
+.date-line input{border:1px solid var(--pill-line)!important;border-radius:999px!important;padding:6px 12px!important;background:var(--pill-bg)!important;box-shadow:var(--specular)!important}
+
+/* 安装提示条与复制按钮 */
+.install-hint{border-radius:20px!important;background:var(--glass-bg)!important;border:.5px solid var(--glass-line)!important;-webkit-backdrop-filter:blur(24px) saturate(180%)!important;backdrop-filter:blur(24px) saturate(180%)!important;box-shadow:0 20px 44px -14px rgba(0,0,0,.6),var(--specular)!important;animation:hint-rise .5s var(--spring-release) both}
+.install-hint.leaving{animation:hint-sink .38s cubic-bezier(.5,0,.75,0) forwards}
+@keyframes hint-rise{from{opacity:0;transform:translateY(24px) scale(.97)}}
+@keyframes hint-sink{0%{transform:translateY(0)}25%{transform:translateY(-6px)}100%{opacity:0;transform:translateY(140%)}}
+.install-hint button{border-radius:999px!important;padding:8px 16px!important}
+.copy-contact{interpolate-size:allow-keywords;transition:width var(--release-ms) var(--spring-release),color .3s,border-color .3s!important}
+.copy-contact.is-done{color:var(--gold-hi)!important;border-color:rgba(212,175,55,.55)!important}
+@media(prefers-reduced-motion:reduce){.install-hint,.install-hint.leaving,.mood-chip.on,.tick-col{animation:none!important}.tick-col{transform:translateY(-50%)}}
+
+/* ===== 抽牌揭晓（src/draw-motion.ts）=====
+   只在动画期间存在：锁定交互、待揭晓时把结果页的大牌和文字暂时设为透明（布局不变，不会跳动）、飞行中的双面牌浮层。 */
+.minimal-ritual.draw-locked .ritual-scene,.minimal-ritual.draw-locked button{pointer-events:none}
+.fan-card.is-drawn,.pile-card.is-drawn{z-index:4;border-color:rgba(212,175,55,.6)!important;box-shadow:0 24px 48px rgba(0,0,0,.8),0 0 20px rgba(197,160,89,.25)!important;transition:box-shadow .32s var(--spring-release),border-color .32s!important}
+.minimal-result.reveal-pending>:not(.tarot),.minimal-result.card-pending>.tarot{opacity:0}
+.minimal-result.reveal-pending .tick-col{animation-play-state:paused}
+.draw-flight{position:fixed;z-index:70;pointer-events:none;perspective:1200px;transform-origin:50% 50%;will-change:transform,opacity}
+.flight-card{position:absolute;inset:0;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;will-change:transform}
+.flight-face{position:absolute;inset:0;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.flight-back{background:#0E0D12;border:1px solid rgba(212,175,55,.42)!important;border-radius:8px!important}
+.flight-back svg{display:block;width:100%;height:100%}
+.flight-front{transform:rotateY(180deg);background:var(--bg);border:1px solid var(--line)!important}
+.flight-front img{display:block;width:100%;height:100%;object-fit:cover}
+.flight-front.is-reversed img{transform:rotate(180deg)}
+.flight-sheen{position:absolute;inset:0;pointer-events:none;opacity:0;transform:translateX(-120%);background:linear-gradient(115deg,transparent 25%,rgba(255,248,231,.26) 50%,transparent 75%)}
+.flight-shadow{position:absolute;left:6%;right:6%;bottom:-7%;height:20%;border-radius:50%!important;opacity:0;filter:blur(16px);background:radial-gradient(ellipse at center,rgba(0,0,0,.75) 0%,rgba(197,160,89,.14) 45%,transparent 72%)}
+html:root[data-theme=light] .flight-shadow{background:radial-gradient(ellipse at center,rgba(40,30,15,.35) 0%,rgba(156,122,60,.12) 45%,transparent 72%)}
+
+/* ===== 牌背配色（src/card-back.ts）=====
+   深色：黑曜石底 + 五阶香槟烫金；浅色：羊皮石膏白底 + 古董暗金压纹。牌背 SVG 的渐变全部读这些变量。
+   容器底色和牌背边缘同色：牌的长宽比与 240×400 不完全一样时，上下多出的一点不会露出色差。 */
+:root{--cb-bg-a:#17151E;--cb-bg-b:#0B0A0F;--cb-glow:#C5A059;--cb-f0:#7A5C29;--cb-f1:#C5A059;--cb-f2:#FFF2CC;--cb-f3:#D4AF37;--cb-f4:#6B4F22;--cb-hl:#FFF2CC}
+html:root[data-theme=light]{--cb-bg-a:#FBF8F2;--cb-bg-b:#F5F2EB;--cb-glow:#8C6D32;--cb-f0:#4F3B14;--cb-f1:#8C6D32;--cb-f2:#C9A961;--cb-f3:#8C6D32;--cb-f4:#4F3B14;--cb-hl:#FFFFFF}
+.pile-card,.fan-card,.card-scene .tarot.chosen-card,.flight-back{background:var(--cb-bg-b)!important}
+.pile-card svg.card-back,.fan-card svg.card-back,.chosen-card svg.card-back,.flight-back svg.card-back{opacity:1}
+html:root[data-theme=light] .pile-card,html:root[data-theme=light] .fan-card,html:root[data-theme=light] .flight-back{border-color:rgba(140,109,50,.4)!important}
+
+/* 牌阵页：78 张牌背 */
+.card-back-sprite{position:absolute;width:0;height:0;overflow:hidden}
+.deck-section .deck-fan button{padding:0!important;overflow:hidden;background:var(--cb-bg-b)!important;border:1px solid rgba(212,175,55,.28)!important;border-radius:4px!important;box-shadow:0 8px 16px -10px rgba(0,0,0,.7)!important}
+html:root[data-theme=light] .deck-section .deck-fan button{border-color:rgba(140,109,50,.35)!important;box-shadow:0 6px 12px -8px rgba(60,45,20,.35)!important}
+.consult-back,.consult-back svg{display:block;width:100%;height:100%}
+.deck-section .deck-fan button:disabled.picked{opacity:.15}
+/* 浅色：牌扇其余牌用不透明的“褪色”代替压暗（不用半透明，免得叠在一起的牌透出底下的线），投影换成暖棕色、更轻 */
+html:root[data-theme=light] .ritual-scene[data-stage=pick] .deck-fan:has(.lift) .fan-card:not(.lift){filter:saturate(.35) contrast(.55) brightness(1.3)}
+html:root[data-theme=light] .pile-card,html:root[data-theme=light] .fan-card{box-shadow:0 16px 30px -16px rgba(60,45,20,.45)!important}
+html:root[data-theme=light] .deck-pile.shuffling .pile-card{box-shadow:0 8px 14px -10px rgba(60,45,20,.55)!important}
+html:root[data-theme=light] .fan-card.lift{box-shadow:0 22px 36px -16px rgba(60,45,20,.5),0 0 16px rgba(140,109,50,.22)!important}
+html:root[data-theme=light] .fan-card.is-drawn,html:root[data-theme=light] .pile-card.is-drawn{box-shadow:0 22px 40px -14px rgba(60,45,20,.5),0 0 18px rgba(140,109,50,.25)!important}
+
+/* ===== 图鉴：陈列室与检视台（src/components/tarot/compendium.tsx）===== */
+.codex-page{max-width:1120px;text-align:center}
+.codex-head h1{margin-bottom:20px}
+.codex-lead{max-width:40ch;margin:0 auto 36px;font-size:15px;line-height:1.8;color:var(--muted)}
+/* 分段筛选：选中项下面垫一块会滑动的香槟金胶囊 */
+.codex-segs{position:relative;display:inline-flex;max-width:100%;gap:2px;padding:4px;overflow-x:auto;scrollbar-width:none;border:1px solid var(--pill-line);border-radius:999px!important;background:var(--pill-bg);box-shadow:var(--specular)!important}
+.codex-segs::-webkit-scrollbar{display:none}
+.codex-segs button{position:relative;z-index:1;flex:none;display:inline-flex;align-items:center;gap:6px;min-height:0!important;padding:8px 14px!important;border:0!important;border-radius:999px!important;background:transparent!important;font-size:13px;letter-spacing:.08em;white-space:nowrap;color:var(--muted)!important;transition:color .3s var(--spring-release)}
+.codex-segs button[aria-pressed=true]{color:var(--fg)!important}
+.codex-count{font-size:11px;opacity:.55;letter-spacing:0}
+.codex-thumb{position:absolute;top:4px;bottom:4px;left:0;border-radius:999px!important;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.5);box-shadow:inset 0 1px 0 rgba(255,248,231,.22),inset 0 0 12px rgba(197,160,89,.14)!important;transition:transform var(--release-ms) var(--spring-release),width var(--release-ms) var(--spring-release);pointer-events:none}
+.codex-tools{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px;margin:18px 0 10px}
+.codex-search{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;min-width:min(320px,100%);border:1px solid var(--pill-line);border-radius:999px!important;background:var(--pill-bg);box-shadow:var(--specular)!important;color:var(--muted)}
+.codex-search svg{width:15px;height:15px;flex:none}
+.codex-search input{flex:1;min-width:0;border:0!important;background:none!important;padding:0!important;font:inherit;font-size:14px;color:var(--fg);outline:none}
+.codex-mode{display:inline-flex;padding:3px;border:1px solid var(--pill-line);border-radius:999px!important;background:var(--pill-bg)}
+.codex-mode button{min-height:0!important;padding:6px 14px!important;border:0!important;border-radius:999px!important;background:transparent!important;font-size:13px;letter-spacing:.08em;color:var(--muted)!important}
+.codex-mode button[aria-pressed=true]{color:var(--fg)!important;background:rgba(212,175,55,.12)!important;box-shadow:inset 0 0 0 1px rgba(212,175,55,.45),var(--specular)!important}
+.codex-progress{margin:6px 0 30px;font-size:13px;letter-spacing:.12em;color:var(--muted)}
+.codex-progress b{font-weight:400;color:var(--gold)}
+/* 网格：3:5 牌面，桌面每行最多 6 张，手机 3 张 */
+.codex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:30px 20px;text-align:center}
+.codex-card{display:flex!important;flex-direction:column;align-items:stretch;gap:10px;min-height:0!important;padding:0!important;border:0!important;background:none!important;cursor:pointer;--press-scale:.985;animation:codex-in .5s var(--spring-release) calc(var(--i) * 26ms) backwards}
+@keyframes codex-in{from{opacity:0;transform:translateY(10px) scale(.96)}}
+.codex-face{position:relative;display:block;aspect-ratio:3/5;overflow:hidden;border-radius:8px!important;border:1px solid rgba(212,175,55,.22);background:var(--cb-bg-b);box-shadow:0 14px 28px -18px rgba(0,0,0,.8)!important;transition:transform var(--release-ms) var(--spring-release),border-color .35s,box-shadow .45s var(--spring-release)!important}
+.codex-face img{display:block;width:100%;height:100%;object-fit:cover}
+.codex-back,.codex-back svg{display:block;width:100%;height:100%}
+.codex-card.is-unmet .codex-back{opacity:.55}
+.codex-card.is-unmet .codex-name{opacity:.6}
+@media(hover:hover){.codex-card:hover .codex-face{transform:translateY(-6px) scale(1.02);border-color:rgba(212,175,55,.6);box-shadow:0 22px 40px -18px rgba(0,0,0,.85),0 0 18px rgba(197,160,89,.22)!important}}
+.codex-card:focus-visible{outline:none}.codex-card:focus-visible .codex-face{border-color:rgba(212,175,55,.75);box-shadow:0 0 0 2px rgba(212,175,55,.35)!important}
+.codex-badge{position:absolute;top:6px;left:6px;padding:2px 8px;border-radius:999px!important;font-size:10px;letter-spacing:.12em;line-height:1.6;color:#E6D2B5;background:rgba(11,10,15,.62);border:.5px solid rgba(212,175,55,.45);-webkit-backdrop-filter:blur(6px)!important;backdrop-filter:blur(6px)!important}
+.codex-seen{position:absolute;top:5px;right:8px;font-size:13px;color:var(--gold);text-shadow:0 0 6px rgba(11,10,15,.8)}
+.codex-name{display:flex;flex-direction:column;gap:2px}
+.codex-name b{font-weight:400;font-size:15px;letter-spacing:.08em;color:var(--fg)}
+.codex-name small{font-size:11px;letter-spacing:.08em;color:var(--muted)}
+.codex-empty{margin:48px 0;color:var(--muted)}
+html:root[data-theme=light] .codex-badge{color:#6E5832;background:rgba(245,242,235,.78);border-color:rgba(140,109,50,.4)}
+html:root[data-theme=light] .codex-face{border-color:rgba(140,109,50,.28);box-shadow:0 12px 24px -16px rgba(60,45,20,.45)!important}
+@media(max-width:560px){.codex-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 12px}.codex-name b{font-size:13px}.codex-name small{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.codex-badge{font-size:9px;padding:1px 6px}.codex-segs button{padding:7px 12px!important}}
+
+/* 检视台 */
+dialog.inspector{width:min(1080px,calc(100vw - 32px));max-width:none;max-height:calc(100dvh - 32px);margin:auto;padding:0;overflow:auto;overscroll-behavior:contain;color:var(--fg);text-align:left;
+ border:.5px solid var(--glass-line);border-radius:24px!important;background:var(--insp-bg);box-shadow:0 40px 90px -30px rgba(0,0,0,.8),var(--specular)!important}
+/* 毛玻璃只做一层（::backdrop 模糊背后的页面），检视台本身用更实的玻璃底色，省掉第二次 28px 模糊 */
+:root{--insp-bg:rgba(20,19,26,.84)}html:root[data-theme=light]{--insp-bg:rgba(250,247,240,.88)}
+dialog.inspector[open]{animation:insp-in .46s var(--spring-release)}
+@keyframes insp-in{from{opacity:0;transform:translateY(14px) scale(.97)}}
+dialog.inspector::backdrop{background:rgba(5,5,7,.5);-webkit-backdrop-filter:blur(28px) saturate(180%);backdrop-filter:blur(28px) saturate(180%)}
+html:root[data-theme=light] dialog.inspector::backdrop{background:rgba(242,239,233,.5)}
+.insp-close{position:sticky;top:12px;z-index:5;display:flex!important;align-items:center;justify-content:center;width:36px;height:36px;min-height:0!important;margin:12px 12px -48px auto;padding:0!important;border:1px solid var(--pill-line)!important;border-radius:999px!important;background:var(--glass-bg)!important;font-size:20px;line-height:1;box-shadow:var(--specular)!important}
+.insp-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:44px;padding:52px 48px 44px}
+.insp-stage{position:sticky;top:24px;align-self:start;display:flex;flex-direction:column;align-items:center;gap:24px}
+.insp-pad{width:min(320px,100%);aspect-ratio:3/5;perspective:1200px;touch-action:none;cursor:grab;-webkit-user-select:none;user-select:none}
+.insp-pad:active{cursor:grabbing}
+.insp-tilt{width:100%;height:100%;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;will-change:transform}
+.insp-card{--rz:0deg;--ry:0deg;--zs:1;position:relative;width:100%;height:100%;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transform:rotateZ(var(--rz)) rotateY(var(--ry)) scale(var(--zs));transition:transform .62s var(--spring-release);z-index:2}
+.insp-card.is-reversed{--rz:180deg}.insp-card.is-flipped{--ry:180deg}.insp-card.is-zoomed{--zs:1.35}
+.insp-face{position:absolute;inset:0;overflow:hidden;border-radius:10px!important;border:1px solid rgba(212,175,55,.35);background:var(--cb-bg-b);backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 30px 60px -24px rgba(0,0,0,.85)!important}
+.insp-front img{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none}
+.insp-back{transform:rotateY(180deg)}.insp-back svg{display:block;width:100%;height:100%}
+.insp-glare{position:absolute;inset:0;pointer-events:none;mix-blend-mode:soft-light;opacity:calc(.2 + var(--ga,0) * .8);
+ background:radial-gradient(circle at var(--gx,50%) var(--gy,50%),rgba(255,242,204,.7) 0%,rgba(230,210,181,.25) 26%,transparent 58%),linear-gradient(115deg,transparent 35%,rgba(255,248,231,.22) var(--gx,50%),transparent 75%)}
+.insp-bar{display:inline-flex;align-items:center;flex-wrap:wrap;justify-content:center;gap:2px;padding:5px;border:.5px solid var(--glass-line);border-radius:999px!important;background:var(--glass-bg);-webkit-backdrop-filter:blur(20px) saturate(180%)!important;backdrop-filter:blur(20px) saturate(180%)!important;box-shadow:0 14px 30px -16px rgba(0,0,0,.6),var(--specular)!important}
+.insp-bar button{display:inline-flex!important;align-items:center;gap:6px;min-height:0!important;padding:8px 13px!important;border:0!important;border-radius:999px!important;background:transparent!important;font-size:13px;letter-spacing:.06em;color:var(--fg)!important;--press-scale:.94}
+.insp-bar button>span[aria-hidden]{color:var(--gold);font-size:14px}
+.insp-bar button[aria-pressed=true]{background:rgba(212,175,55,.12)!important;box-shadow:inset 0 0 0 1px rgba(212,175,55,.45),var(--specular)!important}
+.insp-nav{display:inline-flex;align-items:center;gap:2px;padding-left:4px;margin-left:2px;border-left:.5px solid var(--glass-line)}
+.insp-nav button{font-size:18px!important;padding:6px 12px!important}
+.insp-pos{font-size:12px;letter-spacing:.08em;color:var(--muted);min-width:44px;text-align:center}
+.insp-dossier{min-width:0}
+.insp-eyebrow{margin:0 0 10px;font-size:12px;letter-spacing:.3em;color:var(--gold)}
+.insp-dossier h2{margin:0;font-size:clamp(26px,3vw,34px);font-weight:300;letter-spacing:.1em;line-height:1.3;text-align:left}
+.insp-dossier h2 span{font-size:.5em;letter-spacing:.14em;color:var(--muted)}
+.insp-astro{display:inline-block;margin:14px 0 0;padding:4px 12px;border-radius:999px!important;border:1px solid rgba(212,175,55,.35);font-size:12px;letter-spacing:.1em;color:var(--gold-hi)}
+.insp-chips{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 4px}
+.insp-chips span{padding:4px 12px;border-radius:999px!important;border:1px solid var(--pill-line);background:var(--pill-bg);font-size:13px;letter-spacing:.06em;color:var(--pill-fg)}
+.insp-swap{animation:insp-fade .4s var(--spring-release)}
+@keyframes insp-fade{from{opacity:0;transform:translateY(6px);filter:blur(2px)}}
+.insp-dossier section{margin-top:26px}
+.insp-dossier h3{margin:0 0 8px;font-size:13px;font-weight:400;letter-spacing:.22em;color:var(--muted)}
+.insp-dossier p,.insp-dossier dd{margin:0;font-size:15px;line-height:1.9;color:var(--text-secondary,var(--muted))}
+html:root[data-theme=dark] .insp-dossier p,html:root[data-theme=dark] .insp-dossier dd{color:#C8C2B8}
+.insp-symbols{margin-top:10px!important;font-size:14px!important;opacity:.85}
+.insp-morning{padding:16px 18px;border-radius:14px!important;border:1px solid rgba(212,175,55,.28);background:rgba(212,175,55,.05)}
+.insp-aspects{display:grid;gap:12px;margin:0}
+.insp-aspects div{display:grid;grid-template-columns:5.5em 1fr;gap:12px}
+.insp-aspects dt{font-size:13px;letter-spacing:.12em;color:var(--gold)}
+.insp-note{margin-top:22px!important;font-size:13px!important;opacity:.8}
+.insp-echo{margin-top:26px!important;padding-top:18px;border-top:1px solid var(--line);color:var(--gold-hi)!important;letter-spacing:.04em}
+.insp-source{margin-top:10px!important;font-size:13px!important}
+.insp-source a{color:var(--muted);border-bottom:1px solid var(--line)}
+@media(max-width:760px){
+ dialog.inspector{width:calc(100vw - 16px);max-height:calc(100dvh - 16px);border-radius:20px!important}
+ .insp-body{grid-template-columns:1fr;gap:28px;padding:44px 20px 32px}
+ .insp-stage{position:static}
+ .insp-pad{width:min(230px,62vw)}
+ .insp-bar button{padding:7px 10px!important}
+ .insp-aspects div{grid-template-columns:1fr;gap:2px}
+}
+/* 图鉴：放宽 page-shell 的 720px 上限，桌面每行可放 6 张；引导语不留孤字；搜索框高度与 iPhone 不自动放大 */
+.page-shell.codex-page{max-width:1120px!important}
+.codex-lead{max-width:34em;text-wrap:balance}
+.codex-search{min-height:44px;padding:0 16px}
+.codex-search input{min-height:0!important;height:auto;line-height:1.5}
+@media(max-width:560px){.codex-search input{font-size:16px}}
+.insp-astro{font-variant-emoji:text}
+
+/* ===== 北斗仪式（src/dipper-ritual.ts）=====
+   单色细线：只用 --fg / --muted / --line，不用金色、光晕和玻璃。星的亮度靠大小和不透明度。深色是黑底暖白星，浅色是纸底墨色星。 */
+.ritual-switch{display:inline-flex;gap:2px;padding:3px;margin:4px auto 18px;border:1px solid var(--line);border-radius:999px!important}
+.ritual-switch button{min-height:0!important;padding:5px 16px!important;border:0!important;border-radius:999px!important;background:transparent!important;font-size:13px;letter-spacing:.14em;color:var(--muted)!important}
+.ritual-switch button[aria-pressed=true]{color:var(--fg)!important;box-shadow:inset 0 0 0 1px var(--fg)!important}
+.dipper-ritual{position:relative;color:var(--fg)}
+.dipper-meta{margin:0 0 14px;font-size:13px;letter-spacing:.12em;color:var(--muted)}
+.dipper-meta span{display:block;margin-top:2px;font-size:12px;letter-spacing:.06em;opacity:.8}
+.dipper-sky{position:relative;width:min(100%,520px);aspect-ratio:1;margin:0 auto;-webkit-user-select:none;user-select:none}
+.dipper-sky canvas,.dipper-svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.dipper-svg{overflow:visible}
+.dp-rim{fill:none;stroke:var(--fg);stroke-width:1;opacity:.35;vector-effect:non-scaling-stroke}
+.dp-grid{fill:none;stroke:var(--fg);stroke-width:1;opacity:.09;vector-effect:non-scaling-stroke}
+.dp-horizon{fill:none;stroke:var(--fg);stroke-width:1;stroke-dasharray:4 5;opacity:.45;vector-effect:non-scaling-stroke}
+.dp-label{font-family:var(--font-reading);font-size:.066px;letter-spacing:.006px;fill:var(--muted)}
+.dp-horizon-label{font-size:.052px}
+.dp-slot{fill:none;stroke:var(--fg);stroke-width:1;opacity:.26;vector-effect:non-scaling-stroke;transition:opacity .2s}
+.dp-slot.is-near{opacity:.8}.dp-slot.is-chosen{opacity:1}.dp-slot.is-taken{opacity:0}
+.dp-line{fill:none;stroke:var(--fg);stroke-width:1;opacity:.8;stroke-dasharray:1;stroke-dashoffset:1;vector-effect:non-scaling-stroke}
+.dp-line.is-drawn{stroke-dashoffset:0}
+.dp-pointer{stroke:var(--fg);stroke-width:1;stroke-dasharray:3 4;opacity:0;vector-effect:non-scaling-stroke;transition:opacity .5s}
+.dp-pointer.is-on{opacity:.45}
+.dp-star{fill:var(--fg);opacity:.42;transform-box:fill-box;transform-origin:center;transition:opacity .3s,transform .35s cubic-bezier(.22,1,.36,1)}
+.dp-star.is-below{opacity:.2}
+.dp-star.is-lit{opacity:1;transform:scale(1.55)}
+.dp-star.is-below.is-lit{opacity:.55}
+.dp-ripple{fill:none;stroke:var(--fg);stroke-width:1;vector-effect:non-scaling-stroke;transform-box:fill-box;transform-origin:center;pointer-events:none}
+.dp-alcor{fill:var(--fg);opacity:.55}
+.dp-pole-star{fill:var(--fg)}
+.dipper-hits{position:absolute;inset:0}
+.dp-hit{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;padding:0!important;min-height:0!important;border:0!important;border-radius:50%!important;background:transparent!important;cursor:pointer;touch-action:none;--press-scale:.9}
+.dp-hit:focus-visible{outline:1px solid var(--fg);outline-offset:-8px}
+.dp-hit:disabled{cursor:default}
+.dipper-hint{min-height:1.7em;margin:16px 0 4px;font-size:14px;letter-spacing:.12em;color:var(--fg)}
+.dipper-status,.dipper-season{max-width:34em;margin:6px auto 0;font-size:13px;line-height:1.8;color:var(--muted);text-wrap:balance}
+.dipper-season a{margin-left:4px;color:var(--muted);border-bottom:1px solid var(--line)}
+.dipper-actions{margin:16px 0 4px;min-height:44px}
+.minimal-ritual .dipper-all{display:inline-flex!important;align-items:center;justify-content:center!important;gap:10px;width:auto!important;min-width:0!important;min-height:0!important;margin:0 auto;padding:10px 26px!important;font-size:14px;letter-spacing:.2em;font-weight:400!important;color:var(--fg)!important;border:1px solid var(--line)!important;border-radius:999px!important;background:transparent!important}
+.minimal-ritual .dipper-all span{font-size:11px;color:var(--muted)}
+.minimal-ritual .dipper-all:disabled{opacity:.35}
+.dipper-pick{position:absolute;z-index:6;overflow:hidden;border:1px solid var(--line);border-radius:3px!important;background:var(--cb-bg-b)}
+.dipper-pick svg{display:block;width:100%;height:100%}
+.dipper-note{margin:-4px 0 28px;font-size:13px;letter-spacing:.1em;color:var(--muted)}
+.dipper-settings{margin:28px 0;padding:0;border:0;display:grid;gap:14px;text-align:left}
+.dipper-settings legend{margin-bottom:10px;font-size:13px;letter-spacing:.22em;color:var(--muted)}
+.dipper-settings .check-row{display:flex;align-items:center;gap:10px;font-size:14px}
+.dipper-settings .setting-note{margin:0;font-size:13px;line-height:1.8;color:var(--muted)}
+@media(prefers-reduced-motion:reduce){.dp-star,.dp-slot,.dp-pointer{transition:none!important}}
+/* 北斗方式：标题收紧，星空在手机上铺满屏宽；点击交给整块星空判断，按钮只留给键盘和读屏 */
+.minimal-ritual.dipper-mode .ritual-date{margin-bottom:12px}
+.minimal-ritual.dipper-mode h1{margin-bottom:14px}
+.minimal-ritual.dipper-mode .ritual-switch{margin-bottom:12px}
+.dp-hit{pointer-events:none}
+.dipper-hits{touch-action:none}
+.dipper-mood-hint{margin-top:22px!important;font-size:13px!important}
+.dp-label{font-size:.058px}
+@media(max-width:560px){.dipper-sky{width:100vw;margin-left:calc(50% - 50vw)}}
+.dp-compass{font-size:.05px;fill:var(--muted);opacity:.8}
+
+/* 北斗七星牌阵牌板（src/components/tarot/dipper-board.tsx）：单色细线，宽屏显示，手机隐藏改用下方列表 */
+.dipper-board{position:relative;width:min(100%,860px);aspect-ratio:100/72;margin:48px auto 8px}
+.dipper-board svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.dipper-board polyline{fill:none;stroke:var(--fg);stroke-width:1;opacity:.35;vector-effect:non-scaling-stroke}
+.dipper-slot{position:absolute;width:10%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:6px}
+.dipper-slot img,.dipper-empty{display:block;width:100%;aspect-ratio:1/1.715;border:1px solid var(--line);background:var(--bg);object-fit:cover}
+.dipper-empty{border-style:dashed}
+.dipper-slot figcaption{display:flex;flex-direction:column;align-items:center;gap:1px;white-space:nowrap}
+.dipper-slot b{font-weight:400;font-size:12px;letter-spacing:.1em;color:var(--fg)}
+.dipper-slot small{font-size:11px;color:var(--muted)}
+@media(max-width:700px){.dipper-board{display:none}}
+/* 牌堆有 role=button，会被上面“控件统一 touch-action:manipulation”的规则盖掉原本的 touch-action:none，
+   手指一划浏览器就当成滚动、发出 pointercancel，划动切牌失效。这里锁回 none（牌扇选牌区同理）。 */
+.deck-pile,.ritual-scene[data-stage=pick] .deck-fan{touch-action:none!important}
+/* 牌背只是图案，不接收指针事件，触摸直接落到外层的牌堆和牌上 */
+svg.card-back{pointer-events:none}
+/* 站点承诺：抽牌页标题下、日历页顶部。细金线 + 两行，手机上冒号后换行 */
+.brand-promise{--bp:#9C7A3C;display:flex;flex-wrap:wrap;justify-content:center;gap:0 .2em;margin:2px auto 22px;max-width:30em;padding:10px 0;border-top:1px solid rgba(197,160,89,.28);border-bottom:1px solid rgba(197,160,89,.28);font-size:14px;line-height:1.9;letter-spacing:.12em;color:var(--bp);text-align:center}
+html:root[data-theme=dark] .brand-promise{--bp:#D9C29A}
+.brand-promise span{white-space:nowrap}
+.home-promise{margin:0 auto 26px}
+@media (max-width:520px){.brand-promise{flex-direction:column;align-items:center;font-size:13px;letter-spacing:.08em}}
+/* 心情开场白：在解读最前面，左侧一道金线 */
+.daily-reading .mood-lead{margin:0 0 26px;padding:2px 0 2px 16px;border-left:1px solid rgba(197,160,89,.6);line-height:1.9}
+.mood-lead .mood-tag{display:block;margin-bottom:4px;font-size:12px;letter-spacing:.24em;color:#9C7A3C}
+html:root[data-theme=dark] .mood-lead .mood-tag{color:#C5A059}
+/* 这张牌你以前抽到过 */
+.daily-reading .card-past{margin-top:30px;padding-top:18px;border-top:1px solid var(--line)}
+.card-past blockquote{margin:10px 0 6px;padding:0 0 0 14px;border-left:1px solid var(--line);color:var(--fg);font-style:normal}
+.card-past .past-empty{color:var(--muted);font-size:14px}
+.card-past .past-day{margin-top:8px}
+
+
+/* ===== 实体牌与宽屏舞台（2026-11）===== */
+/* 牌框：2px 哑光古铜金，内侧一道顶光，像斜切的金属边 */
+.pile-card,.fan-card,.card-scene .tarot.chosen-card{border:2px solid #9e7f47!important;box-shadow:inset 0 1px 0 rgba(255,236,190,.4),inset 0 0 0 1px rgba(255,236,190,.1),0 20px 40px -15px rgba(0,0,0,.85)!important}
+/* 牌堆最底下那张向右下叠出约 9px 的书口金边：明暗交替的拉丝古铜，像整副烫金边的牌叠在一起 */
+.deck-pile .pile-card:nth-child(2){box-shadow:inset 0 1px 0 rgba(255,236,190,.4),1px 1px 0 #6e5630,2px 2px 0 #d4b87a,3px 3px 0 #8a6f3e,4px 4px 0 #c9ad72,5px 5px 0 #5e4a24,6px 6px 0 #b89758,7px 7px 0 #7a6136,8px 8px 0 #a88a50,9px 9px 0 #4a3a1c,16px 22px 34px rgba(0,0,0,.6)!important}
+html:root[data-theme=light] .deck-pile .pile-card:nth-child(2){box-shadow:inset 0 1px 0 rgba(255,236,190,.4),1px 1px 0 #6e5630,2px 2px 0 #d4b87a,3px 3px 0 #8a6f3e,4px 4px 0 #c9ad72,5px 5px 0 #5e4a24,6px 6px 0 #b89758,7px 7px 0 #7a6136,8px 8px 0 #a88a50,9px 9px 0 #4a3a1c,14px 20px 30px rgba(60,40,10,.28)!important}
+/* 「替我选一张」：三段式矩形按钮——星芒 · 文案 · 箭头 */
+.minimal-ritual .primary.draw{display:inline-grid!important;grid-template-columns:52px 1fr 56px;gap:0!important;align-items:stretch;width:min(300px,100%)!important;height:54px;padding:0!important;border-radius:0!important;border:1px solid rgba(197,165,110,.42)!important;background:rgba(12,15,22,.55)!important;letter-spacing:.16em}
+html:root[data-theme=light] .minimal-ritual .primary.draw{background:rgba(255,252,244,.35)!important;border-color:rgba(126,96,48,.45)!important}
+.minimal-ritual .primary.draw>span{display:flex;align-items:center;justify-content:center}
+.minimal-ritual .primary.draw .draw-star{font-size:11px;color:#c5a56e;text-shadow:0 0 6px rgba(230,198,135,.6)}
+.minimal-ritual .primary.draw .draw-main{flex-direction:column;font-size:15px;line-height:1.2;color:var(--rt-title,var(--fg))}
+.draw-main small{font-family:var(--font-display)!important;font-size:9px;letter-spacing:.28em;color:rgba(197,165,110,.75);margin-top:5px}
+.minimal-ritual .primary.draw .draw-arrow{border-left:1px solid rgba(197,165,110,.3)}
+.draw-arrow svg{width:30px;height:10px;fill:none;stroke:#c5a56e;stroke-width:1}
+.ritual-eyebrow,.brand-sub{display:none}
+
+/* 桌面宽屏（≥1024px）：左栏讲述与操作，右栏是星盘和牌堆的舞台；抽完牌后左边是牌，右边是解读。手机上不变；北斗方式保持原样 */
+@media (min-width:1024px){
+ .shared-header{max-width:1440px;width:calc(100% - 128px)}
+ .brand-sub{display:inline;margin-left:18px;font-family:var(--font-display)!important;font-size:10px;letter-spacing:.28em;opacity:.45}
+ body #app>main:has(>.minimal-ritual:not(.dipper-mode)),body #app>main:has(>.minimal-result){max-width:1440px!important;padding:6vh 64px!important}
+ .minimal-ritual:not(.dipper-mode){position:relative;display:grid;grid-template-columns:minmax(0,42fr) minmax(0,58fr);grid-template-rows:1fr repeat(8,auto) 1fr auto;grid-template-areas:". stage" "eye stage" "title stage" "promise stage" "hint stage" "mood stage" "sw stage" "act stage" "keep stage" ". stage" ". phint";column-gap:4vw;text-align:left;min-height:min(78vh,760px)}
+ .minimal-ritual:not(.dipper-mode)>.ritual-date{display:none}
+ .ritual-eyebrow{display:flex;grid-area:eye;align-items:center;gap:14px;margin:0 0 28px;font-family:var(--font-display)!important;font-size:11px;letter-spacing:.28em;color:var(--muted)}
+ .ritual-eyebrow i{width:32px;height:1px;background:#c5a56e}
+ .ritual-eyebrow span:last-child{letter-spacing:.12em}
+ .minimal-ritual:not(.dipper-mode)>h1{grid-area:title;font-size:clamp(2.5rem,4vw,3.75rem)!important;font-weight:300;line-height:1.15;margin:0 0 18px;padding-left:0!important;text-indent:0;text-align:left}
+ html:root:not([data-theme=light]) .minimal-ritual:not(.dipper-mode)>h1{color:#eae4dc}
+ .minimal-ritual:not(.dipper-mode)>.brand-promise{grid-area:promise;justify-self:start;justify-content:flex-start;text-align:left;margin:0 0 24px}
+ .minimal-ritual:not(.dipper-mode)>.ritual-hint{grid-area:hint;margin:0 0 32px;text-align:left}
+ .minimal-ritual:not(.dipper-mode)>.mood-row{grid-area:mood;display:grid;grid-template-columns:repeat(3,max-content);justify-content:start;gap:10px;margin:0 0 28px;max-width:none}
+ .minimal-ritual:not(.dipper-mode) .mood-chip:not(.on){border-color:rgba(197,165,110,.2)!important;background:rgba(12,15,22,.65)!important}
+ html:root[data-theme=light] .minimal-ritual:not(.dipper-mode) .mood-chip:not(.on){background:transparent!important;border-color:rgba(126,96,48,.25)!important}
+ .minimal-ritual:not(.dipper-mode)>.ritual-switch{grid-area:sw;justify-self:start;margin:0 0 40px}
+ .minimal-ritual:not(.dipper-mode)>.primary.draw{grid-area:act;justify-self:start;margin:0;width:300px!important}
+ .minimal-ritual:not(.dipper-mode)>.keep-card{grid-area:keep;justify-self:start;margin:16px 0 0}
+ .minimal-ritual:not(.dipper-mode)>.ritual-scene{grid-area:stage;align-self:center;justify-self:center;width:420px;height:300px;scale:1.3;transform-origin:50% 70%;margin:0!important;z-index:1}
+ .minimal-ritual:not(.dipper-mode)>.pick-hint{grid-area:phint;margin:12px 0 0}
+ /* 舞台背后的巨型星盘：0.5px 同心刻度环，左上角一组北斗七星，很淡 */
+ .minimal-ritual:not(.dipper-mode)::before{content:'';position:absolute;z-index:0;pointer-events:none;width:560px;height:560px;left:calc(71% + 1.16vw - 360px);top:50%;margin-top:-340px;opacity:.85;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 540' fill='none' stroke='%23c5a56e' stroke-width='.5'%3E%3Ccircle cx='270' cy='270' r='266' stroke-opacity='.28'/%3E%3Ccircle cx='270' cy='270' r='256' stroke-opacity='.18'/%3E%3Ccircle cx='270' cy='270' r='261' stroke-width='9' stroke-opacity='.26' stroke-dasharray='.5 22.27'/%3E%3Ccircle cx='270' cy='270' r='246' stroke-width='14' stroke-opacity='.3' stroke-dasharray='.6 128.2'/%3E%3Ccircle cx='270' cy='270' r='196' stroke-opacity='.12'/%3E%3Cpath d='M270 0V540M0 270H540' stroke-opacity='.06'/%3E%3Cpath d='M58 74L88 84L116 97L142 114L150 146L188 148L192 118L142 114' stroke-opacity='.24'/%3E%3Cg fill='%23d9bd86' stroke='none' fill-opacity='.55'%3E%3Ccircle cx='58' cy='74' r='1.6'/%3E%3Ccircle cx='88' cy='84' r='1.4'/%3E%3Ccircle cx='116' cy='97' r='1.5'/%3E%3Ccircle cx='142' cy='114' r='1.4'/%3E%3Ccircle cx='150' cy='146' r='1.6'/%3E%3Ccircle cx='188' cy='148' r='1.7'/%3E%3Ccircle cx='192' cy='118' r='1.6'/%3E%3Ccircle cx='420' cy='60' r='1.1'/%3E%3Ccircle cx='470' cy='410' r='1'/%3E%3Ccircle cx='96' cy='452' r='1.2'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat}
+ html:root[data-theme=light] .minimal-ritual:not(.dipper-mode)::before{filter:brightness(.55)}
+ .minimal-result{display:grid;grid-template-columns:minmax(0,40fr) minmax(0,60fr);grid-template-rows:repeat(6,auto) 1fr auto;column-gap:6vw;align-items:start}
+ .minimal-result>*{grid-column:1}
+ .minimal-result>.ritual-date{margin-bottom:32px}
+ .minimal-result>.tarot{width:300px!important;margin-bottom:40px}
+ .minimal-result>h1{font-size:clamp(36px,3.4vw,52px)!important}
+ .minimal-result>.orientation{margin-bottom:32px}
+ .minimal-result>.daily-reading{grid-column:2;grid-row:1/8;max-width:60ch;margin:0;text-align:left}
+ .minimal-result>.daily-reading>h2:first-child{margin-top:0}
+ .minimal-result>.review-block{grid-column:2;grid-row:8;max-width:60ch;margin:24px 0 0}
+ .minimal-result>.review-block .evening-question,.minimal-result>.review-block .single-review{margin-left:0}
+}
