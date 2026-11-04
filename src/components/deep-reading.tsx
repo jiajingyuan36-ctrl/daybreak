@@ -4,7 +4,7 @@ import {DEEP_READING,OPERATOR_NOTE} from '../site';
 /** 一个可复制的联系方式。微信号没法直接点开，所以给一个“复制”按钮。 */
 function ContactValue({value,href}:{value:string;href?:string}){const [copied,setCopied]=useState(false);
  async function copy(){try{await navigator.clipboard.writeText(value)}catch{const t=document.createElement('textarea');t.value=value;document.body.appendChild(t);t.select();try{document.execCommand('copy')}catch{}t.remove()}setCopied(true);setTimeout(()=>setCopied(false),1800)}
- return <>{href?<a href={href} target="_blank" rel="noreferrer">{value}</a>:<strong>{value}</strong>}<button type="button" className="copy-contact" onClick={copy}>{copied?'已复制':'复制'}</button></>}
+ return <>{href?<a href={href} target="_blank" rel="noreferrer">{value}</a>:<strong>{value}</strong>}<button type="button" className={`copy-contact${copied?' is-done':''}`} onClick={copy} aria-live="polite">{copied?<><span className="done-mark" aria-hidden="true">✓</span>已复制</>:'复制'}</button></>}
 /** 联系方式加经营者说明；remark 是加好友时请对方写的备注，extra 是这个场景下额外想说的话。 */
 export function ContactCard({remark,extra}:{remark:string;extra?:string}){const c=DEEP_READING.contact;if(!c.length)return <p className="deep-soon">即将开放。</p>;
  return <div className="contact-card"><ul className="deep-contact">{c.map(x=><li key={x.label}><span>{x.label}</span><ContactValue value={x.value} href={x.href}/></li>)}</ul><p className="contact-note">加好友时请备注「{remark}」。{OPERATOR_NOTE}{extra||''}</p></div>}

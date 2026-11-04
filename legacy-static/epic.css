@@ -263,3 +263,133 @@ html:root[data-theme=light] .ritual-orbit circle{stroke:rgba(110,88,50,.4)}
  .ritual-orbit{left:-150px;top:-150px;width:300px;height:300px}
 }
 @media(prefers-reduced-motion:reduce){.ritual-glow,.ritual-orbit{animation:none!important}}
+
+/* ===== 全站按压手感与浮层（2026-11）=====
+   按下：110ms 快速下沉；松开：420ms 弹簧回弹（src/tactile.ts 加 .is-pressed / .is-releasing）。
+   胶囊控件顶部有 1px 受光高光，按下时泛起一点暖金内光。全局 body * 去掉了投影，这里一律用更具体的选择器加 !important。 */
+:root{--spring-press:cubic-bezier(.32,.72,0,1);--spring-release:cubic-bezier(.22,1,.36,1);--press-ms:110ms;--release-ms:420ms;
+ --specular:inset 0 1px 0 0 rgba(255,255,255,.14);--press-glow:inset 0 0 16px rgba(197,160,89,.18);--pill-line:rgba(197,160,89,.28);--pill-bg:rgba(255,255,255,.025);--pill-fg:#C8C2B8;--gold-hi:#E6D2B5;--gold:#C5A059;
+ --glass-bg:rgba(22,21,28,.62);--glass-line:rgba(212,175,55,.45);--glass-hover:rgba(255,255,255,.06)}
+html:root[data-theme=light]{--specular:inset 0 1px 0 0 rgba(255,255,255,.75);--press-glow:inset 0 0 14px rgba(156,122,60,.16);--pill-line:rgba(110,88,50,.3);--pill-bg:rgba(255,255,255,.35);--pill-fg:#4a4640;--gold-hi:#6E5832;--gold:#8A6D3B;
+ --glass-bg:rgba(250,247,240,.72);--glass-line:rgba(110,88,50,.35);--glass-hover:rgba(0,0,0,.045)}
+html:root[data-theme=dark]{--text-secondary:#A8A297}
+button,a,select,summary,label,[role=button],[role=option]{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button,[role=button],[role=option],.glass-trigger{-webkit-user-select:none;user-select:none}
+.shared-header nav a,.shared-footer a,.calendar-links a,.zodiac-index a,a.shared-brand{display:inline-block}
+
+/* 按压 */
+.is-pressed{transform:scale(var(--press-scale,.96))!important;transition:transform var(--press-ms) var(--spring-press),box-shadow var(--press-ms) var(--spring-press),color .2s,border-color .2s,background-color .2s,opacity .2s!important}
+.is-releasing{transition:transform var(--release-ms) var(--spring-release),box-shadow var(--release-ms) var(--spring-release),color .3s,border-color .3s,background-color .3s,opacity .3s!important}
+.shared-header nav a,.mood-chip,.copy-contact,.date-pill,.glass-trigger,.zodiac-index a{--press-scale:.94}
+.catalog-card,.history-item,.day.has-card,.zodiac-pair-link,.z-card{--press-scale:.985}
+@media(prefers-reduced-motion:reduce){.is-pressed{transform:none!important}}
+
+/* 胶囊控件：受光高光 + 按下暖金内光 */
+.mood-chip,.minimal-ritual .primary.draw,.glass-trigger,.date-pill,.result-tools button,.review-save,.copy-contact,.install-hint button{box-shadow:var(--specular)!important}
+.is-pressed:is(.mood-chip,.primary.draw,.glass-trigger,.date-pill,.review-save,.copy-contact,.install-hint button),.result-tools button.is-pressed{box-shadow:var(--specular),var(--press-glow)!important}
+
+/* 情绪胶囊 */
+.mood-chip{color:var(--pill-fg)!important;border:1px solid rgba(197,160,89,.24)!important;background:var(--pill-bg)!important}
+.mood-chip.on{color:var(--rt-title,var(--fg))!important;border-color:rgba(212,175,55,.7)!important;background:rgba(212,175,55,.05)!important;box-shadow:inset 0 1px 0 rgba(255,248,231,.25),inset 0 0 14px rgba(197,160,89,.2)!important;animation:chip-glow 4s ease-in-out infinite}
+@keyframes chip-glow{50%{box-shadow:inset 0 1px 0 rgba(255,248,231,.25),inset 0 0 20px rgba(197,160,89,.3)}}
+html:root[data-theme=light] .mood-chip.on{box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 0 0 14px rgba(156,122,60,.22)!important}
+
+/* 「替我选一张」：触发后锁住并淡出 */
+.minimal-ritual.drawing .primary.draw{opacity:0!important;transform:scale(.96);pointer-events:none;transition:opacity .45s var(--spring-release),transform .45s var(--spring-release)!important}
+
+/* 牌堆：按住时缓缓下沉、阴影收紧；中途松手弹回；走满时一次金色脉冲 */
+.deck-pile{transition:opacity .45s,scale var(--release-ms) var(--spring-release)}
+.deck-pile.shuffling{scale:.96;transition:opacity .45s,scale .6s var(--spring-press)}
+.pile-card{transition:translate .35s cubic-bezier(.2,.7,.2,1),box-shadow .5s var(--spring-release)}
+.deck-pile.shuffling .pile-card{box-shadow:0 10px 18px -10px rgba(0,0,0,.95)!important}
+.deck-pile::after{content:'';position:absolute;left:50%;top:58%;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%!important;pointer-events:none;opacity:0;background:radial-gradient(circle,rgba(230,210,181,.32) 0%,rgba(197,160,89,.12) 38%,transparent 68%)}
+.deck-pile.charged::after{animation:charge-pulse .9s var(--spring-release) both}
+@keyframes charge-pulse{0%{opacity:0;transform:scale(.6)}35%{opacity:1}100%{opacity:0;transform:scale(1.25)}}
+
+/* 顶部导航：选中项下面的金线；跨页面时作为独立图层滑过去 */
+.shared-header nav a[aria-current=page]::after{transform:scaleX(0)!important}
+.nav-mark{position:absolute;left:0;right:0;bottom:-1px;height:1px;background:var(--gold);view-transition-name:nav-indicator;pointer-events:none}
+html:root[data-theme=light] .nav-mark{background:var(--fg)}
+::view-transition-group(nav-indicator){animation-duration:.42s;animation-timing-function:var(--spring-release)}
+
+/* 页面与视图切换：先让旧画面完整淡出（180ms，向上、轻微模糊），再淡入新画面，两层不再同时出现 */
+::view-transition-old(root){animation:vt-exit .18s var(--spring-press) both!important}
+::view-transition-new(root){animation:vt-enter .26s var(--spring-release) .18s both!important}
+@keyframes vt-exit{to{opacity:0;transform:translateY(-8px);filter:blur(4px)}}
+@keyframes vt-enter{from{opacity:0;transform:translateY(8px)}}
+::view-transition-old(site-header){display:none}
+::view-transition-new(site-header){animation:none}
+@media(prefers-reduced-motion:reduce){::view-transition-old(root),::view-transition-new(root){animation:none!important}}
+
+/* 换一张：旧内容淡出后整块移除，新内容再进场 */
+.minimal-result{transition:opacity .18s var(--spring-press),transform .18s var(--spring-press),filter .18s var(--spring-press)}
+.minimal-result.is-exiting{opacity:0;transform:translateY(-8px);filter:blur(4px);pointer-events:none}
+.minimal-result.is-entering{animation:result-enter .44s var(--spring-release) both}
+@keyframes result-enter{from{opacity:0;transform:translateY(10px);filter:blur(3px)}}
+.sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.ticker{display:inline-block;height:1.3em;line-height:1.3em;overflow:hidden;vertical-align:-.3em}
+.tick-col{display:flex;flex-direction:column;animation:tick-roll .55s var(--spring-release) .3s both}
+.tick-col>span{display:block;height:1.3em}
+@keyframes tick-roll{to{transform:translateY(-50%)}}
+
+/* 结果页工具：幽灵胶囊 */
+.result-tools{align-items:center}
+.result-tools button{display:inline-flex!important;align-items:center;gap:8px;min-height:0!important;padding:8px 18px!important;border:1px solid var(--pill-line)!important;border-radius:999px!important;background:var(--pill-bg)!important;font-size:13px;letter-spacing:.08em;color:var(--fg)!important}
+.result-tools .tool-field{display:inline-flex;align-items:center;gap:10px}
+.result-tools .tool-field .glass-pop{left:0;right:auto;transform-origin:top left}
+.done-mark{color:var(--gold);margin-right:6px}
+.is-done{color:var(--gold-hi)!important;border-color:rgba(212,175,55,.55)!important}
+.is-busy{pointer-events:none;opacity:.85}
+.is-busy::before{content:'';width:14px;height:14px;flex:none;border-radius:50%!important;background:conic-gradient(from 0deg,transparent 0 12%,currentColor);-webkit-mask:radial-gradient(farthest-side,transparent 55%,#000 58%);mask:radial-gradient(farthest-side,transparent 55%,#000 58%);animation:ios-spin .9s steps(12) infinite}
+@keyframes ios-spin{to{transform:rotate(1turn)}}
+
+/* 晚间回望：没写 → 柔和；写了新内容 → 香槟金；已保存 → ✓ 已珍藏 */
+.review-save{min-height:0!important;padding:8px 20px!important;border:1px solid var(--pill-line)!important;border-radius:999px!important;background:var(--pill-bg)!important;letter-spacing:.1em;transition:opacity .3s,color .3s,border-color .3s,box-shadow .3s var(--spring-release)!important}
+.review-save.is-empty{opacity:.45;cursor:default}
+.review-save.is-active{color:var(--gold-hi)!important;border-color:rgba(212,175,55,.62)!important;box-shadow:var(--specular),inset 0 0 12px rgba(212,175,55,.12)!important}
+.review-save.is-saved{color:var(--gold)!important;cursor:default}
+.review-save.just-saved{animation:saved-pop .6s var(--spring-release)}
+@keyframes saved-pop{0%{transform:scale(.94)}100%{transform:scale(1)}}
+
+/* 灵动岛式提示：顶部居中的毛玻璃胶囊，弹簧落下 */
+html body #toast{top:calc(env(safe-area-inset-top,0px) + 12px);bottom:auto;left:50%;max-width:min(92vw,420px);width:max-content;padding:10px 20px;border-radius:999px!important;font-size:14px;letter-spacing:.04em;line-height:1.5;text-align:center;
+ color:var(--fg);background:var(--glass-bg);border:.5px solid var(--glass-line);-webkit-backdrop-filter:blur(24px) saturate(180%)!important;backdrop-filter:blur(24px) saturate(180%)!important;box-shadow:0 18px 40px -14px rgba(0,0,0,.55),var(--specular)!important;
+ opacity:0;transform:translate(-50%,-160%) scale(.86);transition:transform .3s var(--spring-press),opacity .22s!important;z-index:120}
+html body #toast.show{opacity:1;transform:translate(-50%,0) scale(1);animation:none;transition:transform .5s var(--spring-release),opacity .25s!important}
+
+/* 毛玻璃浮层（外观、配色）：src/popover.ts 与 site-chrome.tsx 共用 */
+.glass-select{position:relative;display:inline-flex;align-items:center;gap:8px}
+.glass-native{position:absolute!important;width:1px;height:1px;opacity:0;pointer-events:none;clip-path:inset(50%)}
+.glass-trigger{display:inline-flex!important;align-items:center;gap:8px;min-height:0!important;padding:6px 12px 6px 10px!important;border:1px solid var(--pill-line)!important;border-radius:999px!important;background:var(--pill-bg)!important;font-size:13px;letter-spacing:.08em;color:var(--fg)!important;white-space:nowrap;cursor:pointer}
+.glass-chevron{width:12px;height:12px;flex:none;opacity:.7;transition:transform var(--release-ms) var(--spring-release)}
+.glass-select.open .glass-chevron{transform:rotate(180deg)}
+.swatch{width:12px;height:12px;flex:none;border-radius:50%!important;background:var(--swatch);box-shadow:inset 0 0 0 .5px rgba(197,160,89,.65),0 0 0 .5px rgba(0,0,0,.25)!important}
+.glass-pop{position:absolute;top:calc(100% + 8px);right:0;z-index:90;min-width:150px;margin:0;padding:6px;list-style:none;text-align:left;border-radius:16px!important;background:var(--glass-bg);border:.5px solid var(--glass-line);
+ -webkit-backdrop-filter:blur(24px) saturate(180%)!important;backdrop-filter:blur(24px) saturate(180%)!important;box-shadow:0 24px 48px -12px rgba(0,0,0,.6),var(--specular)!important;
+ transform-origin:top right;transform:scale(.9);opacity:0;visibility:hidden;transition:transform .18s var(--spring-press),opacity .14s,visibility 0s .18s}
+.glass-select.open .glass-pop{transform:scale(1);opacity:1;visibility:visible;transition:transform var(--release-ms) var(--spring-release),opacity .2s,visibility 0s}
+.glass-pop li{display:flex;align-items:center;gap:10px;padding:10px 12px;white-space:nowrap;border-radius:10px!important;font-size:14px;letter-spacing:.06em;color:var(--fg);cursor:pointer;outline:none;transition:background-color .2s}
+.glass-pop li:hover,.glass-pop li:focus-visible{background:var(--glass-hover)}
+.glass-check{margin-left:auto;padding-left:12px;color:var(--gold);opacity:0}
+.glass-pop li[aria-selected=true] .glass-check{opacity:1}
+.theme-label{font-size:13px;color:var(--muted);white-space:nowrap}
+.shared-header .theme-picker{flex-shrink:0}
+@media(max-width:650px){.shared-header .theme-picker{margin-left:auto}}
+
+/* 日历：前日 / 后日幽灵胶囊，尖括号向按下的方向微移 */
+.date-pill{display:inline-flex!important;align-items:center;gap:6px;min-height:0!important;padding:6px 14px!important;border:1px solid var(--pill-line)!important;border-radius:999px!important;background:var(--pill-bg)!important;font-size:13px;letter-spacing:.1em}
+.date-pill .chev{display:inline-block;font-size:16px;line-height:1;color:var(--gold);transition:transform var(--release-ms) var(--spring-release)}
+.date-pill.prev.is-pressed .chev{transform:translateX(-2px);transition:transform var(--press-ms) var(--spring-press)}
+.date-pill.next.is-pressed .chev{transform:translateX(2px);transition:transform var(--press-ms) var(--spring-press)}
+.date-pill:disabled{opacity:.35}
+.date-line input{border:1px solid var(--pill-line)!important;border-radius:999px!important;padding:6px 12px!important;background:var(--pill-bg)!important;box-shadow:var(--specular)!important}
+
+/* 安装提示条与复制按钮 */
+.install-hint{border-radius:20px!important;background:var(--glass-bg)!important;border:.5px solid var(--glass-line)!important;-webkit-backdrop-filter:blur(24px) saturate(180%)!important;backdrop-filter:blur(24px) saturate(180%)!important;box-shadow:0 20px 44px -14px rgba(0,0,0,.6),var(--specular)!important;animation:hint-rise .5s var(--spring-release) both}
+.install-hint.leaving{animation:hint-sink .38s cubic-bezier(.5,0,.75,0) forwards}
+@keyframes hint-rise{from{opacity:0;transform:translateY(24px) scale(.97)}}
+@keyframes hint-sink{0%{transform:translateY(0)}25%{transform:translateY(-6px)}100%{opacity:0;transform:translateY(140%)}}
+.install-hint button{border-radius:999px!important;padding:8px 16px!important}
+.copy-contact{interpolate-size:allow-keywords;transition:width var(--release-ms) var(--spring-release),color .3s,border-color .3s!important}
+.copy-contact.is-done{color:var(--gold-hi)!important;border-color:rgba(212,175,55,.55)!important}
+@media(prefers-reduced-motion:reduce){.install-hint,.install-hint.leaving,.mood-chip.on,.tick-col{animation:none!important}.tick-col{transform:translateY(-50%)}}
