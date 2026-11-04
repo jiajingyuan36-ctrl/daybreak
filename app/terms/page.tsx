@@ -1,5 +1,6 @@
 import type {Metadata} from 'next';
-export const metadata:Metadata={title:'使用条款'};
+import {pageMeta} from '../../src/meta';
+export const metadata:Metadata=pageMeta('/terms/','使用条款');
 // 推出付费功能时需补充价格、续费、退款和经营者联系方式。
 export default function Terms(){return <main className="page-shell legal-page"><h1>使用条款</h1><p className="legal-date">更新于 2026 年 11 月 1 日</p>
 <section><h2>内容是什么性质</h2><p>这里的塔罗解析和按生辰推算的今日运势，用于娱乐和自我反思，不是对未来的预测，也不能代替医疗、心理、法律或理财等专业意见。遇到重要的决定，请以现实情况和专业建议为准。</p></section>

@@ -1,10 +1,11 @@
 import type {Metadata} from 'next';
+import {pageMeta} from '../../src/meta';
 import {ZODIAC,ELEMENT_NOTE,MODE_NOTE} from '../../src/zodiac';
 import {PLANETS,ASTRO_SOURCE_URL} from '../../src/astro';
 import {cardById} from '../../src/cards';
 import {cardImageUrl} from '../../src/art';
 import {ZodiacToday} from '../../src/components/zodiac-today';
-export const metadata:Metadata={title:'十二星座与塔罗',description:'十二星座的元素、性质、守护星，以及每个星座在韦特塔罗里对应的大牌和三张小牌。依托勒密《四书》与金色黎明会《Book T》。'};
+export const metadata:Metadata=pageMeta('/zodiac/','十二星座与塔罗','十二星座的元素、性质、守护星，以及每个星座在韦特塔罗里对应的大牌和三张小牌。依托勒密《四书》与金色黎明会《Book T》。');
 function Thumb({id,role,note}:{id:string;role:string;note?:string}){const c=cardById(id);return <figure className="z-card"><img src={cardImageUrl(id,true)} alt={c.nameZh} width={80} height={137} loading="lazy"/><figcaption><span className="z-role">{role}</span><strong>{c.nameZh}</strong>{note&&<span className="z-note">{note}</span>}</figcaption></figure>}
 export default function Zodiac(){return <main className="page-shell legal-page zodiac-page"><h1>十二星座与塔罗</h1><p className="legal-date">元素 · 性质 · 守护星 · 对应的牌</p>
 <p>韦特塔罗的作者 Waite 和画师 Pamela Colman Smith 都属于金色黎明会。这个组织给每个星座都配了塔罗牌：一张大阿卡纳代表星座本身，守护星也有自己的大牌；星座的 30 度再分成三段（每段 10 度，叫一个「旬」），各对应一张小牌。</p>
