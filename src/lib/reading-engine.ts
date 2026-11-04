@@ -190,11 +190,18 @@ export interface SpreadReading extends QuestionInfo {answer:string;headline:stri
 export function readSpread(question:string,spread:TarotSpread,drawn:readonly DrawnCard[],domain?:Domain):SpreadReading{
  const info={...understand(question)};info.notices=[...info.notices];if(domain)info.domain=domain;
  const S=`「${info.subject}」`,[A,B]=info.options??['A','B'];
+ if(spread.id==='single-daily' && drawn.length===1){
+  const [d]=drawn;
+  const meaning=d.card[d.isReversed?'reversed':'upright'];
+  const headline=nm(d)+' · '+meaning.keywords.join('、');
+  const context=domainLine(d,info.domain)||meaning.reading;
+  return {...info,headline,answer:context,cards:[{id:d.card.id,text:d.card.symbolism.join(' ')}],
+   flow:[],actions:[d.card.today_action],reflection:d.card.evening_question};
+ }
  const cards=drawn.map((d,i)=>{const role=roleOf(spread,i);return {id:d.card.id,text:cardText(d,role,info,role==='gain'||role==='cost'?(i<=2?A:B):'')}});
  const k=(i:number)=>drawn[i]?kw(drawn[i])[0]:'',t=(i:number)=>drawn[i]?tone(drawn[i]):0;
  let headline='';
  switch(spread.id){
-  case 'single-daily':headline=`关于${S}，抽到的是${nm(drawn[0])}，给你的提醒是「${k(0)}」。`;break;
   case 'three-card-state':{const go=t(2)>=0?pick(drawn,[`往前走的钥匙，在「${k(2)}」这一边`,`牌建议你从「${k(2)}」开始`,`松动它的办法，藏在「${k(2)}」里`]):pick(drawn,[`往前走之前，要先处理「${k(2)}」这件事`,`在动手之前，先正视「${k(2)}」`]);
    headline=pick(drawn,[`关于${S}，三张牌连起来是这样一条线：眼下的主题是「${k(0)}」，真正卡住你的，和「${k(1)}」有关；${go}。`,`关于${S}：你现在处在「${k(0)}」里，挡在前面的是「${k(1)}」；${go}。`,`${S}这件事，现在的底色是「${k(0)}」。让它停住的，是「${k(1)}」；${go}。`]);break}
   case 'three-card-time':{const end=t(2)>=0?pick(drawn,[`照这样走下去，更可能走向「${k(2)}」`,`接下来的方向是「${k(2)}」`]):pick(drawn,[`如果什么都不改，要留意可能滑向「${k(2)}」`,`不调整的话，可能会走到「${k(2)}」`]);

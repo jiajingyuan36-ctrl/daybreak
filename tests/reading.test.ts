@@ -33,7 +33,7 @@ test('every card, both orientations, every position and every domain reads compl
   const r=readSpread('换工作这件事，我最该先弄清什么？',spread,drawn,domain);
   const all=[r.headline,...r.cards.map(c=>c.text),...r.flow,...r.actions,r.reflection];
   for(const t of all){assert.ok(t.length>4,`${spread.id}: 空句`);assert.doesNotMatch(t,broken,`${spread.id}/${domain}: ${t}`);assert.doesNotMatch(t,banned,`${spread.id}/${domain}: ${t}`)}
-  assert.equal(r.cards.length,drawn.length);assert.ok(r.actions.length>=1,spread.id);assert.ok(r.flow.length>=1,spread.id)}});
+  assert.equal(r.cards.length,drawn.length);assert.ok(r.actions.length>=1,spread.id);assert.equal(r.flow.length>0,spread.positions.length>1,spread.id)}});
 
 test('the answer keeps coming back to the question',()=>{
  const spread=findSpread('three-card-state');const drawn=spread.positions.map((position,i)=>({card:tarotCards[i*11],isReversed:false,position}));
@@ -56,3 +56,16 @@ test('tone: hard cards soften when reversed, kind cards get blocked',()=>{
  const card=(id:string)=>tarotCards.find(c=>c.id===id)!;
  assert.ok(tone({card:card('m19'),isReversed:false})>0);assert.ok(tone({card:card('m19'),isReversed:true})<0);
  assert.ok(tone({card:card('swords-3'),isReversed:false})<0);assert.ok(tone({card:card('swords-3'),isReversed:true})>0)});
+
+test('reversed Ace of Cups has one contextual sentence and no relationship commentary',()=>{
+ const spread=findSpread('single-daily'),card=tarotCards.find(c=>c.id==='cups-1')!;
+ const draw={card,isReversed:true,position:spread.positions[0]};
+ for(const [question,index] of [['',7],['怎么和领导沟通',5]] as const){
+  const r=readSpread(question,spread,[draw]);
+  const text=[r.headline,r.answer,r.cards[0].text,...r.flow,...r.actions,r.reflection].join('\n');
+  assert.equal(r.answer,LINES[card.id][index]);
+  assert.equal(text.split(r.answer).length,2);
+  assert.doesNotMatch(text,/这几张牌|这组牌|最关键的一张/);
+  assert.deepEqual(r.flow,[]);assert.match(r.headline,/圣杯王牌逆位/);
+ }
+});
