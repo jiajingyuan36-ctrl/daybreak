@@ -4,7 +4,7 @@
 
 ## 当前状态
 线上：https://daybreak-morning-ritual.onrender.com/
-本仓库与线上版本一致（部署分支提交 c39c523）。50 项测试、类型检查与生产构建通过。
+本仓库 main 合并本次 PR 后与线上版本一致（部署分支 daybreak-render 提交 f74ce8e，源码 4a03e9e）。68 项测试、类型检查与生产构建通过。
 
 ## 运行
 使用 Node.js 24。在本目录运行：
@@ -39,5 +39,10 @@ npm run build
 
 ## 部署注意
 源码仓库是 jiajingyuan36-ctrl/daybreak，推送到这里不会更新线上。线上由 Render 从 jiajingyuan36-ctrl/cike-yousheng 的 daybreak-render 分支构建（不要修改该仓库的 main，那是其他项目）：Render 把 source.tar.gz.b64 解包到 app，再 npm ci 与 build，发布 app/dist。更新线上需要重新打包并更新 unpack.mjs 中的 SHA256。
+
+打包时文件清单与原包一致：git ls-files 去掉 .gitignore、CLAUDE.md、README.md 和 legacy-static/fonts/SourceHanSansCN.woff2（unpack.mjs 部署时另行下载），再加上 prebuild 生成的 src/data/*.json，全部放在 app/ 下。改了前端文件要把 public/sw.js 的缓存版本号加一。CDN 会缓存约 5 分钟；app.js 是模块脚本，浏览器请求带 Origin 头，CDN 单独缓存一份，验证线上时要等它也刷新。
+
+## 样式注意
+epic.css 开头有 `body *{border-radius:0!important;box-shadow:none!important;backdrop-filter:none!important}`，要投影、圆角或毛玻璃必须用更具体的选择器并加 !important；关键帧动画改不动 box-shadow。旧版页面还会加载 legacy-static/style.css，其中 .primary 有 min-width 等规则。tests/font.test.ts 会检查源码（含注释）里的每个汉字都在精简字体中，新加汉字前先确认或重新抽字。
 
 包内不含密钥、node_modules、构建缓存或浏览器个人记录。字体及第三方许可证保留。
