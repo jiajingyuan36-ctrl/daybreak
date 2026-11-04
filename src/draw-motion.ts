@@ -22,8 +22,9 @@ function bezierTimeFor(y:number,x1:number,y1:number,x2:number,y2:number){
 export async function lockStage(ritual:HTMLElement,picked:HTMLElement){
  const quick=reducedMotion();
  ritual.classList.add('draw-locked');picked.classList.remove('lift');picked.classList.add('is-drawn');
- const fromPile=picked.classList.contains('pile-card');
- const others=[...ritual.querySelectorAll<HTMLElement>(fromPile?'.pile-card,.shuffle-ring,.ritual-aura':'.fan-card,.deck-pile,.ritual-aura')].filter(el=>el!==picked);
+ const fromPile=picked.classList.contains('pile-card'),fromDipper=picked.classList.contains('dipper-pick');
+ // 北斗仪式：退场的是星空、说明文字和按钮；牌扇方式：其余的牌
+ const others=[...ritual.querySelectorAll<HTMLElement>(fromDipper?'.dipper-away,.dipper-hint,.ritual-switch':fromPile?'.pile-card,.shuffle-ring,.ritual-aura':'.fan-card,.deck-pile,.ritual-aura')].filter(el=>el!==picked);
  // 舞台中央只留这张牌：其余牌、提示、按钮淡出；标题、日期和心情也一起退场，免得换成结果页时突然跳掉
  const away=[...others,...ritual.querySelectorAll<HTMLElement>('.pick-hint,.primary.draw,.ritual-hint,.mood-row,h1,.ritual-date')];
  if(quick){away.forEach(el=>el.animate({opacity:[1,0]},{duration:150,fill:'forwards'}));await wait(150);return measure(picked)}

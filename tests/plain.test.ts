@@ -8,3 +8,11 @@ test('no jargon, template phrasing or recycled sentences',()=>{const seen=new Ma
 test('requirement examples are kept verbatim',()=>{assert.equal(plainById('swords-9').dailyReading.upright,'今天脑子容易转个不停，尤其是还没落地的待办或别人的一个眼神，都容易让你反复琢磨。其实大部分让你心累的事，眼下并没有那么糟。今天别逼自己“想通所有事”，只要把正在悬着的一件小事落到纸上，心就能踏实一半。');assert.equal(plainById('m0').eveningQuestion,'今天做过的哪件小事，让你觉得挺有新鲜感？');assert.deepEqual(plainById('pentacles-3').keywordsUpright,['配合默契','把活做好','互相搭把手'])});
 test('share images get a short reading that is a prefix of the full one',()=>{for(const c of cards)for(const full of [c.meaningUpright,c.meaningReversed]){const b=briefReading(full);assert.ok(full.startsWith(b));assert.ok(len(b)>=20&&len(b)<=75,`${c.id} ${len(b)}`)}});
 test('history saved before the rewrite still loads and shows the new copy',()=>{const d=fresh();d.days['2026-10-01']={...draw('2026-10-01',d.preferences,'','',()=>0),cardId:'swords-9',reversed:true,reading:{title:'宝剑九 · 逆位',message:'反复思考未必增加信息，把担忧暂时放到纸上。',personal:'',action:'写下担忧与明天能做的一步，然后收起纸。',observe:'',question:'关于忧虑，今天有什么值得记住的细节？',quote:''},review:{resonance:'有一点共鸣',note:'睡得早了一点'}};const back=validate(JSON.parse(JSON.stringify(d)));const day=back.days['2026-10-01'];assert.equal(day.review?.note,'睡得早了一点');const c=cardById(day.cardId);assert.equal(c.meaningReversed,plainById('swords-9').dailyReading.reversed);assert.doesNotMatch(c.reflectionPrompt,banned)});
+
+test('big dipper spread copy: seven positions named after the stars, plain lengths, no jargon or repeats',async()=>{
+ const {DIPPER_SPREAD}=await import('../src/dipper-copy.ts');const {findSpread}=await import('../src/lib/tarot-catalog.ts');
+ assert.deepEqual(DIPPER_SPREAD.positions.map(p=>p[0]),['天枢','天璇','天玑','天权','玉衡','开阳','摇光']);
+ const s=findSpread('big-dipper');assert.equal(s.positions.length,7);assert.ok(!s.hidden);assert.ok(!s.sourceUrl,'site-designed spread must not claim a source');assert.match(s.sourceNote??'',/本站自己设计/);
+ const seen=new Set<string>();
+ for(const [title,meaning] of DIPPER_SPREAD.positions){assert.ok(len(meaning)>=18&&len(meaning)<=40,`${title}: ${len(meaning)}`);assert.doesNotMatch(meaning,banned,title);assert.ok(!seen.has(meaning),title);seen.add(meaning)}
+ for(const t of [DIPPER_SPREAD.description,DIPPER_SPREAD.note])assert.doesNotMatch(t,banned)});
