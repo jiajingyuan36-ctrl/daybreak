@@ -1,6 +1,7 @@
 // 网站地址只在这里写一次；以后换自己的域名，改这一处即可（分享图、日签、链接预览都会跟着变）。
 // 例外：public/robots.txt 和 public/sitemap.xml 是静态文件，换域名时要一起改。
-export const SITE_HOST='daybreaktarot.xyz';
+// 自有域名 daybreaktarot.xyz 还没接通，先用 Render 的原地址；接通后改回这里，并同步 robots.txt、sitemap.xml。
+export const SITE_HOST='daybreak-morning-ritual.onrender.com';
 export const SITE_URL=`https://${SITE_HOST}`;
 /** 经营者的微信号：深度解读和提建议都用它。不要换成手机号。 */
 export const WECHAT='YJJ_080922';

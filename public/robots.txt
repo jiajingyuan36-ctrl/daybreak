@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://daybreaktarot.xyz/sitemap.xml
+Sitemap: https://daybreak-morning-ritual.onrender.com/sitemap.xml
