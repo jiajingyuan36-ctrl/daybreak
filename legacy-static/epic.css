@@ -407,3 +407,25 @@ html body #toast.show{opacity:1;transform:translate(-50%,0) scale(1);animation:n
 .flight-sheen{position:absolute;inset:0;pointer-events:none;opacity:0;transform:translateX(-120%);background:linear-gradient(115deg,transparent 25%,rgba(255,248,231,.26) 50%,transparent 75%)}
 .flight-shadow{position:absolute;left:6%;right:6%;bottom:-7%;height:20%;border-radius:50%!important;opacity:0;filter:blur(16px);background:radial-gradient(ellipse at center,rgba(0,0,0,.75) 0%,rgba(197,160,89,.14) 45%,transparent 72%)}
 html:root[data-theme=light] .flight-shadow{background:radial-gradient(ellipse at center,rgba(40,30,15,.35) 0%,rgba(156,122,60,.12) 45%,transparent 72%)}
+
+/* ===== 牌背配色（src/card-back.ts）=====
+   深色：黑曜石底 + 五阶香槟烫金；浅色：羊皮石膏白底 + 古董暗金压纹。牌背 SVG 的渐变全部读这些变量。
+   容器底色和牌背边缘同色：牌的长宽比与 240×400 不完全一样时，上下多出的一点不会露出色差。 */
+:root{--cb-bg-a:#17151E;--cb-bg-b:#0B0A0F;--cb-glow:#C5A059;--cb-f0:#7A5C29;--cb-f1:#C5A059;--cb-f2:#FFF2CC;--cb-f3:#D4AF37;--cb-f4:#6B4F22;--cb-hl:#FFF2CC}
+html:root[data-theme=light]{--cb-bg-a:#FBF8F2;--cb-bg-b:#F5F2EB;--cb-glow:#8C6D32;--cb-f0:#4F3B14;--cb-f1:#8C6D32;--cb-f2:#C9A961;--cb-f3:#8C6D32;--cb-f4:#4F3B14;--cb-hl:#FFFFFF}
+.pile-card,.fan-card,.card-scene .tarot.chosen-card,.flight-back{background:var(--cb-bg-b)!important}
+.pile-card svg.card-back,.fan-card svg.card-back,.chosen-card svg.card-back,.flight-back svg.card-back{opacity:1}
+html:root[data-theme=light] .pile-card,html:root[data-theme=light] .fan-card,html:root[data-theme=light] .flight-back{border-color:rgba(140,109,50,.4)!important}
+
+/* 牌阵页：78 张牌背 */
+.card-back-sprite{position:absolute;width:0;height:0;overflow:hidden}
+.deck-section .deck-fan button{padding:0!important;overflow:hidden;background:var(--cb-bg-b)!important;border:1px solid rgba(212,175,55,.28)!important;border-radius:4px!important;box-shadow:0 8px 16px -10px rgba(0,0,0,.7)!important}
+html:root[data-theme=light] .deck-section .deck-fan button{border-color:rgba(140,109,50,.35)!important;box-shadow:0 6px 12px -8px rgba(60,45,20,.35)!important}
+.consult-back,.consult-back svg{display:block;width:100%;height:100%}
+.deck-section .deck-fan button:disabled.picked{opacity:.15}
+/* 浅色：牌扇其余牌用不透明的“褪色”代替压暗（不用半透明，免得叠在一起的牌透出底下的线），投影换成暖棕色、更轻 */
+html:root[data-theme=light] .ritual-scene[data-stage=pick] .deck-fan:has(.lift) .fan-card:not(.lift){filter:saturate(.35) contrast(.55) brightness(1.3)}
+html:root[data-theme=light] .pile-card,html:root[data-theme=light] .fan-card{box-shadow:0 16px 30px -16px rgba(60,45,20,.45)!important}
+html:root[data-theme=light] .deck-pile.shuffling .pile-card{box-shadow:0 8px 14px -10px rgba(60,45,20,.55)!important}
+html:root[data-theme=light] .fan-card.lift{box-shadow:0 22px 36px -16px rgba(60,45,20,.5),0 0 16px rgba(140,109,50,.22)!important}
+html:root[data-theme=light] .fan-card.is-drawn,html:root[data-theme=light] .pile-card.is-drawn{box-shadow:0 22px 40px -14px rgba(60,45,20,.5),0 0 18px rgba(140,109,50,.25)!important}

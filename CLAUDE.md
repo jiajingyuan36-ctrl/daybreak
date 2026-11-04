@@ -23,7 +23,8 @@ npm run build
 - src/knowledge.ts：RWS 牌面符号与原典链接。
 - scripts/seed-tarot-data.ts：构建前把上述数据转成 src/data/tarot_cards_78.json，只做格式转换，不生成文字。
 - tests/plain.test.ts：文案字数、禁用词、重复句与旧历史兼容检查。
-- public/rws/：78 张 1909 年 Rider–Waite–Smith 原版牌面（公有领域，来自维基共享资源 Wikimedia Commons），彩色 WebP，600×1029；thumb/ 为 320 宽小图。src/art.ts 的 cardImage() 生成标签，几何 art() 只用于牌背和后备。
+- public/rws/：78 张 1909 年 Rider–Waite–Smith 原版牌面（公有领域，来自维基共享资源 Wikimedia Commons），彩色 WebP，600×1029；thumb/ 为 320 宽小图。src/art.ts 的 cardImage() 生成标签，几何 art() 只用于后备。
+- src/card-back.ts：全站牌背「星盘月相 · 双向对称」（viewBox 240×400）。上半部分画一次、下半部分旋转 180° 复用，牌倒过来完全一样；颜色读 epic.css 里的 --cb-* 变量（深色黑金、浅色羊皮暗金）。每日抽牌用 cardBack()，牌阵页 78 张用 cardBackSprite() + cardBackUse()。
 - src/lib/bazi-fortune.ts：按生辰的今日运势（lunar-javascript 排盘）；src/components/real-moon.tsx：真实月面（three.js 贴图 + Astronomy Engine）。
 - prepare-legacy.mjs 用 esbuild 把 src/app.ts 打包成 public/js/app.js。
 - src/lib/tarot-catalog.ts、src/types/tarot.ts：现代牌库与类型。

@@ -10,29 +10,5 @@ else if(card.arcanaType==='major'){const symbols=[`<path d="M65 355L125 250L180 
 else{const count=n<=10?n:n-8;body=Array.from({length:count},(_,i)=>{const a=i*2.399;const r=count===1?0:35+Math.sqrt(i)*25;const x=180+Math.cos(a)*r,y=260+Math.sin(a)*r;return card.suit==='星币'?`${circle(x,y,22)}<path d="M${x-13} ${y}H${x+13}M${x} ${y-13}V${y+13}" ${line}/>`:card.suit==='圣杯'?`<path d="M${x-22} ${y-22}H${x+22}Q${x+20} ${y+12} ${x} ${y+12}Q${x-20} ${y+12} ${x-22} ${y-22}M${x} ${y+12}V${y+28}M${x-14} ${y+28}H${x+14}" ${line}/>`:card.suit==='宝剑'?`<path d="M${x} ${y-38}L${x+7} ${y+15}H${x-7}ZM${x-17} ${y+18}H${x+17}M${x} ${y+18}V${y+35}" ${line}/>`:`<path d="M${x-7} ${y+35}L${x+7} ${y-35}M${x} ${y}Q${x+32} ${y-10} ${x+22} ${y-25}Q${x} ${y-20} ${x} ${y}" ${line}/>`}).join('');if(n>10)body=`<rect x="70" y="80" width="220" height="340" rx="20" ${line}/>`+body+`<path d="M130 100L155 120L180 85L205 120L230 100" ${line}/>`}
 const bg='#0a0a0b';return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 540" role="img" aria-label="${card?.nameZh||'待揭示的今日牌'}"><rect width="360" height="540" rx="0" fill="${bg}"/><rect x="27" y="27" width="306" height="486" rx="0" ${line} opacity=".6"/>${body}</svg>`}
 
-/** 每日抽牌用的黑金牌背：不透明深色卡纸、双层香槟金细线框（约在边缘 6px / 10px 处）、
- * 向内弯的圆角与四角星芒、中央八芒星与上下月相。线宽用 non-scaling-stroke 固定为 0.75 屏幕像素，牌放大缩小都一样细。
- * 每次生成独立的渐变 id，避免同页多张牌互相引用。 */
-let backSeq=0;
-export function cardBack():string{const id=`cb${++backSeq}`,g=`url(#${id}g)`;
- const s=(w=.75)=>`fill="none" stroke="${g}" stroke-width="${w}" vector-effect="non-scaling-stroke"`;
- const spark=(x:number,y:number,r:number)=>`<path d="M${x} ${y-r}L${x+r*.22} ${y-r*.22}L${x+r} ${y}L${x+r*.22} ${y+r*.22}L${x} ${y+r}L${x-r*.22} ${y+r*.22}L${x-r} ${y}L${x-r*.22} ${y-r*.22}Z" fill="${g}" opacity=".9"/>`;
- // 内框四角向内弯的圆弧
- const H=628,M=H/2,c=14,L=34,T=34,R=326,B=H-34;
- const inner=`M${L+c} ${T}H${R-c}A${c} ${c} 0 0 0 ${R} ${T+c}V${B-c}A${c} ${c} 0 0 0 ${R-c} ${B}H${L+c}A${c} ${c} 0 0 0 ${L} ${B-c}V${T+c}A${c} ${c} 0 0 0 ${L+c} ${T}Z`;
- // 八芒星：两个正方形叠成 45°
- const sq=(r:number,rot:number)=>Array.from({length:4},(_,k)=>{const a=(rot+k*90)*Math.PI/180;return `${(180+r*Math.cos(a)).toFixed(1)} ${(M+r*Math.sin(a)).toFixed(1)}`}).join('L');
- const crescent=(y:number,flip:boolean)=>`<path d="M${180-11} ${y}A11 11 0 1 1 ${180+11} ${y}A14 14 0 1 0 ${180-11} ${y}Z" fill="${g}" opacity=".75" transform="${flip?'matrix(-1 0 0 1 360 0) ':''}rotate(-90 180 ${y})"/>`;
- return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 ${H}" aria-hidden="true" class="card-back">
-<defs><linearGradient id="${id}b" x1="0" y1="0" x2=".55" y2="1"><stop offset="0" stop-color="#1A1822"/><stop offset="1" stop-color="#0E0D12"/></linearGradient>
-<linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E6D2B5"/><stop offset=".35" stop-color="#C5A059"/><stop offset=".62" stop-color="#6E5832"/><stop offset="1" stop-color="#C5A059"/></linearGradient>
-<radialGradient id="${id}v" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#C5A059" stop-opacity=".07"/><stop offset="1" stop-color="#C5A059" stop-opacity="0"/></radialGradient></defs>
-<rect width="360" height="${H}" fill="url(#${id}b)"/><rect width="360" height="${H}" fill="url(#${id}v)"/>
-<rect x="20" y="20" width="320" height="${H-40}" ${s()} opacity=".55"/><path d="${inner}" ${s()} opacity=".8"/>
-${spark(L,T,6)}${spark(R,T,6)}${spark(L,B,6)}${spark(R,B,6)}
-<circle cx="180" cy="${M}" r="96" ${s()} opacity=".7"/><circle cx="180" cy="${M}" r="84" ${s(.6)} stroke-dasharray="1 5" opacity=".7"/>
-<path d="M${sq(84,0)}Z" ${s()}/><path d="M${sq(84,45)}Z" ${s()}/><circle cx="180" cy="${M}" r="42" ${s()} opacity=".8"/>
-${spark(180,M,9)}<line x1="180" y1="${M-160}" x2="180" y2="${M-104}" ${s(.6)} opacity=".5"/><line x1="180" y1="${M+104}" x2="180" y2="${M+160}" ${s(.6)} opacity=".5"/>
-${crescent(M-196,false)}${crescent(M+196,true)}
-${[[96,M-180],[264,M-180],[96,M+180],[264,M+180],[70,M],[290,M]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.6" fill="${g}" opacity=".6"/>`).join('')}
-</svg>`}
+/** 牌背：星盘月相 · 双向对称金箔神圣几何（实现在 card-back.ts，所有抽牌、洗牌、牌阵的牌背都用它）。 */
+export {cardBack} from './card-back.ts';
