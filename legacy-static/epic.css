@@ -778,3 +778,9 @@ html:root[data-theme=light] .minimal-ritual .primary.draw{background:rgba(255,25
 .drawn-card .card-plain p{font-size:15px;margin:10px 0 0}
 .consultation-reading .reading-headline{font-size:19px;line-height:1.9;padding-left:16px;border-left:1px solid rgba(197,160,89,.7)}
 .consultation-reading .connection-copy{margin:0 0 14px}
+/* 「我会这样读你的问题」：塔罗师先把问题换成牌能回答的说法 */
+.q-reframe{margin:-8px 0 0;font-size:15px;line-height:1.8}
+.q-reframe span{display:block;font-size:12px;letter-spacing:.18em;color:var(--muted);margin-bottom:2px}
+.q-reframe em{display:block;font-style:normal;font-size:13px;color:var(--muted)}
+/* 直接回答：结论的第一句，比后面的整体描述更醒目 */
+.consultation-reading .reading-answer{font-size:20px;line-height:1.85;margin:0 0 12px;color:var(--rt-title,var(--fg))}

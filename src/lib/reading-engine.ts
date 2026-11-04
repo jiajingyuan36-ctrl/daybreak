@@ -3,8 +3,10 @@
 // 2. 每个牌阵位置有一个「角色」（现状、阻碍、建议、过去、未来……），同一张牌在不同角色里说法不同。
 // 3. 每张牌有语气（TONE，按 Waite 原典与通行牌义手工标注）：正位照用，逆位往回收一半——好牌受阻，难牌缓和。
 // 4. 组合：相邻位置的元素相性（金色黎明体系：火风相生、水土相生，火水、风土相克）、大牌 / 逆位 / 花色的集中、时间线的走向。
-// 5. 成文：先给一句回应问题的结论，再逐张、再连起来看，最后给今天能做的小事。牌只提供角度，不做预测。
+// 5. 成文：像塔罗师一样先把问题换成能回答的说法，按问题类型直接回应（会不会 → 走向；怎么做 → 第一步；为什么 → 卡在哪），
+//    再逐张、再连起来看，最后给今天能做的小事。牌只提供角度，不做预测。
 import type {DrawnCard,TarotCard,TarotSpread,Topic} from '../types/tarot.ts';
+import {LINES} from './reading-lines.ts';
 
 export type Domain='love'|'people'|'career'|'wealth'|'self';
 export type Kind='how'|'why'|'will'|'mind'|'choice'|'focus'|'open';
@@ -14,26 +16,38 @@ export const DOMAIN_LABEL:Record<Domain,string>={love:'感情',people:'人际关
 const DOMAIN_IN:Record<Domain,string>={love:'在这段感情里，',people:'在和人相处上，',career:'在学业和工作上，',wealth:'在钱的安排上，',self:''};
 const DOMAIN_DO:Record<Domain,string>={love:'放到感情里',people:'放到和人相处上',career:'放到学业和工作上',wealth:'放到钱和精力的安排上',self:''};
 const DOMAIN_WORDS:[Domain,RegExp][]=[
- ['love',/对象|男友|女友|男朋友|女朋友|老公|老婆|伴侣|暧昧|恋爱|喜欢|分手|复合|前任|表白|结婚|离婚|婚姻|感情|约会|相亲|异地|爱我|追求|心动|这段关系|crush/gi],
- ['career',/工作|上班|跳槽|辞职|离职|面试|offer|老板|领导|同事|升职|加薪|项目|考研|考公|考编|考试|学业|论文|毕业|实习|创业|副业|职业|简历|绩效|留学|学校|专业|读书|读研|学习|导师|求职/gi],
- ['wealth',/钱|存款|攒|理财|消费|花销|收入|工资|负债|欠|贷款|买房|房租|预算|开销|月光|赚/g],
- ['people',/朋友|闺蜜|父母|家人|爸|妈|室友|同学|亲戚|邻居|社交|人际|孩子|兄弟|姐妹/g],
+ ['love',/对象|男友|女友|男朋友|女朋友|老公|老婆|伴侣|暧昧|恋爱|喜欢|分手|复合|前任|表白|结婚|离婚|婚姻|感情|约会|相亲|异地|爱我|追求|心动|这段关系|我们的关系|我们之间|桃花|单身|脱单|对的人|失恋|挽回|网友|黏人|crush/gi],
+ ['career',/工作|上班|跳槽|辞职|离职|面试|offer|老板|领导|同事|升职|加薪|项目|考研|考公|考编|考试|学业|论文|毕业|实习|创业|副业|职业|简历|绩效|留学|学校|专业|读书|读研|研究生|学习|导师|求职|上岸|大厂|公司|职场/gi],
+ ['wealth',/钱|存款|攒|理财|消费|花销|收入|工资|负债|欠|贷款|买|房租|预算|开销|月光|赚|分期|投资|财运|经济/g],
+ ['people',/朋友|闺蜜|父母|家人|家里|爸|妈|室友|同学|亲戚|邻居|社交|人际|孩子|兄弟|姐妹|集体|催婚/g],
 ];
 const PERSON=/他|她|对方|TA/i;
 // 常见话题词：命中就用它当这次解读反复提到的「这件事」
 const SUBJECTS=['换工作','跳槽','辞职','面试','考研','考公','考试','论文','毕业','实习','升职','加薪','创业','副业','留学','求职','分手','复合','表白','暧昧','结婚','异地','相亲','前任','冷战','沟通','存钱','攒钱','理财','买房','搬家','减肥','健身','社交','新项目','这段关系','这段感情'];
 
-export interface QuestionInfo {domain:Domain;kind:Kind;subject:string;options:[string,string]|null;notices:string[]}
+/** reframe：塔罗师会把问题换成牌能回答的说法，并告诉提问的人「我会这样读你的问题」 */
+export interface QuestionInfo {domain:Domain;kind:Kind;subject:string;options:[string,string]|null;notices:string[];reframe:string}
+// 句尾的「吗 / 么」；「什么、怎么、多么」里的「么」不算
+const ASK='(?<![什怎多这那])[吗么]';
+const KIND_RE={
+ choice:new RegExp(`还是|要不要|该不该|选哪|哪个|哪一个|二选一|^(我)?(应该|该|需要)[^怎如什].{0,12}${ASK}$`),
+ // 问别人心里怎么想；「针对我」里的「对我」不算
+ mind:new RegExp(`(他|她|对方|TA|ta|老板|领导|同事|面试官|妈妈|爸爸|父母|朋友|室友|同学|对象|前任|网友).{0,8}(怎么想|想法|喜不喜欢|喜欢我|爱我|在想|心里|态度|(?<!针)对我|看我|是不是|有没有|有意见|印象|真心)`),
+ will:new RegExp(`会不会|能不能|有没有可能|有可能|可不可以|能否|会.{0,8}${ASK}|能.{0,8}${ASK}|什么时候|多久|合适${ASK}|合不合适|适合.{0,8}${ASK}|值得.{0,8}${ASK}|好${ASK}$|有没有结果|有结果|有戏|能成|成不成|在一起|走到最后|有未来|上岸|(时机|时候).{0,6}${ASK}|(会|运势|财运|接下来|未来|以后|下个月|今年|这周|发展).{0,8}(怎么样|如何|怎样)`),
+ why:/为什么|为何|为啥|怎么会|原因|出在哪|哪里出了问题/,
+ how:/怎样|怎么|如何|可以做|该做/,
+ focus:/最该|留意|注意|弄清|看清|是什么|适合做什么|做什么|专注什么|改进什么/};
 
-const clean=(s:string)=>s.replace(/^[\s，。、？?！!「」"“”,]+|[\s，。、？?！!「」"“”,吗呢吧啊呀]+$/g,'');
+// 句尾的语气词也去掉；「么」只在不属于「什么 / 怎么 / 多么」时才算语气词
+const clean=(s:string)=>s.replace(/^[\s，。、？?！!「」"“”,]+|[\s，。、？?！!「」"“”,吗呢吧啊呀]+$/g,'').replace(/(?<![什怎多这那要])[么嘛]$/,'');
 /** 读懂问题：领域、类型、关键词，以及需要先说清楚的提醒。 */
 export function understand(question:string):QuestionInfo{
  const q=question.trim(),notices:string[]=[];
  const scores=DOMAIN_WORDS.map(([d,re])=>[d,(q.match(re)||[]).length] as const).sort((a,b)=>b[1]-a[1]);
  let domain:Domain=scores[0][1]>0?scores[0][0]:'self';
  if(domain==='self'&&PERSON.test(q))domain='love';
- const who=q.match(/(他|她|对方|TA|老板|领导|同事|妈妈|爸爸|父母|朋友|室友|对象).{0,8}(怎么想|想法|喜不喜欢|喜欢我|爱我|在想|心里|态度|对我|看我)/i);
- const kind:Kind=!q?'open':/还是|要不要|该不该|选哪|二选一/.test(q)?'choice':who?'mind':/会不会|能不能|有没有可能|可不可以|能否|会.{0,8}吗|能.{0,8}吗|什么时候|多久|合适吗|适合.{0,8}吗/.test(q)?'will':/为什么|为何|怎么会|原因/.test(q)?'why':/怎样|怎么|如何|可以做|该做/.test(q)?'how':/最该|留意|注意|弄清|看清|是什么/.test(q)?'focus':'open';
+ const qs=q.replace(/[？?！!。\s]+$/,''),who=qs.match(KIND_RE.mind);
+ const kind:Kind=!q?'open':KIND_RE.choice.test(qs)?'choice':who?'mind':KIND_RE.why.test(qs)?'why':KIND_RE.will.test(qs)?'will':KIND_RE.how.test(qs)?'how':KIND_RE.focus.test(qs)?'focus':'open';
  let options:[string,string]|null=null;
  const m=q.match(/([^，。？?、]{1,16}?)还是([^，。？?、]{1,16})/),yn=q.match(/(?:要不要|该不该)([^，。？?]{1,16})/);
  const strip=(s:string)=>clean(s.replace(/^(我|我们)?(到底|究竟)?(是|该|应该|要|想)?(选择?)?/,'').replace(/(比较好|更好|好)$/,''));
@@ -43,12 +57,18 @@ export function understand(question:string):QuestionInfo{
  // 去掉问法，只留「这件事」本身：按逗号拆开，丢掉只剩问法的半句，取第一段有内容的
  const tail=/(我|我们)?(最|最该|需要|应该|该|要|可以|能|还)*(先)?(留意|注意|弄清|看清|做|知道|关注|调整|推进|坚持|处理|面对)?(些|一下)?(什么|哪些|怎样|怎么办|怎么样|如何|下去|会怎样)$/;
  const short=clean(q).split(/[，,；;]/).map(s=>clean(s.replace(/^(为什么|为何|怎么会|请问)/,'').replace(/^(我|我们)/,'').replace(tail,'').replace(/(可以|应该|该|要)?(怎样|怎么|如何)/,'').replace(/^(我|我们)/,''))).find(s=>s.length>=2)??'';
- const subject=kind==='mind'?(/他|她|对方|TA/i.test(who?.[1]??'')?(domain==='love'?'你们的关系':'你和对方'):`你和${who![1]}`):options&&!m?options[0]:options?`${options[0]}还是${options[1]}`:hit||(short&&short.length<=12?short:q?'这件事':'今天');
+ // 问的是自己和「他 / 她」之间、又没点出具体的事（比如「我跟她有结果么」），这件事就是你们的关系
+ const subject=kind==='mind'?(/他|她|对方|TA|对象|前任|网友/i.test(who?.[1]??'')?(domain==='love'?'你们的关系':'你和对方'):`你和${who![1]}`):options&&!m?options[0]:options?`${options[0]}还是${options[1]}`:hit||(domain==='love'&&PERSON.test(q)&&kind!=='how'?'你们的关系':short&&short.length<=12?short:q?'这件事':'今天');
+ const S=`「${subject}」`;
+ const reframe=!q?'':{choice:options?`「${options[0]}」和「${options[1]}」，各自能得到什么、要付出什么`:`${S}，两边各自的得失`,mind:`在${S}里，你能看清什么、可以怎么做`,will:`照现在这样，${S}会往哪里走，你能做些什么`,why:`${S}，卡在了哪里`,how:`${S}，从哪里开始最合适`,focus:`${S}，最需要留意的是什么`,open:`${S}，牌想提醒你什么`}[kind];
  if(kind==='mind')notices.push('牌读不了别人心里在想什么。下面把问题换成「你能怎么做」来读，这部分才是你能掌握的。');
  if(kind==='will')notices.push('牌不负责预测「会不会」「什么时候」，它更擅长告诉你：什么能让你想要的结果更有可能发生。');
  if(/想死|自杀|轻生|不想活|伤害自己/.test(q))notices.push('如果你现在很难受，甚至想伤害自己，请先放下牌，马上联系身边信任的人，或拨打心理援助热线 12356。');
  else if(/病|医院|怀孕|抑郁症|焦虑症|手术|诊断|吃药|官司|起诉|律师|股票|基金|炒币|彩票/.test(q))notices.push('涉及健康、法律或投资的事，请以医生、律师或专业人士的意见为准。牌只能帮你理清自己的想法和感受。');
- return {domain,kind,subject,options,notices}}
+ return {domain,kind,subject,options,notices,reframe}}
+
+/** 塔罗师会按问题挑牌阵：二选一摆两条路，问走向看过去现在未来，其余先看现状、阻碍和建议 */
+export function suggestSpread(kind:Kind){return kind==='choice'?'two-paths':kind==='will'?'three-card-time':'three-card-state'}
 
 /** 领域和旧记录里的 Topic 互相换算 */
 export const domainToTopic=(d:Domain):Topic=>d==='love'||d==='people'?'love':d==='career'?'career':d==='wealth'?'wealth':'general';
@@ -79,12 +99,17 @@ const kw=(d:DrawnCard)=>d.card[d.isReversed?'reversed':'upright'].keywords;
 const nm=(d:DrawnCard)=>`${d.card.name_zh}${d.isReversed?'逆位':''}`;
 const court=(c:TarotCard)=>c.arcana==='minor'&&c.number>10;
 function aspect(c:TarotCard,domain:Domain){return domain==='love'||domain==='people'?c.life_aspects.love:domain==='career'?c.life_aspects.career:domain==='wealth'?c.life_aspects.finance:''}
-// 这些位置本身就是「可以怎么做」，接上这张牌在该领域里的具体建议；其余位置只描述，不给建议
-const ADVISE:Role[]=['daily','advice','next','common','self','core'];
+// 这些位置本身就是「可以怎么做」，再接上这张牌在该领域里的具体建议
+const ADVISE:Role[]=['daily','advice','next'];
+const LINE_AT:Record<Domain,number>={love:0,people:0,career:1,wealth:2,self:3};
+/** 这张牌在这个领域里说的是什么（reading-lines.ts），正位取前四句，逆位取后四句 */
+const domainLine=(d:DrawnCard,domain:Domain)=>LINES[d.card.id]?.[(d.isReversed?4:0)+LINE_AT[domain]]??'';
 
 /** 一张牌在它的位置上，对这个问题说了什么 */
 function cardText(d:DrawnCard,role:Role,info:QuestionInfo,opt=''):string{
- const [k0,k1]=kw(d),t=tone(d),both=k1?`「${k0}」，也带着一点「${k1}」`:`「${k0}」`,dom=DOMAIN_IN[info.domain];
+ const line=domainLine(d,info.domain);
+ // 有分领域的那句时，位置句里只点一个关键词，免得和后面那句重复
+ const [k0,k1]=kw(d),t=tone(d),both=k1&&!line?`「${k0}」，也带着一点「${k1}」`:`「${k0}」`,dom=line?'':DOMAIN_IN[info.domain];
  const lines:Record<Role,()=>string>={
   daily:()=>`今天这张牌落在${both}上。想一想今天哪件具体的事和它对得上。`,
   cover:()=>`${dom}整件事笼罩在${both}的氛围里，别的一切都在它里面发生。`,
@@ -112,8 +137,30 @@ function cardText(d:DrawnCard,role:Role,info:QuestionInfo,opt=''):string{
  };
  let s=lines[role]();
  const a=aspect(d.card,info.domain);
- if(a&&ADVISE.includes(role))s+=`${DOMAIN_DO[info.domain]}：${a}`;
+ // 描述类位置接上这张牌在该领域里的意思；建议类位置接上具体做法（一张牌的日常指引两样都要）
+ if(!ADVISE.includes(role)||role==='daily')s+=line;
+ if(ADVISE.includes(role))s+=a?`${DOMAIN_DO[info.domain]||'具体来说'}：${a}`:line;
  return s}
+
+// 塔罗师先回答问题、再解释：每个位置在「整体倾向」里的分量，未来和结果最重，阻碍本来就偏难，分量最轻
+const WEIGHT:Partial<Record<Role,number>>={outcome:2,future:2,daily:2,advice:1.5,next:1.5,now:1,core:1,cover:1,self:1,block:.5};
+const firstOf=(spread:TarotSpread,n:number,roles:Role[])=>{for(const r of roles)for(let i=0;i<n;i++)if(roleOf(spread,i)===r)return i;return 0};
+/** 按问题类型直接回应：会不会 → 整体走向；怎么做 → 第一步；为什么 → 卡在哪；对方怎么想 → 你们之间的状态；留意什么 → 最该注意的一张 */
+function answer(info:QuestionInfo,spread:TarotSpread,drawn:readonly DrawnCard[]):string{
+ if(!drawn.length||spread.id==='two-paths')return '';
+ const n=drawn.length,S=`「${info.subject}」`,idx=(roles:Role[])=>firstOf(spread,n,roles),say=(i:number)=>`${nm(drawn[i])}（${kw(drawn[i])[0]}）`;
+ let sum=0,wt=0;drawn.forEach((d,i)=>{const w=WEIGHT[roleOf(spread,i)]??.5;sum+=w*tone(d);wt+=w});const score=sum/wt;
+ const line=(i:number)=>domainLine(drawn[i],info.domain);
+ switch(info.kind){
+  case 'will':case 'choice':{const subj=info.kind==='choice'&&info.options?`「${info.options[0]}」`:S;
+   const lead=score>=.35?'整体牌面偏积极：照现在这样走，往好的方向发展的空间更大':score>=-.15?'牌面有好有难：有可能，但它不会自己发生，要看你接下来怎么做':'牌面阻力偏多：照现在这样走不太顺，先把卡住的地方处理好，局面才会松动';
+   const key=score<-.15?idx(['block','now','cover','core','past','daily']):idx(['advice','next','future','outcome','now','daily']);
+   return `关于${subj}，${lead}。最关键的一张是${say(key)}。`}
+  case 'how':{const i=idx(['advice','next','future','outcome','now','daily']);return tone(drawn[i])>=0?`关于${S}，牌给的第一步是「${kw(drawn[i])[0]}」。${line(i)}`:`关于${S}，先别急着找办法：${say(i)}在提醒你，先处理好「${kw(drawn[i])[0]}」，再往前走。`}
+  case 'why':{const i=idx(['block','past','origin','cover','now','daily']);return `${S}，多半卡在「${kw(drawn[i])[0]}」这里。${line(i)}`}
+  case 'mind':{const i=idx(['now','core','cover','self','daily']);return `牌不读别人的心，但能看你们之间的状态：眼下是「${kw(drawn[i])[0]}」。${line(i)}`}
+  case 'focus':{const i=idx(['block','hope','balance','now','daily']);return `${S}最需要留意的，是「${kw(drawn[i])[0]}」。${line(i)}`}
+  default:return ''}}
 
 const EL:Record<string,string>={fire:'火',water:'水',air:'风',earth:'土'};
 const EL_MEAN:Record<string,string>={fire:'行动和热情',water:'感受和关系',air:'想法和沟通',earth:'现实、身体和钱'};
@@ -131,7 +178,7 @@ const SUIT_THEME:Record<string,string>={wands:'行动和热情',cups:'感受和�
 // 连起来看时，哪些位置两两对照
 const PAIRS:Record<string,[number,number][]>={'three-card-state':[[0,1],[1,2]],'three-card-time':[[0,1],[1,2]],'celtic-cross':[[0,1],[6,7],[2,9]],'big-dipper':[[0,6],[2,5]]};
 
-export interface SpreadReading extends QuestionInfo {headline:string;cards:{id:string;text:string}[];flow:string[];actions:string[];reflection:string}
+export interface SpreadReading extends QuestionInfo {answer:string;headline:string;cards:{id:string;text:string}[];flow:string[];actions:string[];reflection:string}
 
 /** 读一次牌阵。domain 不传就按问题自动判断。 */
 export function readSpread(question:string,spread:TarotSpread,drawn:readonly DrawnCard[],domain?:Domain):SpreadReading{
@@ -149,11 +196,13 @@ export function readSpread(question:string,spread:TarotSpread,drawn:readonly Dra
   case 'celtic-cross':headline=`关于${S}：整件事笼罩在「${k(0)}」的氛围里，眼前挡着的是「${k(1)}」；你真正想要的是「${k(2)}」，而照现在的走法，${t(9)>=0?`最可能走向「${k(9)}」`:`更可能先走到「${k(9)}」，还来得及调整`}。`;break;
   case 'big-dipper':headline=`关于${S}：你最放不下的是「${k(0)}」，手里已经有「${k(2)}」可以用；${t(6)>=0?`接下来先迈出「${k(6)}」这一小步`:`接下来先照顾好「${k(6)}」，再往前走`}。`;break;
   default:headline=`关于${S}：${drawn.map(d=>`「${kw(d)[0]}」`).join('、')}。`}
- if(info.kind==='why'&&spread.id==='three-card-state')headline+='你问的「为什么」，答案多半藏在阻碍那张牌里。';
  if(info.kind==='choice'&&spread.id!=='two-paths')info.notices.push('你在两个选择之间犹豫。下次可以试试「二选一」牌阵，它会把两条路的好处和代价分开摆。');
 
  const flow:string[]=[];
- for(const [a,b] of PAIRS[spread.id]??[])if(drawn[a]&&drawn[b]){const r=relation(drawn[a],drawn[b]);if(r)flow.push(`「${drawn[a].position.title}」和「${drawn[b].position.title}」：${r}`)}
+ // 同一张大牌「定下底色」只说一次
+ const toned=new Set<string>();
+ for(const [a,b] of PAIRS[spread.id]??[])if(drawn[a]&&drawn[b]){const x=drawn[a],y=drawn[b],mixed=(x.card.arcana==='major')!==(y.card.arcana==='major'),major=x.card.arcana==='major'?x:y;
+  if(mixed&&toned.has(major.card.id))continue;const r=relation(x,y);if(!r)continue;if(mixed)toned.add(major.card.id);flow.push(`「${x.position.title}」和「${y.position.title}」：${r}`)}
  if(spread.id==='three-card-time'&&drawn.length===3){const [p,n,f]=drawn.map(tone);flow.push(f>n&&n>=p?'整条线是往上走的：越往后越顺，眼下的努力在起作用。':f<n&&n<=p?'整条线在往下走：不是坏事要发生，而是提醒你现在的做法需要调整。':'这条线有起有伏，关键在「现在」这一步怎么走。')}
  if(spread.id==='two-paths'&&drawn.length===5)for(const [o,g,c] of [[A,1,2],[B,3,4]] as const){const r=relation(drawn[g],drawn[c]);if(r)flow.push(`${o}的好处和代价：${r}`)}
  const n=drawn.length,majors=drawn.filter(d=>d.card.arcana==='major').length,rev=drawn.filter(d=>d.isReversed).length;
@@ -169,4 +218,4 @@ export function readSpread(question:string,spread:TarotSpread,drawn:readonly Dra
  const order=[...drawn.keys()].filter(i=>pickRoles.includes(roleOf(spread,i))).sort((a,b)=>pickRoles.indexOf(roleOf(spread,a))-pickRoles.indexOf(roleOf(spread,b)));
  const actions=[...new Set(order.map(i=>drawn[i].card.today_action))].slice(0,3);
  const reflection=info.subject!=='今天'?`回到${S}：今天哪一刻，你觉得离想要的样子近了一点？`:drawn[order[0]]?.card.evening_question??'今天哪件事，和你原本以为的不太一样？';
- return {...info,headline,cards,flow,actions,reflection}}
+ return {...info,answer:answer(info,spread,drawn),headline,cards,flow,actions,reflection}}
