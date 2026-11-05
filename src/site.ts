@@ -5,7 +5,7 @@ export const SITE_HOST='daybreak-morning-ritual.onrender.com';
 export const SITE_URL=`https://${SITE_HOST}`;
 /** 「抽牌后问一个问题」的后端（server/，放在 Render，密钥只在那边）。AI_ENABLED 为 false 时网页上不显示这个入口。 */
 export const AI_API='https://daybreak-ai.onrender.com';
-export const AI_ENABLED=false;
+export const AI_ENABLED=true;
 /** 经营者的微信号：深度解读和提建议都用它。不要换成手机号。 */
 export const WECHAT='YJJ_080922';
 /** 经营者自我介绍，放在每处微信联系方式旁边，让人知道回复为什么慢。 */
