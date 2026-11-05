@@ -1009,3 +1009,28 @@ html:root[data-theme=light] .home-cta{border-color:rgba(28,25,23,.18)}
 .ask-status{min-height:1.6em;font-size:13px;color:var(--muted);margin:4px 0 0;letter-spacing:.04em}
 .ask-privacy{font-size:12px;line-height:1.8;color:var(--muted);opacity:.85;margin:6px 0 0;letter-spacing:.03em}
 html:root[data-theme=dark] .ask-item{border-left-color:rgba(197,160,89,.45)}
+/* ============ 单张牌页面（/card/…/） ============ */
+.card-page{max-width:760px!important}
+.card-crumb{display:flex;gap:10px;font-size:13px;letter-spacing:.08em;color:var(--muted);margin:0 0 22px}
+.card-crumb a{color:var(--muted)}
+.card-head{display:grid;grid-template-columns:minmax(150px,240px) 1fr;gap:clamp(20px,4vw,44px);align-items:start;margin:0 0 30px}
+.card-art{width:100%;height:auto;display:block;border:1px solid var(--line)}
+.card-group{font-size:12px;letter-spacing:.22em;color:#9C7A3C;margin:4px 0 6px}
+html:root[data-theme=dark] .card-group{color:#C5A059}
+.card-head h1{margin:0!important;text-align:left}
+.card-en{font-family:var(--font-display);font-size:15px;letter-spacing:.14em;color:var(--muted);margin:6px 0 18px}
+.card-intro{line-height:1.95;margin:0}
+.card-keys{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:0 0 12px}
+.card-keys li{font-size:13px;letter-spacing:.08em;padding:3px 12px;border:1px solid var(--line);border-radius:999px!important}
+.card-life{margin:0}.card-life>div{padding:10px 0;border-bottom:1px solid var(--line)}.card-life dt{font-size:13px;letter-spacing:.12em;color:var(--muted);margin:0 0 4px}.card-life dd{margin:0;line-height:1.85}
+.card-question,.card-meta{color:var(--muted);font-size:15px}
+.card-source{font-size:14px;color:var(--muted)}
+.card-cta{display:flex;flex-wrap:wrap;gap:22px;align-items:center;margin:34px 0 26px}
+.card-draw{display:inline-flex;align-items:center;gap:10px;padding:10px 22px;border:1px solid var(--line);border-radius:999px!important}
+.card-draw span{font-size:11px;color:#C5A059}
+.card-pager{display:flex;justify-content:space-between;gap:16px;border-top:1px solid var(--line);padding-top:16px}
+.card-pager a{display:flex;flex-direction:column;gap:2px}.card-pager a[rel=next]{text-align:right}
+.card-pager small{font-size:12px;color:var(--muted);letter-spacing:.12em}
+.card-more{margin:18px 0 0;font-size:14px}.card-more a{color:var(--muted);text-decoration:underline;text-underline-offset:4px}
+.insp-page{font-size:13px;margin:10px 0 0}.insp-page a{text-decoration:underline;text-underline-offset:4px}
+@media(max-width:560px){.card-head{grid-template-columns:1fr}.card-art{max-width:220px;margin:0 auto}.card-head h1{text-align:center}.card-group,.card-en{text-align:center}}

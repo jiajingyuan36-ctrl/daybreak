@@ -124,6 +124,7 @@ function CardInspector({list,index,history,onIndex,onClose}:{list:Card[];index:n
     <section><h3>晚间回顾</h3><p>{c.reflectionPrompt}</p></section>
     {cardAstro(c.id)?.plain&&<p className="insp-note">{cardAstro(c.id)!.plain}</p>}
     <p className="insp-echo">✦ {meet?<>在你的晨启记录里，这张牌和你相遇过 {meet.count} 次{meet.reversed?`（其中逆位 ${meet.reversed} 次）`:''}，最近一次是 {meet.last}。</>:'这张牌还在等你们第一次相遇。'}</p>
+    <p className="insp-page"><a href={`/card/${c.id}/`}>打开这张牌的完整页面（可以分享）→</a></p>
     {k?.source&&<p className="insp-source"><a href={k.source} target="_blank" rel="noreferrer">Waite《The Pictorial Key to the Tarot》原文</a></p>}
    </article>
   </div>

@@ -1,6 +1,6 @@
 // 网站地址只在这里写一次；以后换自己的域名，改这一处即可（分享图、日签、链接预览都会跟着变）。
-// 例外：public/robots.txt 和 public/sitemap.xml 是静态文件，换域名时要一起改。
-// 自有域名 daybreaktarot.xyz 还没接通，先用 Render 的原地址；接通后改回这里，并同步 robots.txt、sitemap.xml。
+// sitemap.xml 和 robots.txt 由 app/sitemap.ts、app/robots.ts 在构建时按这里的地址生成。
+// 自有域名 daybreaktarot.xyz 还没接通，先用 Render 的原地址；接通后改回这里即可。
 export const SITE_HOST='daybreak-morning-ritual.onrender.com';
 export const SITE_URL=`https://${SITE_HOST}`;
 /** 「抽牌后问一个问题」的后端（server/，放在 Render，密钥只在那边）。AI_ENABLED 为 false 时网页上不显示这个入口。 */

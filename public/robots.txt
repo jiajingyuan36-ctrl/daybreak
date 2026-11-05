@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://daybreak-morning-ritual.onrender.com/sitemap.xml
