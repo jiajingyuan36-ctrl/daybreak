@@ -60,7 +60,7 @@ export function Compendium(){
   <p className="codex-progress" aria-live="polite">{mine?<>已经遇见 <b>{met}</b> / 78 张牌</>:<>{list.length} / 78 张</>}</p>
   <div className="codex-grid" key={`${group}|${query}|${mine}`}>{list.map((c,i)=>{const seen=!!history[c.id],hide=mine&&!seen;
    return <button type="button" key={c.id} className={`codex-card${hide?' is-unmet':''}`} style={{['--i' as string]:Math.min(i,24)}} onClick={()=>setOpen(i)} aria-label={`${c.nameZh}，${c.nameEn}${mine?(seen?'，已遇见':'，还没遇见'):''}`}>
-    <span className="codex-face">{hide?<span className="codex-back" dangerouslySetInnerHTML={{__html:BACK_USE}}/>:<img src={cardImageUrl(c.id,true)} alt="" loading="lazy" decoding="async" width={320} height={549}/>}<span className="codex-badge">{badge(c)}</span>{seen&&mine&&<span className="codex-seen" aria-hidden="true">✦</span>}</span>
+    <span className="codex-face">{hide?<span className="codex-back" dangerouslySetInnerHTML={{__html:BACK_USE}}/>:<img src={cardImageUrl(c.id,true)} alt="" loading="lazy" decoding="async" width={320} height={549} ref={el=>{if(el?.complete&&el.naturalWidth)el.classList.add('is-loaded')}} onLoad={e=>e.currentTarget.classList.add('is-loaded')} onError={e=>e.currentTarget.classList.add('is-loaded')}/>}<span className="codex-badge">{badge(c)}</span>{seen&&mine&&<span className="codex-seen" aria-hidden="true">✦</span>}</span>
     <span className="codex-name"><b>{c.nameZh}</b><small>{c.nameEn}</small></span></button>})}</div>
   {!list.length&&<p className="codex-empty">没有找到这张牌。试试更短的关键词，或换一个牌组。</p>}
   {open!==null&&list[open]&&<CardInspector list={list} index={open} history={history} onIndex={setOpen} onClose={()=>setOpen(null)}/>}
