@@ -1046,3 +1046,20 @@ html:root[data-theme=dark] .card-group{color:#C5A059}
 .about-page section ul>li{position:relative;padding:6px 0 6px 2.2em;line-height:1.85}
 .about-page section ul>li::before{content:'';position:absolute;left:.7em;top:1.05em;width:4px;height:4px;border:1px solid currentColor;opacity:.55;transform:rotate(45deg)}
 .about-page code{font-size:.86em;padding:1px 6px;border:1px solid var(--line);border-radius:6px!important}
+/* 深度解读 · 价目表 */
+.deep-tiers{width:100%;border-collapse:collapse;margin:8px 0 10px;font-size:15px;line-height:1.75}
+.deep-tiers th,.deep-tiers td{text-align:left;vertical-align:top;padding:12px 10px 12px 0;border-bottom:1px solid var(--line)}
+.deep-tiers thead th{font-size:12px;letter-spacing:.16em;color:var(--muted);font-weight:400;padding-top:4px}
+.deep-tiers tbody th{font-weight:400;white-space:nowrap}
+.deep-tiers tbody th small{display:block;font-size:12px;color:var(--muted);letter-spacing:.08em}
+.deep-tiers td:last-child{white-space:nowrap;text-align:right;padding-right:0}
+.deep-tier-note{font-size:14px;color:var(--muted)}
+@media(max-width:520px){.deep-tiers{font-size:14px}.deep-tiers th,.deep-tiers td{padding-right:8px}}
+/* 深度解读页的列表：全站去掉了列表符号，这里补回细小的序号和圆点 */
+.deep-page section ol,.deep-page section ul{list-style:none;padding:0;margin:4px 0 8px;counter-reset:deep}
+.deep-page section ol>li,.deep-page section ul>li{position:relative;padding:6px 0 6px 2.2em;line-height:1.85}
+.deep-page section ol>li{counter-increment:deep}
+.deep-page section ol>li::before{content:counter(deep,decimal-leading-zero);position:absolute;left:0;top:7px;font-size:12px;letter-spacing:.12em;color:#9C7A3C}
+html:root[data-theme=dark] .deep-page section ol>li::before{color:#C5A059}
+.deep-page section ul>li::before{content:'';position:absolute;left:.7em;top:1.05em;width:4px;height:4px;border:1px solid currentColor;opacity:.55;transform:rotate(45deg)}
+.deep-page .deep-contact>li{padding-left:0}.deep-page .deep-contact>li::before{display:none}
