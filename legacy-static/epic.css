@@ -838,3 +838,90 @@ html:root[data-theme=light] .minimal-ritual .primary.draw{background:rgba(255,25
 .home-fortune{max-width:46ch;margin:40px auto 24px;text-align:center}
 .home-fortune summary{display:list-item;width:fit-content;margin:auto;padding:12px 0;cursor:pointer}
 .home-fortune .birth-inline{margin-top:12px;padding-top:24px}
+
+/* ===== 全站色彩、排版与微交互（2026-11 审美升级）=====
+   语义化色彩变量：深色「玄夜星辉」、浅色「羊皮卷古籍」。旧变量（--fg、--muted、--line、--gold……）都映射到这里，
+   各页面不再各自写死颜色。浅色模式下的强调金改成低明度的古董暗金，保证在米白底上对比度达到 WCAG AA。 */
+html:root,html:root[data-theme=dark]{--bg-primary:#0F0F11;--bg-surface:#0F0F11;--bg-elevated:#16161A;--bg-glass:rgba(22,22,26,.78);
+ --text-primary:#F4EFE6;--text-secondary:#C8C4BC;--text-muted:#8E8A82;--accent-gold:#D4AF37;--accent-gold-bright:#E5C158;
+ --border-subtle:rgba(212,175,55,.18);--border-hover:rgba(212,175,55,.45);--watermark-opacity:.07;--dawn-glow:rgba(212,175,55,.07);
+ --fg:var(--text-primary);--ink:var(--text-primary);--muted:var(--text-muted);--line:var(--border-subtle);
+ --font-sans:"Inter","PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",sans-serif;--ease-soft:cubic-bezier(.22,1,.36,1)}
+html:root[data-theme=light]{--bg-primary:#F4EFE6;--bg-surface:#F4EFE6;--bg-elevated:#FAF7F2;--bg-glass:rgba(250,247,242,.85);
+ --text-primary:#1C1917;--text-secondary:#44403C;--text-muted:#6F6862;--accent-gold:#8C621E;--accent-gold-bright:#724E14;
+ --border-subtle:rgba(140,98,30,.22);--border-hover:rgba(140,98,30,.5);--watermark-opacity:.035;--dawn-glow:rgba(140,98,30,.05);
+ --fg:var(--text-primary);--ink:var(--text-primary);--muted:var(--text-muted);--line:var(--border-subtle)}
+/* 浅色模式：各组件里写在局部的金色变量统一换成古董暗金（用 * 才能盖过写在组件上的同名变量） */
+html:root[data-theme=light] *{--gold:var(--accent-gold);--gold-hi:var(--accent-gold-bright);--al-gold:var(--accent-gold);--bp:var(--accent-gold);--rt-hint:var(--text-muted)}
+html:root[data-theme=light] :is(.pick-hint,.mood-lead .mood-tag,.minimal-ritual .primary.draw .draw-star,.draw-main small,.ribbon-eyebrow,.ribbon-nav,.keyword-kicker,.action-no,.chev,.brand-promise,.brand-promise span){color:var(--accent-gold)!important}
+html:root[data-theme=light] :is(.draw-arrow svg,.ribbon-btn svg){stroke:var(--accent-gold)}
+/* 浅色背景：星盘线稿从页面背景里拿出来，单独铺一层，透明度降到 --watermark-opacity 的水平，不再和正文抢 */
+html:root[data-theme=light]{background:
+  radial-gradient(ellipse 115% 85% at 50% 42%,rgba(0,0,0,0) 58%,rgba(126,92,44,.08) 100%) fixed,
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .27 0 0 0 0 .15 0 0 0 .08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0/240px 240px,
+  var(--bg-primary)}
+html:root[data-theme=light] body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;background:url(/textures/astrolabe.svg) 50% -180px/min(1040px,165vw) auto no-repeat;opacity:.3}
+html:root:not([data-theme=light]){background-color:var(--bg-primary)}
+/* 抽牌页最小号的灰字（日期）提亮到次级文字色，深色下也看得清 */
+html:root[data-theme=dark] .minimal-ritual{--rt-small:var(--text-muted)}
+
+/* 文字：正文用暖灰白（深色）/ 暖深灰褐（浅色），小标题用主文字色；所有页面主标题统一用主文字色 */
+main p,main li,main dd,main blockquote,.daily-reading p,.consultation-reading p,.drawn-card p,.zodiac-page p{color:var(--text-secondary)}
+main h1,main h2,main h3,.page-heading h1,.tarot-workbench>h1{color:var(--text-primary)}
+.page-heading h1,main h1{letter-spacing:.08em}
+/* 正文与解读：干净的无衬线字体，行高 1.8，段落之间留出呼吸 */
+:is(main,.card-detail-dialog) :is(p,li,dd,blockquote):not([class*=kicker]):not([class*=eyebrow]):not(.mono){font-family:var(--font-sans)!important;line-height:1.8}
+:is(.daily-reading,.consultation-reading,.drawn-card,.card-detail-dialog,.legal-page,.zodiac-page) p{margin-bottom:1.15em}
+/* 英文全大写的小标题，字距统一 */
+:is(.keyword-kicker,.ribbon-eyebrow span,.brand-sub,.ritual-eyebrow,.cap .k){letter-spacing:.22em}
+/* 设置页：「外观」两个字不再被挤成两行 */
+.theme-setting{white-space:nowrap;gap:16px}
+
+/* 图鉴：牌面没加载出来之前是一张古典星芒牌背（不是黑框），微光扫过；加载完再淡入牌面 */
+.codex-face{position:relative;aspect-ratio:1/1.71;border-radius:8px!important;overflow:hidden;
+ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none' stroke='%23D4AF37' stroke-width='.8' opacity='.22'%3E%3Ccircle cx='50' cy='50' r='30'/%3E%3Ccircle cx='50' cy='50' r='24'/%3E%3Cpath d='M50 14L56 44L86 50L56 56L50 86L44 56L14 50L44 44Z'/%3E%3Cpath d='M50 26a24 24 0 0 0 0 48a17 17 0 0 1 0-48Z'/%3E%3C/svg%3E") center/62% no-repeat,linear-gradient(160deg,var(--bg-elevated) 0%,var(--bg-primary) 100%);
+ border:1px solid var(--border-subtle)!important}
+.codex-face::before{content:'';position:absolute;inset:6px;border:1px solid rgba(212,175,55,.12);border-radius:5px!important;pointer-events:none}
+.codex-face::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 35%,rgba(232,206,150,.10) 50%,transparent 65%);background-size:250% 100%;animation:codex-shimmer 1.6s ease-in-out infinite}
+.codex-face:has(img.is-loaded)::after{animation:none;opacity:0}
+.codex-face img{opacity:0;transition:opacity .4s ease}
+.codex-face img.is-loaded{opacity:1}
+@keyframes codex-shimmer{from{background-position:130% 0}to{background-position:-30% 0}}
+@media (min-width:1024px){.codex-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important}}
+@media (min-width:1280px){.codex-grid{grid-template-columns:repeat(6,minmax(0,1fr))!important}}
+
+/* 韦特牌面融进暗色界面：外加一圈暗金画框 */
+:is(.drawn-card img,.card-detail-dialog>img,.pair-majors img,.zodiac-cards img,.history-art img.rws){padding:6px;background:var(--bg-elevated);border:1px solid var(--border-subtle)!important;border-radius:10px!important;box-sizing:border-box}
+
+/* 牌阵页底部：付费一对一深度解读，做成一张毛玻璃名片 */
+.deep-note.deep-card{position:relative;margin-top:72px;padding:28px 24px 24px!important;border:1px solid var(--border-subtle)!important;border-top:1px solid var(--border-subtle)!important;border-radius:12px!important;
+ background:var(--bg-glass)!important;-webkit-backdrop-filter:blur(12px)!important;backdrop-filter:blur(12px)!important;justify-items:center;text-align:center;gap:14px}
+.deep-mark{width:22px;height:22px;fill:none;stroke:var(--accent-gold);stroke-width:1;opacity:.85}
+.deep-card h2{font-family:var(--font-display)!important;font-size:22px!important;letter-spacing:.12em;color:var(--accent-gold)!important}
+.deep-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0;padding:0;list-style:none}
+.deep-pills li{padding:4px 12px;border:1px solid var(--border-subtle);border-radius:999px!important;font-size:12px!important;letter-spacing:.08em;color:var(--text-secondary)}
+.deep-card>p{max-width:40ch}
+.deep-card .contact-card{width:100%;display:grid;gap:10px}
+.deep-card .deep-contact{margin:0;padding:12px 14px;list-style:none;border:1px solid var(--border-subtle);border-radius:10px!important;background:var(--bg-elevated)}
+.deep-card .deep-contact li{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.deep-card .deep-contact li>span{font-size:12px;letter-spacing:.12em;color:var(--text-muted)}
+.deep-card .deep-contact strong{font-family:var(--font-display)!important;letter-spacing:.06em;color:var(--text-primary)}
+.deep-card .copy-contact{min-height:0!important;padding:6px 14px!important;border:1px solid var(--border-hover)!important;border-radius:999px!important;font-size:13px;color:var(--accent-gold-bright)!important}
+.deep-card .contact-note{font-size:13px!important;color:var(--text-muted)!important}
+
+/* 「把晨启放到手机桌面」：右上角 × 关掉后不再出现；页面底部会自动留出它的高度 */
+.install-hint{padding-right:44px!important}
+.install-close{position:absolute;top:8px;right:10px;width:28px;height:28px;min-height:0!important;padding:0!important;border:0!important;font-size:20px;line-height:1;color:var(--text-muted)!important;background:none!important}
+.install-setting{display:flex!important;align-items:center;justify-content:space-between;gap:16px;text-align:left}
+.install-setting strong{font-weight:400}
+.install-how{margin:6px 0 0;font-size:13px;color:var(--text-muted);display:none}
+.install-how.is-shown{display:block}
+.install-setting .install-now{flex:none;min-height:0!important;padding:6px 16px!important;border:1px solid var(--border-hover)!important;border-radius:999px!important;font-size:13px}
+
+/* 桌面宽屏：页面顶部中央一层很淡的晨曦光晕，两侧不再是死板的纯黑 */
+@media (min-width:1024px){body{background-image:radial-gradient(ellipse 60% 40% at 50% 0%,var(--dawn-glow),transparent 70%)}}
+
+/* 统一的微交互：按钮、导航、卡片都用同一条阻尼曲线；主操作悬停时微微上浮、泛一点金光 */
+:is(.shared-header nav a,.shared-header select,.outline-button,.ritual-link,.q-examples button,.spread-choice button,.q-domain button,.codex-card,.catalog-card,.copy-contact,.install-now,.calendar-links a){transition:color .32s var(--ease-soft),border-color .32s var(--ease-soft),background-color .32s var(--ease-soft),box-shadow .32s var(--ease-soft),transform .32s var(--ease-soft)}
+@media (hover:hover){:is(.outline-button,.ritual-link,.calendar-links a,.home-draw,.deep-card .copy-contact):hover:not(:disabled){transform:translateY(-1px)!important;box-shadow:0 6px 20px rgba(212,175,55,.18)!important;border-color:var(--border-hover)!important}}
+@media (prefers-reduced-motion:reduce){.codex-face::after{animation:none}.codex-face img{transition:none}}
