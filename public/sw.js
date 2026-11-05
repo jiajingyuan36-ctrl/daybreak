@@ -1,6 +1,6 @@
 // 首次安装：后台缓存六个页面和它们引用的脚本、样式、字体。
 // 之后：带版本号的文件、牌面和贴图直接用缓存；页面和其它文件先用缓存秒开，同时后台取新版本更新缓存（下次打开生效）。
-const CACHE='daybreak-v47';
+const CACHE='daybreak-v48';
 const PAGES=['/','/ritual/','/consult/','/encyclopedia/','/history/','/settings/','/privacy/','/terms/','/deep/','/feedback/','/zodiac/','/pair/'];
 const IMMUTABLE=/\/_next\/static\/|\/fonts\/|\/rws\/|\/moon\/|\.(?:woff2|png|svg|webp|webmanifest)$/;
 const ASSET=/(?:href|src)="(\/(?:_next\/static|js)\/[^"?#]+)"/g;
