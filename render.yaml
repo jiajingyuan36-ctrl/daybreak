@@ -1,0 +1,18 @@
+# Render Blueprint：晨启塔罗的提问后端（server/）。
+# 用法：Render 控制台 New + → Blueprint → 选 jiajingyuan36-ctrl/daybreak，分支 claude/beidou → 按提示填 DEEPSEEK_API_KEY。
+# 网站本身（静态页）不在这里：它由 cike-yousheng 仓库的 daybreak-render 分支构建。
+services:
+  - type: web
+    name: daybreak-ai
+    runtime: node
+    plan: free
+    branch: claude/beidou
+    buildCommand: echo ok
+    startCommand: node --experimental-strip-types server/index.mjs
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: DEEPSEEK_API_KEY
+        sync: false   # 部署时在 Render 页面里手填，不写进仓库
