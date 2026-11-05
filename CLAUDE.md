@@ -4,7 +4,9 @@
 
 ## 当前状态
 线上：https://daybreak-morning-ritual.onrender.com/
-本仓库 main 合并本次 PR 后与线上版本一致（部署分支 daybreak-render 提交 f74ce8e，源码 4a03e9e）。68 项测试、类型检查与生产构建通过。
+**main 是唯一的源码主线**（2026-11-05 起）：它包含线上全部内容，以及提问后端 server/。所有改动先在分支上做、测过，再合进 main；不要再各自从部署包还原一份。
+部署现在有两种：旧方式是把源码打成 source.tar.gz.b64 推到 cike-yousheng 的 daybreak-render 分支（见下面“部署注意”）；新方式是让 Render 直接从本仓库 main 构建（`npm ci && npm run build`，发布 dist），不再打包。切到新方式之前，旧方式仍然有效。**推送部署分支之前先 git fetch，看有没有别人新推的提交，有就先合并，不要覆盖。**
+.github/workflows/ci.yml 在每次推送 main 和每个 PR 上跑类型检查、全部测试、生产构建。.gitattributes 统一用 LF，Windows 上不要把文件改成 CRLF（会让合并整文件冲突）。
 
 ## 运行
 使用 Node.js 24。在本目录运行：
