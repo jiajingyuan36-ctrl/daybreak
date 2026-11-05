@@ -1063,3 +1063,6 @@ html:root[data-theme=dark] .card-group{color:#C5A059}
 html:root[data-theme=dark] .deep-page section ol>li::before{color:#C5A059}
 .deep-page section ul>li::before{content:'';position:absolute;left:.7em;top:1.05em;width:4px;height:4px;border:1px solid currentColor;opacity:.55;transform:rotate(45deg)}
 .deep-page .deep-contact>li{padding-left:0}.deep-page .deep-contact>li::before{display:none}
+
+/* home sheet is prerendered for the build day; hide it on other days until the page picks the real date */
+html.home-stale .editorial-home .daily-inscription{visibility:hidden!important}
