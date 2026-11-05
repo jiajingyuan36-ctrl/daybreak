@@ -1,0 +1,11 @@
+# 统一用 LF，避免 Windows 环境（autocrlf）把文件变成 CRLF，合并时整文件冲突
+* text=auto eol=lf
+*.woff2 binary
+*.woff binary
+*.otf binary
+*.webp binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.b64 -text
