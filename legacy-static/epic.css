@@ -762,3 +762,17 @@ html:root[data-theme=light] .minimal-ritual .primary.draw{background:rgba(255,25
  .minimal-result>.review-block{grid-column:2;grid-row:8;max-width:60ch;margin:24px 0 0}
  .minimal-result>.review-block .evening-question,.minimal-result>.review-block .single-review{margin-left:0}
 }
+/* ============ 抽牌后「问一个问题」 ============ */
+.ask-card{margin:34px 0 8px;padding:22px 0 4px;border-top:1px solid var(--line);text-align:left}
+.ask-card h2{margin:0 0 8px}
+.ask-hint{font-size:14px;line-height:1.85;letter-spacing:.04em;color:var(--muted);margin:0 0 16px}
+.ask-item{margin:0 0 18px;padding:0 0 0 14px;border-left:1px solid rgba(197,160,89,.5)}
+.ask-q{font-size:14px;color:var(--muted);margin:0 0 8px;letter-spacing:.04em}
+.ask-a{margin:0 0 10px;line-height:1.95;letter-spacing:.04em}
+.ask-a.is-care{color:var(--fg)}
+.ask-form{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin:6px 0 6px}
+.ask-form input{flex:1 1 220px;min-width:0;font-size:16px}
+.ask-send{flex:none;white-space:nowrap}
+.ask-status{min-height:1.6em;font-size:13px;color:var(--muted);margin:4px 0 0;letter-spacing:.04em}
+.ask-privacy{font-size:12px;line-height:1.8;color:var(--muted);opacity:.85;margin:6px 0 0;letter-spacing:.03em}
+html:root[data-theme=dark] .ask-item{border-left-color:rgba(197,160,89,.45)}

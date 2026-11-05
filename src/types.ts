@@ -7,5 +7,6 @@ export interface Preferences {zodiacSign?:import('./sky.ts').Sign;themeMode?:imp
 export interface Reading {title:string;message:string;personal:string;action:string;observe:string;question:string;quote:string}
 export interface Day {date:string;cardId:string;reversed:boolean;mood:string;intent:string;themes:string[];reading:Reading;fortune?:import('./fortune.ts').Fortune;
  /** 这张牌是用哪种方式抽的（可选） */ ritual?:'fan'|'dipper';
- /** 北斗仪式抽牌那一刻的真实天空：斗柄方位（罗盘度数）、摇光高度、观测纬度经度、时刻。只用于展示和分享图 */ dipper?:{handleAz:number;alkaidAlt:number;lat:number;lon?:number;at?:string};review?:{actionDone?:boolean;resonance:string;note:string};redraws?:number}
+ /** 北斗仪式抽牌那一刻的真实天空：斗柄方位（罗盘度数）、摇光高度、观测纬度经度、时刻。只用于展示和分享图 */ dipper?:{handleAz:number;alkaidAlt:number;lat:number;lon?:number;at?:string};review?:{actionDone?:boolean;resonance:string;note:string};redraws?:number;
+ /** 抽牌后“问一个问题”的提问与回答，只存在本机 */ asks?:{q:string;a:string;at:string;crisis?:boolean}[]}
 export interface Data {version:1;preferences:Preferences;days:Record<string,Day>}
