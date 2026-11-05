@@ -965,9 +965,13 @@ button.sky-pill.bind-chart{min-height:0!important;border:1px dashed var(--border
 .verse-line{font-size:18px;line-height:1.7;color:var(--text-secondary)}
 /* 第 4 层：一主两辅的操作 */
 .home-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;margin-top:10px}
-.home-cta{display:inline-flex;align-items:center;gap:10px;height:46px;padding:0 28px;border:1px solid rgba(212,175,55,.6);border-radius:999px!important;background:rgba(212,175,55,.06);color:var(--accent-gold-bright)!important;font-size:15px;letter-spacing:.14em;text-decoration:none;transition:background-color .32s var(--ease-soft),box-shadow .32s var(--ease-soft),transform .32s var(--ease-soft)}
-@media (hover:hover){.home-cta:hover{background:rgba(212,175,55,.16);box-shadow:0 6px 20px rgba(212,175,55,.18)!important;transform:translateY(-1px)}}
-html:root[data-theme=light] .home-cta{border-color:rgba(140,98,30,.55);background:rgba(140,98,30,.05)}
+/* 主按钮：不用金边金字，只用象牙白文字 + 一圈很淡的中性细线；金色只留给前面那颗小星芒 */
+.home-cta{display:inline-flex;align-items:center;gap:12px;height:46px;padding:0 26px;border:1px solid rgba(244,239,230,.2);border-radius:999px!important;background:transparent;color:var(--text-primary)!important;font-size:15px;letter-spacing:.16em;text-decoration:none;transition:border-color .32s var(--ease-soft),background-color .32s var(--ease-soft)}
+.home-cta>span:first-child{font-size:11px;color:var(--accent-gold);opacity:.7}
+.home-cta>span:last-child{color:var(--text-muted);transition:transform .32s var(--ease-soft),color .32s var(--ease-soft)}
+@media (hover:hover){.home-cta:hover{border-color:rgba(244,239,230,.45);background:rgba(244,239,230,.03)}.home-cta:hover>span:last-child{transform:translateX(3px);color:var(--text-primary)}}
+html:root[data-theme=light] .home-cta{border-color:rgba(28,25,23,.18)}
+@media (hover:hover){html:root[data-theme=light] .home-cta:hover{border-color:rgba(28,25,23,.4);background:rgba(28,25,23,.03)}}
 .home-ghost{min-height:0!important;padding:4px 0!important;border:0!important;border-bottom:1px solid transparent!important;font-size:14px;letter-spacing:.1em;color:var(--text-secondary)!important}
 @media (hover:hover){.home-ghost:hover:not(:disabled){color:var(--text-primary)!important;border-bottom-color:var(--border-hover)!important}}
 /* 「日期 · 晨启塔罗 · 网址」只出现在保存的日签图片里 */
