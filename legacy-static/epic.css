@@ -762,6 +762,235 @@ html:root[data-theme=light] .minimal-ritual .primary.draw{background:rgba(255,25
  .minimal-result>.review-block{grid-column:2;grid-row:8;max-width:60ch;margin:24px 0 0}
  .minimal-result>.review-block .evening-question,.minimal-result>.review-block .single-review{margin-left:0}
 }
+
+/* ===== 牌阵解读（围绕问题）===== */
+/* 「这件事关于」：自动判断的领域，可以点选改掉 */
+.q-domain{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin-top:-12px;font-size:13px;color:var(--muted)}
+.q-domain span{margin-right:4px;letter-spacing:.08em}
+.tarot-workbench .q-domain button{border:1px solid var(--line)!important;min-height:0;padding:5px 12px;font-size:13px;letter-spacing:.04em;color:var(--muted)!important}
+.tarot-workbench .q-domain button[aria-pressed=true]{color:var(--fg)!important;border-color:rgba(197,160,89,.7)!important;background:rgba(197,160,89,.08)!important}
+.q-note,.reading-notice{margin:-8px 0 0;padding:8px 0 8px 14px;border-left:1px solid rgba(197,160,89,.6);font-size:14px;line-height:1.8;color:var(--muted)}
+.reading-notice{margin:0 0 24px}
+/* 每张牌放回问题里的那段话是主角，原本的牌义收进折叠里 */
+.drawn-card .in-question{font-size:17px;line-height:1.95;text-align:left;max-width:44ch;margin:20px auto}
+.drawn-card .card-plain{max-width:44ch;margin:0 auto 20px;text-align:left;font-size:14px;color:var(--muted)}
+.drawn-card .card-plain summary{font-size:13px;letter-spacing:.08em}
+.drawn-card .card-plain p{font-size:15px;margin:10px 0 0}
+.consultation-reading .reading-headline{font-size:19px;line-height:1.9;padding-left:16px;border-left:1px solid rgba(197,160,89,.7)}
+.consultation-reading .connection-copy{margin:0 0 14px}
+/* 「我会这样读你的问题」：塔罗师先把问题换成牌能回答的说法 */
+.q-reframe{margin:-8px 0 0;font-size:15px;line-height:1.8}
+.q-reframe span{display:block;font-size:12px;letter-spacing:.18em;color:var(--muted);margin-bottom:2px}
+.q-reframe em{display:block;font-style:normal;font-size:13px;color:var(--muted)}
+/* ===== 牌阵抽牌：拱桥牌扇（ribbon-deck.tsx）===== */
+/* 舞台打破页面的窄栏，铺满整个屏幕宽度 */
+.deck-section.deck-ribbon{width:100vw;max-width:none;margin:48px 0 0 calc(50% - 50vw);padding:0}
+.ribbon{max-width:1360px;margin:0 auto;padding:0 24px;display:grid;gap:14px}
+.ribbon-head{display:grid;gap:8px;text-align:left}
+.ribbon-eyebrow{display:flex;align-items:center;gap:12px;width:max-content;margin:0;padding-bottom:8px;border-bottom:1px solid rgba(197,165,110,.35);font-size:13px;letter-spacing:.2em;color:#c5a56e}
+.ribbon-eyebrow span{font-family:var(--font-display)!important;font-size:10px;letter-spacing:.3em;opacity:.75}
+.ribbon-question{margin:0;font-size:16px;line-height:1.7}
+.ribbon-question small{display:block;font-size:11px;letter-spacing:.2em;color:var(--muted)}
+.ribbon-stage{position:relative;outline:none;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+.ribbon-stage:focus-visible{outline:1px solid rgba(197,165,110,.5)!important;outline-offset:4px}
+.ribbon-anchor{position:absolute;left:50%;width:0;height:0}
+.ribbon-card{position:absolute;left:0;top:0;overflow:hidden;cursor:pointer;will-change:transform;background:var(--cb-bg-b,#0b0e14);border:1px solid rgba(197,165,110,.55);border-radius:5px!important;
+ box-shadow:-1.5px 0 0 rgba(212,184,122,.45),0 10px 18px -10px rgba(0,0,0,.85)!important}
+.ribbon-card svg{display:block;width:100%;height:100%;pointer-events:none}
+.ribbon-card.is-active{border-color:rgba(230,198,135,.95);box-shadow:0 22px 40px -14px rgba(0,0,0,.9),0 0 24px rgba(214,184,128,.35)!important}
+/* 交错切入时，古铜金的边缘流光一张接一张掠过 */
+.ribbon-card::after{content:'';position:absolute;inset:0;pointer-events:none;opacity:0;background:linear-gradient(115deg,transparent 35%,rgba(240,214,160,.45) 50%,transparent 65%);background-size:260% 100%}
+.is-riffle .ribbon-card::after{animation:ribbon-sheen .5s ease-out both}
+@keyframes ribbon-sheen{0%{opacity:0;background-position:120% 0}30%{opacity:1}100%{opacity:0;background-position:-20% 0}}
+/* 呼吸归正：整摞轻轻一缩，泛起一圈很淡的金色涟漪 */
+.is-settle .ribbon-anchor{animation:ribbon-breathe .22s ease-out}
+@keyframes ribbon-breathe{from{transform:scale(1.04)}to{transform:scale(1)}}
+.ribbon-ripple{position:absolute;width:160px;height:160px;margin:-80px 0 0 -80px;border:1px solid rgba(214,184,128,.6);border-radius:50%!important;opacity:0;pointer-events:none}
+.is-settle .ribbon-ripple{animation:ribbon-ripple .9s ease-out}
+@keyframes ribbon-ripple{from{transform:scale(.5);opacity:.6}to{transform:scale(2.4);opacity:0}}
+.ribbon-nav{position:absolute;top:50%;z-index:600;width:34px;height:34px;margin-top:-17px;display:flex!important;align-items:center;justify-content:center;padding:0!important;min-height:0!important;
+ border:1px solid rgba(197,165,110,.35)!important;border-radius:50%!important;font-size:20px;line-height:1;color:#c5a56e!important}
+.ribbon-nav.prev{left:0}.ribbon-nav.next{right:0}
+@media(max-width:640px){.ribbon-nav{display:none!important}.ribbon{padding:0 16px}}
+.ribbon-hint{margin:0;text-align:center;font-size:13px;letter-spacing:.12em;color:var(--rt-hint,var(--muted))}
+.ribbon-tray{display:flex;flex-wrap:wrap;justify-content:center;gap:16px 22px}
+.ribbon-slot{display:grid;justify-items:center;gap:8px}
+.slot-well{position:relative;overflow:hidden;border:1px dashed rgba(197,165,110,.45);border-radius:5px!important;transition:border-color .3s}
+.ribbon-slot.is-filled .slot-well{border-style:solid;border-color:rgba(214,184,128,.85)}
+.slot-card{position:absolute;inset:0;animation:slot-in .25s ease-out}.slot-card svg{display:block;width:100%;height:100%}
+@keyframes slot-in{from{opacity:.4}to{opacity:1}}
+.slot-label{display:flex;align-items:center;gap:6px;font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.slot-label button{min-height:0!important;padding:0 4px!important;border:0!important;font-size:15px;line-height:1;color:var(--muted)!important}
+.ribbon-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:6px}
+.tarot-workbench .ribbon-btn{display:inline-flex!important;align-items:center;gap:8px;min-height:0!important;padding:10px 22px!important;border:1px solid rgba(197,165,110,.42)!important;border-radius:999px!important;font-size:14px;letter-spacing:.12em}
+.ribbon-btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.3}
+.tarot-workbench .ribbon-confirm:not(:disabled){background:linear-gradient(135deg,#dcc28a,#9e7f47)!important;color:#1a140a!important;border-color:transparent!important;transition:background .4s,color .4s}
+/* 选中的牌飞向牌位时的替身，挂在页面最上层 */
+.ribbon-ghost{position:fixed;z-index:9000;pointer-events:none;overflow:hidden;background:var(--cb-bg-b,#0b0e14);border:1px solid rgba(230,198,135,.9);border-radius:5px!important;box-shadow:0 20px 40px -12px rgba(0,0,0,.9)!important}
+.ribbon-ghost svg{display:block;width:100%;height:100%}
+@media(prefers-reduced-motion:reduce){.ribbon-card,.ribbon-anchor,.ribbon-ripple,.ribbon-card::after,.slot-card{animation:none!important;transition:none!important}}
+
+/* 直接回答：结论的第一句，比后面的整体描述更醒目 */
+.consultation-reading .reading-answer{font-size:20px;line-height:1.85;margin:0 0 12px;color:var(--rt-title,var(--fg))}
+
+.almanac-plaque .home-draw{display:inline-flex;align-items:center;gap:.7em;min-height:44px;margin-top:12px;border-bottom:1px solid var(--line);color:var(--fg);font-size:16px;letter-spacing:.08em;text-decoration:none}
+.home-draw:hover,.home-fortune summary:hover{color:var(--muted)}
+.home-fortune{max-width:46ch;margin:40px auto 24px;text-align:center}
+.home-fortune summary{display:list-item;width:fit-content;margin:auto;padding:12px 0;cursor:pointer}
+.home-fortune .birth-inline{margin-top:12px;padding-top:24px}
+
+/* ===== 全站色彩、排版与微交互（2026-11 审美升级）=====
+   语义化色彩变量：深色「玄夜星辉」、浅色「羊皮卷古籍」。旧变量（--fg、--muted、--line、--gold……）都映射到这里，
+   各页面不再各自写死颜色。浅色模式下的强调金改成低明度的古董暗金，保证在米白底上对比度达到 WCAG AA。 */
+html:root,html:root[data-theme=dark]{--bg-primary:#0F0F11;--bg-surface:#0F0F11;--bg-elevated:#16161A;--bg-glass:rgba(22,22,26,.78);
+ --text-primary:#F4EFE6;--text-secondary:#C8C4BC;--text-muted:#8E8A82;--accent-gold:#D4AF37;--accent-gold-bright:#E5C158;
+ --border-subtle:rgba(212,175,55,.18);--border-hover:rgba(212,175,55,.45);--watermark-opacity:.07;--dawn-glow:rgba(212,175,55,.07);
+ --fg:var(--text-primary);--ink:var(--text-primary);--muted:var(--text-muted);--line:var(--border-subtle);
+ --ease-soft:cubic-bezier(.22,1,.36,1)}
+html:root[data-theme=light]{--bg-primary:#F4EFE6;--bg-surface:#F4EFE6;--bg-elevated:#FAF7F2;--bg-glass:rgba(250,247,242,.85);
+ --text-primary:#1C1917;--text-secondary:#44403C;--text-muted:#6F6862;--accent-gold:#8C621E;--accent-gold-bright:#724E14;
+ --border-subtle:rgba(140,98,30,.22);--border-hover:rgba(140,98,30,.5);--watermark-opacity:.035;--dawn-glow:rgba(140,98,30,.05);
+ --fg:var(--text-primary);--ink:var(--text-primary);--muted:var(--text-muted);--line:var(--border-subtle)}
+/* 浅色模式：各组件里写在局部的金色变量统一换成古董暗金（用 * 才能盖过写在组件上的同名变量） */
+html:root[data-theme=light] *{--gold:var(--accent-gold);--gold-hi:var(--accent-gold-bright);--al-gold:var(--accent-gold);--bp:var(--accent-gold);--rt-hint:var(--text-muted)}
+html:root[data-theme=light] :is(.pick-hint,.mood-lead .mood-tag,.minimal-ritual .primary.draw .draw-star,.draw-main small,.ribbon-eyebrow,.ribbon-nav,.keyword-kicker,.action-no,.chev,.brand-promise,.brand-promise span){color:var(--accent-gold)!important}
+html:root[data-theme=light] :is(.draw-arrow svg,.ribbon-btn svg){stroke:var(--accent-gold)}
+/* 浅色背景：星盘线稿从页面背景里拿出来，单独铺一层，透明度降到 --watermark-opacity 的水平，不再和正文抢 */
+html:root[data-theme=light]{background:
+  radial-gradient(ellipse 115% 85% at 50% 42%,rgba(0,0,0,0) 58%,rgba(126,92,44,.08) 100%) fixed,
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .27 0 0 0 0 .15 0 0 0 .08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0/240px 240px,
+  var(--bg-primary)}
+html:root[data-theme=light] body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;background:url(/textures/astrolabe.svg) 50% -180px/min(1040px,165vw) auto no-repeat;opacity:.3}
+html:root:not([data-theme=light]){background-color:var(--bg-primary)}
+/* 抽牌页最小号的灰字（日期）提亮到次级文字色，深色下也看得清 */
+html:root[data-theme=dark] .minimal-ritual{--rt-small:var(--text-muted)}
+
+/* 文字：正文用暖灰白（深色）/ 暖深灰褐（浅色），小标题用主文字色；所有页面主标题统一用主文字色 */
+main p,main li,main dd,main blockquote,.daily-reading p,.consultation-reading p,.drawn-card p,.zodiac-page p{color:var(--text-secondary)}
+main h1,main h2,main h3,.page-heading h1,.tarot-workbench>h1{color:var(--text-primary)}
+.page-heading h1,main h1{letter-spacing:.08em}
+/* 正文与解读：行高 1.8，段落之间留出呼吸 */
+:is(main,.card-detail-dialog) :is(p,li,dd,blockquote):not([class*=kicker]):not([class*=eyebrow]):not(.mono){line-height:1.8}
+:is(.daily-reading,.consultation-reading,.drawn-card,.card-detail-dialog,.legal-page,.zodiac-page) p{margin-bottom:1.15em}
+/* 英文全大写的小标题，字距统一 */
+:is(.keyword-kicker,.ribbon-eyebrow span,.brand-sub,.ritual-eyebrow,.cap .k){letter-spacing:.22em}
+/* 设置页：「外观」两个字不再被挤成两行 */
+.theme-setting{white-space:nowrap;gap:16px}
+
+/* 图鉴：牌面没加载出来之前是一张古典星芒牌背（不是黑框），微光扫过；加载完再淡入牌面 */
+.codex-face{position:relative;aspect-ratio:1/1.71;border-radius:8px!important;overflow:hidden;
+ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none' stroke='%23D4AF37' stroke-width='.8' opacity='.22'%3E%3Ccircle cx='50' cy='50' r='30'/%3E%3Ccircle cx='50' cy='50' r='24'/%3E%3Cpath d='M50 14L56 44L86 50L56 56L50 86L44 56L14 50L44 44Z'/%3E%3Cpath d='M50 26a24 24 0 0 0 0 48a17 17 0 0 1 0-48Z'/%3E%3C/svg%3E") center/62% no-repeat,linear-gradient(160deg,var(--bg-elevated) 0%,var(--bg-primary) 100%);
+ border:1px solid var(--border-subtle)!important}
+.codex-face::before{content:'';position:absolute;inset:6px;border:1px solid rgba(212,175,55,.12);border-radius:5px!important;pointer-events:none}
+.codex-face::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 35%,rgba(232,206,150,.10) 50%,transparent 65%);background-size:250% 100%;animation:codex-shimmer 1.6s ease-in-out infinite}
+.codex-face:has(img.is-loaded)::after{animation:none;opacity:0}
+.codex-face img{opacity:0;transition:opacity .4s ease}
+.codex-face img.is-loaded{opacity:1}
+@keyframes codex-shimmer{from{background-position:130% 0}to{background-position:-30% 0}}
+@media (min-width:1024px){.codex-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important}}
+@media (min-width:1280px){.codex-grid{grid-template-columns:repeat(6,minmax(0,1fr))!important}}
+
+/* 韦特牌面融进暗色界面：外加一圈暗金画框 */
+:is(.drawn-card img,.card-detail-dialog>img,.pair-majors img,.zodiac-cards img,.history-art img.rws){padding:6px;background:var(--bg-elevated);border:1px solid var(--border-subtle)!important;border-radius:10px!important;box-sizing:border-box}
+
+/* 牌阵页底部：付费一对一深度解读，做成一张毛玻璃名片 */
+.deep-note.deep-card{position:relative;margin-top:72px;padding:28px 24px 24px!important;border:1px solid var(--border-subtle)!important;border-top:1px solid var(--border-subtle)!important;border-radius:12px!important;
+ background:var(--bg-glass)!important;-webkit-backdrop-filter:blur(12px)!important;backdrop-filter:blur(12px)!important;justify-items:center;text-align:center;gap:14px}
+.deep-mark{width:22px;height:22px;fill:none;stroke:var(--accent-gold);stroke-width:1;opacity:.85}
+.deep-card h2{font-family:var(--font-display)!important;font-size:22px!important;letter-spacing:.12em;color:var(--accent-gold)!important}
+.deep-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0;padding:0;list-style:none}
+.deep-pills li{padding:4px 12px;border:1px solid var(--border-subtle);border-radius:999px!important;font-size:12px!important;letter-spacing:.08em;color:var(--text-secondary)}
+.deep-card>p{max-width:40ch}
+.deep-card .contact-card{width:100%;display:grid;gap:10px}
+.deep-card .deep-contact{margin:0;padding:12px 14px;list-style:none;border:1px solid var(--border-subtle);border-radius:10px!important;background:var(--bg-elevated)}
+.deep-card .deep-contact li{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.deep-card .deep-contact li>span{font-size:12px;letter-spacing:.12em;color:var(--text-muted)}
+.deep-card .deep-contact strong{font-family:var(--font-display)!important;letter-spacing:.06em;color:var(--text-primary)}
+.deep-card .copy-contact{min-height:0!important;padding:6px 14px!important;border:1px solid var(--border-hover)!important;border-radius:999px!important;font-size:13px;color:var(--accent-gold-bright)!important}
+.deep-card .contact-note{font-size:13px!important;color:var(--text-muted)!important}
+
+/* 「把晨启放到手机桌面」：右上角 × 关掉后不再出现；页面底部会自动留出它的高度 */
+.install-hint{padding-right:44px!important}
+.install-close{position:absolute;top:8px;right:10px;width:28px;height:28px;min-height:0!important;padding:0!important;border:0!important;font-size:20px;line-height:1;color:var(--text-muted)!important;background:none!important}
+.install-setting{display:flex!important;align-items:center;justify-content:space-between;gap:16px;text-align:left}
+.install-setting strong{font-weight:400}
+.install-how{margin:6px 0 0;font-size:13px;color:var(--text-muted);display:none}
+.install-how.is-shown{display:block}
+.install-setting .install-now{flex:none;min-height:0!important;padding:6px 16px!important;border:1px solid var(--border-hover)!important;border-radius:999px!important;font-size:13px}
+
+/* 桌面宽屏：页面顶部中央一层很淡的晨曦光晕，两侧不再是死板的纯黑 */
+@media (min-width:1024px){body{background-image:radial-gradient(ellipse 60% 40% at 50% 0%,var(--dawn-glow),transparent 70%)}}
+
+/* 统一的微交互：按钮、导航、卡片都用同一条阻尼曲线；主操作悬停时微微上浮、泛一点金光 */
+:is(.shared-header nav a,.shared-header select,.outline-button,.ritual-link,.q-examples button,.spread-choice button,.q-domain button,.codex-card,.catalog-card,.copy-contact,.install-now,.calendar-links a){transition:color .32s var(--ease-soft),border-color .32s var(--ease-soft),background-color .32s var(--ease-soft),box-shadow .32s var(--ease-soft),transform .32s var(--ease-soft)}
+@media (hover:hover){:is(.outline-button,.ritual-link,.calendar-links a,.home-draw,.deep-card .copy-contact):hover:not(:disabled){transform:translateY(-1px)!important;box-shadow:0 6px 20px rgba(212,175,55,.18)!important;border-color:var(--border-hover)!important}}
+@media (prefers-reduced-motion:reduce){.codex-face::after{animation:none}.codex-face img{transition:none}}
+
+/* ===== 首页杂志版式（2026-11）===== */
+/* 首页：最大 960px，一屏之内两栏——左 44% 月相星盘，右 56% 刊头 / 关键词 / 晨间行动 / 操作 */
+.page-shell.editorial-home{max-width:960px!important}
+.editorial-home .almanac-grid{display:grid!important;grid-template-columns:minmax(0,44fr) minmax(0,56fr);gap:64px;align-items:center;min-height:calc(100vh - 220px);padding:24px 0!important;text-align:left}
+.editorial-home .almanac-sky{display:grid;justify-items:center;gap:22px;margin:0}
+.editorial-home .almanac-plaque{text-align:center}
+.editorial-home .calendar-caption{margin:0!important;font-size:1.25rem;color:var(--text-primary)}
+/* 外环本身以 (0,0) 为中心对称，用它自己的外框中心当旋转中心，才不会转着转着偏离月亮 */
+.orbit-ring{transform-box:fill-box;transform-origin:center;animation:slowOrbit 120s linear infinite}
+@keyframes slowOrbit{to{transform:rotate(360deg)}}
+.editorial-home .almanac-text{display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-areas:none!important;gap:26px;align-content:center;min-width:0}
+/* 旧版式给这几块排过位置，这里按刊头 → 关键词与行动 → 操作的顺序重排 */
+.editorial-home .almanac-text>*{grid-area:auto!important;grid-column:1!important;grid-row:auto!important}
+.editorial-home .dateline-row{order:1}.editorial-home .almanac-fade{order:2}.editorial-home .home-actions{order:3}
+.editorial-home .dateline-row>.dateline{order:1}.editorial-home .dateline-row>.sky-pill{order:2}
+/* 第 1 层：刊头日期（‹ 2026.11.05 ›，点日期打开日期选择）+ 天象胶囊；去掉上下两条长横线 */
+.dateline-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 16px}
+.editorial-home .date-line.dateline{display:flex;align-items:center;gap:10px;margin:0;padding:0;border:0!important}
+.dateline-step{min-height:0!important;width:32px;height:32px;padding:0!important;border:0!important;font-size:26px;line-height:1;color:var(--text-muted)!important;border-radius:50%!important;transition:color .32s var(--ease-soft),box-shadow .32s var(--ease-soft)}
+@media (hover:hover){.dateline-step:hover:not(:disabled){color:var(--accent-gold-bright)!important;box-shadow:0 0 14px rgba(212,175,55,.25)!important}}
+.dateline-date{position:relative;cursor:pointer}
+.dateline-num{font-size:22px;letter-spacing:.08em;color:var(--text-primary)}
+.dateline-date input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;padding:0;border:0}
+.dateline .today-reset{min-height:0!important;margin:0 0 0 6px;padding:2px 10px!important;border:1px solid var(--border-subtle)!important;border-radius:999px!important;font-size:12px}
+.sky-pill{display:inline-flex;align-items:center;gap:6px;margin:0;padding:5px 14px;border:1px solid var(--border-subtle);border-radius:999px!important;font-size:13px;letter-spacing:.06em;color:var(--text-secondary)}
+.sky-pill span{display:inline-flex;align-items:center;gap:4px}.sky-pill .sep{color:var(--text-muted)}
+.sky-pill .sky-mark{width:12px;height:12px;color:var(--accent-gold)}
+button.sky-pill.bind-chart{min-height:0!important;border:1px dashed var(--border-hover)!important;color:var(--accent-gold)!important;box-shadow:0 0 16px rgba(212,175,55,.08)!important}
+/* 第 2 层：每日关键词 */
+.editorial-home .keyword-kicker{margin:0!important;font-size:15px;letter-spacing:.22em;text-transform:none}
+.almanac-keyword{margin:4px 0 0!important;font-size:clamp(3.5rem,6vw,5.2rem)!important;line-height:1.1!important;padding-right:.2em}
+/* 第 3 层：杂志诗行式的晨间行动，序号 01. 02.，中间一条渐隐细金线 */
+.daily-actions.verse{margin:0!important;padding:0!important;list-style:none;max-width:none!important}
+.daily-actions.verse li{display:grid!important;grid-template-columns:48px 1fr;align-items:baseline;gap:0;margin:0!important;padding:14px 0!important;border:0!important;background:none!important;box-shadow:none!important}
+.daily-actions.verse li+li{background:linear-gradient(90deg,transparent,rgba(212,175,55,.28),transparent) top/100% 1px no-repeat!important}
+.daily-actions.verse .action-no{font-size:1.35rem;letter-spacing:.04em;color:var(--accent-gold)}
+.verse-line{font-size:18px;line-height:1.7;color:var(--text-secondary)}
+/* 第 4 层：一主两辅的操作 */
+.home-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;margin-top:10px}
+.home-cta{display:inline-flex;align-items:center;gap:10px;height:46px;padding:0 28px;border:1px solid rgba(212,175,55,.6);border-radius:999px!important;background:rgba(212,175,55,.06);color:var(--accent-gold-bright)!important;font-size:15px;letter-spacing:.14em;text-decoration:none;transition:background-color .32s var(--ease-soft),box-shadow .32s var(--ease-soft),transform .32s var(--ease-soft)}
+@media (hover:hover){.home-cta:hover{background:rgba(212,175,55,.16);box-shadow:0 6px 20px rgba(212,175,55,.18)!important;transform:translateY(-1px)}}
+html:root[data-theme=light] .home-cta{border-color:rgba(140,98,30,.55);background:rgba(140,98,30,.05)}
+.home-ghost{min-height:0!important;padding:4px 0!important;border:0!important;border-bottom:1px solid transparent!important;font-size:14px;letter-spacing:.1em;color:var(--text-secondary)!important}
+@media (hover:hover){.home-ghost:hover:not(:disabled){color:var(--text-primary)!important;border-bottom-color:var(--border-hover)!important}}
+/* 「日期 · 晨启塔罗 · 网址」只出现在保存的日签图片里 */
+.editorial-home .export-date{display:none}
+.editorial-home .exporting .export-date{display:block}
+#today-fortune{scroll-margin-top:24px}
+@media (max-width:820px){
+ .editorial-home .almanac-grid{grid-template-columns:1fr;gap:28px;min-height:0;text-align:center}
+ .dateline-row{justify-content:center}.editorial-home .keyword-kicker{text-align:center}
+ .almanac-keyword{display:table!important;margin:4px auto 0!important}
+ .daily-actions.verse li{text-align:left}.home-actions{justify-content:center}}
+
+/* 顶部导航：品牌只留 DAYBREAK 和小号斜体 Morning Ritual；底边换成两头渐隐的细金线；外观是一个图标按钮 */
+.shared-brand{display:inline-flex!important;flex-direction:column;align-items:flex-start;line-height:1.05}
+.shared-brand .brand-sub{display:block!important;margin:3px 0 0!important;font-size:11px!important;letter-spacing:.22em;opacity:.55}
+.shared-header{border-bottom:0!important;position:relative}
+.shared-header::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.2),transparent);pointer-events:none}
+.shared-header nav{gap:28px}
+@media (max-width:650px){.shared-header nav{gap:4px}}
+.theme-toggle{display:inline-flex!important;align-items:center;justify-content:center;width:36px;height:36px;min-height:0!important;padding:0!important;border:1px solid var(--border-subtle)!important;border-radius:50%!important;color:var(--accent-gold)!important;transition:border-color .32s var(--ease-soft),box-shadow .32s var(--ease-soft)}
+.theme-toggle svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round}
+@media (hover:hover){.theme-toggle:hover{border-color:var(--border-hover)!important;box-shadow:0 0 16px rgba(212,175,55,.2)!important}}
+@media (prefers-reduced-motion:reduce){.orbit-ring{animation:none}}
 /* ============ 抽牌后「问一个问题」 ============ */
 .ask-card{margin:34px 0 8px;padding:22px 0 4px;border-top:1px solid var(--line);text-align:left}
 .ask-card h2{margin:0 0 8px}
