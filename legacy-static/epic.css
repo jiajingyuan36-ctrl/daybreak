@@ -933,7 +933,8 @@ main h1,main h2,main h3,.page-heading h1,.tarot-workbench>h1{color:var(--text-pr
 .editorial-home .almanac-sky{display:grid;justify-items:center;gap:22px;margin:0}
 .editorial-home .almanac-plaque{text-align:center}
 .editorial-home .calendar-caption{margin:0!important;font-size:1.25rem;color:var(--text-primary)}
-.orbit-ring{transform-box:view-box;transform-origin:50% 50%;animation:slowOrbit 120s linear infinite}
+/* 外环本身以 (0,0) 为中心对称，用它自己的外框中心当旋转中心，才不会转着转着偏离月亮 */
+.orbit-ring{transform-box:fill-box;transform-origin:center;animation:slowOrbit 120s linear infinite}
 @keyframes slowOrbit{to{transform:rotate(360deg)}}
 .editorial-home .almanac-text{display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-areas:none!important;gap:26px;align-content:center;min-width:0}
 /* 旧版式给这几块排过位置，这里按刊头 → 关键词与行动 → 操作的顺序重排 */
