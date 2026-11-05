@@ -16,6 +16,8 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      # 牌的数据文件（src/data）是构建的第一步生成的，类型检查和测试都要用到，所以先生成
+      - run: npm run prebuild
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
