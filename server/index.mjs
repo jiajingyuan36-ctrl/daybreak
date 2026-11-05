@@ -1,3 +1,4 @@
+import reading from './reading.mjs';
 // 晨启塔罗 · 提问后端（零依赖）。
 // 启动：node --experimental-strip-types server/index.mjs
 // 环境变量：DEEPSEEK_API_KEY（必填，只放在 Render 的 Environment 里，不要写进代码或仓库）、PORT、
@@ -27,6 +28,14 @@ export const server=http.createServer(async(req,res)=>{
  const url=new URL(req.url||'/','http://x');
  if(req.method==='OPTIONS'){res.writeHead(allowed?204:403,{...cors,'access-control-allow-methods':'POST, GET, OPTIONS','access-control-allow-headers':'content-type','access-control-max-age':'600'});return res.end()}
  if(req.method==='GET'&&url.pathname==='/health')return send(res,200,{ok:true,ai:!!KEY},cors);
+ if(req.method==='POST'&&url.pathname==='/api/reading'){
+ if(origin&&!allowed)return err(res,403,'forbidden','这个来源不被允许。');
+ Object.entries(cors).forEach(([k,v])=>res.setHeader(k,v));
+ try{req.body=await readBody(req,8192)}catch{return err(res,400,'bad_request','请求无效。',cors)}
+ res.status=function(code){res.statusCode=code;return res};
+ res.json=function(data){res.setHeader('content-type','application/json; charset=utf-8');res.end(JSON.stringify(data));return res};
+ return reading(req,res);
+ }
  if(req.method!=='POST'||url.pathname!=='/api/ask')return err(res,404,'not_found','没有这个地址。',cors);
  if(origin&&!allowed)return err(res,403,'forbidden','这个来源不被允许。');
  if(!KEY)return err(res,503,'disabled','提问功能暂时没有开通。',cors);
