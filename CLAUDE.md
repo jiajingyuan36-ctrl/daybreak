@@ -5,7 +5,7 @@
 ## 当前状态
 线上：https://daybreak-morning-ritual.onrender.com/
 **main 是唯一的源码主线**（2026-11-05 起）：它包含线上全部内容，以及提问后端 server/。所有改动先在分支上做、测过，再合进 main；不要再各自从部署包还原一份。
-部署现在有两种：旧方式是把源码打成 source.tar.gz.b64 推到 cike-yousheng 的 daybreak-render 分支（见下面“部署注意”）；新方式是让 Render 直接从本仓库 main 构建（`npm ci && npm run build`，发布 dist），不再打包。切到新方式之前，旧方式仍然有效。**推送部署分支之前先 git fetch，看有没有别人新推的提交，有就先合并，不要覆盖。**
+部署现在有两种：旧方式是把源码打成 source.tar.gz.b64 推到 cike-yousheng 的 daybreak-render 分支（见下面“部署注意”）；新方式是让 Render 直接从本仓库 main 构建（`npm ci && npm run build`，发布 dist），不再打包。切到新方式之前，旧方式仍然有效（2026-11-05 的上线用的就是旧方式，源码 main@09f323f，部署分支 20e197e）。新增页面（/card/<id>/、/about/）和 sitemap、robots 都是构建时生成，打包后要在线上看一眼 sitemap 条目数（89）。**推送部署分支之前先 git fetch，看有没有别人新推的提交，有就先合并，不要覆盖。**
 .github/workflows/ci.yml 在每次推送 main 和每个 PR 上跑类型检查、全部测试、生产构建。.gitattributes 统一用 LF，Windows 上不要把文件改成 CRLF（会让合并整文件冲突）。
 
 ## 运行
@@ -47,7 +47,7 @@ npm run build
 ## 部署注意
 源码仓库是 jiajingyuan36-ctrl/daybreak，推送到这里不会更新线上。线上由 Render 从 jiajingyuan36-ctrl/cike-yousheng 的 daybreak-render 分支构建（不要修改该仓库的 main，那是其他项目）：Render 把 source.tar.gz.b64 解包到 app，再 npm ci 与 build，发布 app/dist。更新线上需要重新打包并更新 unpack.mjs 中的 SHA256。
 
-打包时文件清单与原包一致：git ls-files 去掉 .gitignore、CLAUDE.md、README.md 和 legacy-static/fonts/SourceHanSansCN.woff2（unpack.mjs 部署时另行下载），再加上 prebuild 生成的 src/data/*.json，全部放在 app/ 下。改了前端文件要把 public/sw.js 的缓存版本号加一。CDN 会缓存约 5 分钟；app.js 是模块脚本，浏览器请求带 Origin 头，CDN 单独缓存一份，验证线上时要等它也刷新。
+打包时文件清单与原包一致：git ls-files 去掉 .gitignore、.gitattributes、.github/、content-kit/、CLAUDE.md、README.md 和 legacy-static/fonts/SourceHanSansCN.woff2（unpack.mjs 部署时另行下载），再加上 prebuild 生成的 src/data/*.json，全部放在 app/ 下。改了前端文件要把 public/sw.js 的缓存版本号加一。CDN 会缓存约 5 分钟；app.js 是模块脚本，浏览器请求带 Origin 头，CDN 单独缓存一份，验证线上时要等它也刷新。
 
 ## 样式注意
 epic.css 开头有 `body *{border-radius:0!important;box-shadow:none!important;backdrop-filter:none!important}`，要投影、圆角或毛玻璃必须用更具体的选择器并加 !important；关键帧动画改不动 box-shadow。按压手感统一由 src/tactile.ts（initTactile 挂在 site-chrome，给控件加 .is-pressed/.is-releasing；triggerHaptic 微震；busyButton 菊花→✓）处理；下拉统一用毛玻璃浮层（旧版页面用 src/popover.ts 的 glassSelect 包原生 select，React 头部是 ThemePicker）。抽牌到揭晓（以及换一张）的动画在 src/draw-motion.ts，用 Web Animations API 驱动（全站 CSS 的 !important 规则会吃掉普通 CSS 动画和投影），app.ts 里 drawPhase 不在 idle 时拒绝新的抽牌。视图过渡是“先出后入”（旧 180ms 淡出，新延迟 180ms 淡入），不要改回交叉淡化，否则换一张和换页会叠影。epic.css 给所有 [role=button] 等控件设了 touch-action:manipulation，需要拖动/划动的手势区（牌堆、牌扇、北斗星空）必须用更具体的选择器加 !important 锁回 none，否则一划就被浏览器当成滚动、手势失效。旧版页面还会加载 legacy-static/style.css，其中 .primary 有 min-width 等规则。tests/font.test.ts 会检查源码（含注释）里的每个汉字都在精简字体中，新加汉字前先确认或重新抽字。
