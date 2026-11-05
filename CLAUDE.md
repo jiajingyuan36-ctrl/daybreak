@@ -15,7 +15,7 @@ npm run typecheck
 npm test
 npm run build
 ```
-生产构建输出 dist/，可作为静态网站发布。Google 字体在构建时需要网络，构建后同源托管；思源黑体已在 legacy-static/fonts/。无需 AI API Key。
+生产构建输出 dist/，可作为静态网站发布。Google 字体在构建时需要网络，构建后同源托管；思源黑体已在 legacy-static/fonts/。网站本身无需 AI API Key。可选的「抽牌后问一个问题」另有一个后端 server/（见 server/README.md），密钥只放在它的 Render 环境变量里，src/site.ts 的 AI_ENABLED 控制网页上是否显示入口。
 
 ## 关键文件
 - src/plain.ts：78 张牌全部白话文案的唯一来源（关键词、一句话看懂、正逆位今日解析、生活场景、今天可做、晚间回顾）。改文案只改这里。
@@ -36,6 +36,8 @@ npm run build
 - src/share.ts：Canvas 分享图。
 - src/components/almanac-dashboard.tsx：日历与日签导出。
 - legacy-static/epic.css：当前极简主题；app/layout.tsx：字体与共享框架。
+
+- server/ask.mjs、server/index.mjs、src/ai-ask.ts：提问后端与网页端。AI 只解读已抽出的牌，不参与抽牌；牌义用站内文案；不记录问题与回答；轻生相关问题不调用模型。tests/ai-server.test.ts 覆盖。
 
 ## 接下来做
 - 改文案时保留卡牌ID、本地存储键、历史记录兼容性，保持当前极简视觉；跑 npm test 会检查禁用词与字数。
