@@ -1041,3 +1041,8 @@ html:root[data-theme=dark] .card-group{color:#C5A059}
 .backup-nudge{margin:26px 0 6px;padding:14px 16px;border:1px solid var(--line);border-radius:14px!important;text-align:left;font-size:14px;line-height:1.85}
 .backup-nudge p{margin:0 0 10px;color:var(--muted)}
 .backup-actions{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+/* 关于与方法：列表补回圆点；代码字样用细线框 */
+.about-page section ul{list-style:none;padding:0;margin:4px 0 8px}
+.about-page section ul>li{position:relative;padding:6px 0 6px 2.2em;line-height:1.85}
+.about-page section ul>li::before{content:'';position:absolute;left:.7em;top:1.05em;width:4px;height:4px;border:1px solid currentColor;opacity:.55;transform:rotate(45deg)}
+.about-page code{font-size:.86em;padding:1px 6px;border:1px solid var(--line);border-radius:6px!important}
