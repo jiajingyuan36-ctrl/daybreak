@@ -36,7 +36,7 @@ function matches(c:Card,q:string){if(!q)return true;let t=q.trim().toLowerCase()
 
 interface Encounter {count:number;last:string;reversed:number}
 function readHistory():Record<string,Encounter>{const out:Record<string,Encounter>={};try{const d=JSON.parse(localStorage.getItem('daybreak:v1')||'null');for(const day of Object.values<{date?:string;cardId?:string;reversed?:boolean}>(d?.days??{})){if(!day?.cardId)continue;const e=out[day.cardId]??={count:0,last:'',reversed:0};e.count++;if(day.reversed)e.reversed++;if((day.date??'')>e.last)e.last=day.date??''}}catch{}return out}
-const reduced=()=>typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reduced=()=>typeof Element.prototype.animate!=='function'||(typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches);
 
 export function Compendium(){
  const [group,setGroup]=useState<Group>('all'),[query,setQuery]=useState(''),[mine,setMine]=useState(false);
@@ -76,9 +76,9 @@ function CardInspector({list,index,history,onIndex,onClose}:{list:Card[];index:n
  // 切牌：220ms 交叉淡化 + 微移（旧内容 110ms 淡出，新内容 110ms 淡入）
  const go=useCallback(async(step:number)=>{if(swapping.current||list.length<2)return;swapping.current=true;triggerHaptic('selection');const el=body.current,next=(index+step+list.length)%list.length;
   // 换牌时刻用定时器卡在 110ms，不等动画的 finished（掉帧时它会晚到，换牌就会拖慢）
-  if(el&&!reduced()){el.animate({opacity:[1,0],transform:['translateX(0)',`translateX(${-step*8}px)`]},{duration:110,easing:'cubic-bezier(0.32,0.72,0,1)',fill:'forwards'});await new Promise(r=>setTimeout(r,110))}
+  let out:Animation|null=null;if(el&&!reduced()){out=el.animate({opacity:[1,0],transform:['translateX(0)',`translateX(${-step*8}px)`]},{duration:110,easing:'cubic-bezier(0.32,0.72,0,1)',fill:'forwards'});await new Promise(r=>setTimeout(r,110))}
   setFlipped(false);setZoom(false);onIndex(next);
-  requestAnimationFrame(()=>{if(el){el.getAnimations().forEach(a=>a.cancel());if(!reduced())el.animate({opacity:[0,1],transform:[`translateX(${step*8}px)`,'translateX(0)']},{duration:110,easing:'cubic-bezier(0.22,1,0.36,1)'})}swapping.current=false})},[index,list.length,onIndex]);
+  requestAnimationFrame(()=>{if(el){out?.cancel();if(!reduced())el.animate({opacity:[0,1],transform:[`translateX(${step*8}px)`,'translateX(0)']},{duration:110,easing:'cubic-bezier(0.22,1,0.36,1)'})}swapping.current=false})},[index,list.length,onIndex]);
  useEffect(()=>{const key=(e:KeyboardEvent)=>{if(e.key==='ArrowLeft'){e.preventDefault();go(-1)}else if(e.key==='ArrowRight'){e.preventDefault();go(1)}};const d=dialog.current!;d.addEventListener('keydown',key);return()=>d.removeEventListener('keydown',key)},[go]);
  // 倾斜跟手：指针相对牌中心的位置 → 目标角度（±15°），每帧向目标靠近一点，松开后慢慢回正
  const target=useRef({x:0,y:0}),cur=useRef({x:0,y:0}),raf=useRef(0),press=useRef<{x:number;y:number;t:number}|null>(null);

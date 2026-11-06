@@ -1066,3 +1066,18 @@ html:root[data-theme=dark] .deep-page section ol>li::before{color:#C5A059}
 
 /* home sheet is prerendered for the build day; hide it on other days until the page picks the real date */
 html.home-stale .editorial-home .daily-inscription{visibility:hidden!important}
+
+/* 牌面图加载失败（src/card-img.ts）：牌框里写出牌名和「再试一次」，不留空框。inset 写成 top/left，较老的内核也认 */
+.tarot,.history-art{position:relative}
+.tarot .img-fallback,.history-art .img-fallback{position:absolute!important;top:0;left:0;width:100%;height:100%;display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:12px;margin:0;padding:16px!important;min-height:0!important;border:0!important;background:var(--bg)!important;color:var(--fg)!important;text-align:center;letter-spacing:.06em;line-height:1.6;cursor:pointer}
+.img-fallback strong{font-size:20px;font-weight:400}
+.img-fallback span{font-size:13px;color:var(--muted)}
+.history-art .img-fallback{gap:4px;padding:6px!important}.history-art .img-fallback strong{font-size:12px}.history-art .img-fallback span{display:none}
+
+/* 牌阵卡片是整行宽的大卡片：按下不再缩放回弹（手机上滑过列表时一碰就缩、松手再弹，看着像卡），只把底色压暗一点；
+   选中框即时切换，不做 0.32 秒的渐变。选中底色用固定半透明色，不依赖 color-mix（较老的 iPhone Safari 不认）。 */
+.tarot-workbench .spread-choice button,.tarot-workbench .spread-choice button.is-pressed,.tarot-workbench .spread-choice button.is-releasing{transform:none!important;transition:none!important}
+.tarot-workbench .spread-choice button[aria-pressed=true]{background:rgba(230,226,216,.05)!important}
+.tarot-workbench .spread-choice button.is-pressed{background:rgba(230,226,216,.08)!important}
+html:root[data-theme=light] .tarot-workbench .spread-choice button[aria-pressed=true]{background:rgba(20,20,19,.04)!important}
+html:root[data-theme=light] .tarot-workbench .spread-choice button.is-pressed{background:rgba(20,20,19,.07)!important}

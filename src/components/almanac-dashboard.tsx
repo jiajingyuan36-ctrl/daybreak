@@ -35,7 +35,7 @@ export function AlmanacDashboard({initialDate}:{initialDate?:string}){
  useEffect(()=>{if(!date||!birth||birth>date){setFortune(null);return}try{setFortune(personalFortune(date,{date:birth,time:birthTime||undefined}))}catch{setFortune(null)}},[date,birth,birthTime]);
  useEffect(()=>{const tick=()=>{if(follow)setDate(chinaDateString(new Date()))};const timer=setInterval(tick,30000);window.addEventListener('focus',tick);return()=>{clearInterval(timer);window.removeEventListener('focus',tick)}},[follow]);
  // 换日期：农历、节气、星象、大字和两句建议 240ms 轻微错落淡入；月面原地重画，不闪
- useEffect(()=>{if(!reading)return;const prev=shown.current;shown.current=date;if(!prev||prev===date||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ useEffect(()=>{if(!reading)return;const prev=shown.current;shown.current=date;if(!prev||prev===date||typeof Element.prototype.animate!=='function'||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   [fadeRight.current,fadeLeft.current].forEach((el,i)=>el?.animate([{opacity:0,transform:'translateY(6px)',filter:'blur(2px)'},{opacity:1,transform:'none',filter:'blur(0)'}],{duration:240,delay:i*60,easing:'cubic-bezier(.22,1,.36,1)',fill:'backwards'}))},[reading]);
  async function download(){if(!sheet.current||busy)return;setBusy(true);try{await document.fonts.ready;// 日签图片始终用竖排：导出时临时切到竖版，日期控件不进图
  setExporting(true);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));

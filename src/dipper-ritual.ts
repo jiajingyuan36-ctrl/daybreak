@@ -5,10 +5,12 @@
 import {DIPPER,BACKGROUND,dipperSky,duskSky,bearingLabel,seasonOf,HEGUANZI,pointerAngle,slotAngle,turnTo,project,labelPositions,type DipperSky} from './lib/dipper.ts';
 import {cardBack} from './card-back.ts';
 import {triggerHaptic} from './tactile.ts';
+import {reducedMotion} from './draw-motion.ts';
 
 export const SLOTS=78;
 const RING=0.93,VIEW=1.1,NS='http://www.w3.org/2000/svg';
-const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+// 用户开了减少动态效果，或者浏览器不支持 Element.animate 时，都不播动画
+const reduced=reducedMotion;
 const wait=(ms:number)=>new Promise<void>(r=>setTimeout(r,ms));
 const fmt=(n:number,d=3)=>n.toFixed(d);
 const el=<K extends keyof SVGElementTagNameMap>(tag:K,attrs:Record<string,string|number>={},parent?:Element)=>{const e=document.createElementNS(NS,tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,String(v));parent?.appendChild(e);return e};

@@ -62,7 +62,8 @@ export function RibbonDeck({size,shuffleKey,slots,chosen,busy,title,question,onP
   const dx=to.left+to.width/2-(from.left+from.width/2),dy=to.top+to.height/2-(from.top+from.height/2),sc=to.width/cw;
   const a={transform:`translate3d(0,0,0) rotate(${fromRot}deg) scale(${reverse?sc:1.22})`},b={transform:`translate3d(${dx}px,${dy}px,0) rotate(0deg) scale(${reverse?1:sc})`};
   const mid={transform:`translate3d(${dx*.5}px,${dy*.5-60}px,0) rotate(${fromRot/2}deg) scale(${reverse?(sc+1)/2:(1.22+sc)/2})`,offset:.45};
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches){ghost.remove();done();return}
+  // 减少动态效果，或者浏览器不支持 Element.animate（如 iOS 12 的 Safari）：牌直接落进牌位，不然抽牌会停住
+  if(typeof ghost.animate!=='function'||matchMedia('(prefers-reduced-motion: reduce)').matches){ghost.remove();done();return}
   const anim=ghost.animate([a,mid,b],{duration:560,easing:EASE});anim.onfinish=()=>{ghost.remove();done()};anim.oncancel=()=>{ghost.remove();done()}})}
 
  async function pick(i:number){
