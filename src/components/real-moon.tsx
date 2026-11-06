@@ -1,11 +1,10 @@
 'use client';
 import {useEffect,useRef,useState} from 'react';
 import {Libration} from 'astronomy-engine';
-import {shadeMoon} from '../lib/moon-render';
+import {MOON_TEXTURE,shadeMoon} from '../lib/moon-render';
 import type {MoonTexture} from '../lib/moon-render';
 // 月面贴图来自 three.js 开源示例 moon_1024.jpg（github.com/mrdoob/three.js，MIT），转成黑白 WebP 放在本站，
 // 不再连第二个域名（新连接的加密握手在部分网络下要好几秒）。读取失败时保留线条月相。
-export const MOON_TEXTURE='/moon/moon-1024.webp';
 const idle=(fn:()=>void)=>'requestIdleCallback'in window?requestIdleCallback(fn,{timeout:400}):setTimeout(fn,0);
 let pending:Promise<MoonTexture>|null=null;
 function loadTexture(){pending??=new Promise<MoonTexture>((resolve,reject)=>{const img=new Image();img.crossOrigin='anonymous';img.decoding='async';img.onload=()=>{try{const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;const x=c.getContext('2d');if(!x)throw Error('no canvas');x.drawImage(img,0,0);const d=x.getImageData(0,0,c.width,c.height);resolve({data:d.data,width:d.width,height:d.height})}catch(e){reject(e)}};img.onerror=()=>reject(Error('月面贴图加载失败'));img.src=MOON_TEXTURE});pending.catch(()=>{pending=null});return pending}

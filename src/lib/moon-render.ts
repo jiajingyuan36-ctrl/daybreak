@@ -1,6 +1,7 @@
 // 把等距圆柱月面贴图投影成从地球看到的月球：
 // 光照方向来自日月距角（Astronomy Engine MoonPhase），月面朝向来自天平动（Astronomy Engine Libration）。
 // 北在上、未计算明暗界线的位置角；只用于展示，不作观测依据。
+export const MOON_TEXTURE='/moon/moon-1024.webp';
 export interface MoonTexture {data:Uint8ClampedArray;width:number;height:number}
 export interface MoonView {elongation:number;libLat:number;libLon:number}
 const rad=Math.PI/180;
