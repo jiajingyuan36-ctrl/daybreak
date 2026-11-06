@@ -1,10 +1,22 @@
 button.shuffle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   width: min(100%, 320px);
   min-height: 52px;
   padding: 12px 24px;
-  border: 1px solid var(--accent-gold) !important;
-  background: var(--dawn-glow) !important;
-  color: var(--accent-gold) !important;
+  border: 1px solid var(--border-hover) !important;
+  background: transparent !important;
+  color: var(--text-primary) !important;
+}
+
+button.shuffle::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border: 1px solid var(--accent-gold);
+  transform: rotate(45deg);
 }
 
 button.shuffle:focus-visible {
@@ -14,7 +26,6 @@ button.shuffle:focus-visible {
 
 @media (hover: hover) {
   button.shuffle:hover:not(:disabled) {
-    border-color: var(--accent-gold-bright) !important;
-    color: var(--accent-gold-bright) !important;
+    border-color: var(--accent-gold) !important;
   }
 }
