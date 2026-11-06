@@ -1,0 +1,20 @@
+button.shuffle {
+  width: min(100%, 320px);
+  min-height: 52px;
+  padding: 12px 24px;
+  border: 1px solid var(--accent-gold) !important;
+  background: var(--dawn-glow) !important;
+  color: var(--accent-gold) !important;
+}
+
+button.shuffle:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 4px;
+}
+
+@media (hover: hover) {
+  button.shuffle:hover:not(:disabled) {
+    border-color: var(--accent-gold-bright) !important;
+    color: var(--accent-gold-bright) !important;
+  }
+}
