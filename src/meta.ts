@@ -7,9 +7,9 @@ const BRAND='晨启塔罗';
 const OG_IMAGE={url:'/og.png',width:1200,height:630,alt:'晨启塔罗：每天早上抽一张塔罗'};
 /** path 写成以 / 结尾的站内路径，如 '/zodiac/'；title 不带品牌名（模板会自动加“ · 晨启塔罗”）。 */
 export function pageMeta(path:string,title:string|null,description:string=SITE_DESCRIPTION):Metadata{
- const full=title?`${title} · ${BRAND}`:`${BRAND} · 每天早上抽一张塔罗`;
+ const full=title?`${title} · ${BRAND}`:`${BRAND} Daybreak · 每日塔罗抽牌`;
  return {
-  ...(title?{title}:{}),
+  title:title??{absolute:full},
   description,
   alternates:{canonical:path},
   openGraph:{type:'website',url:path,siteName:BRAND,title:full,description,locale:'zh_CN',images:[OG_IMAGE]},
