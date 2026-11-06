@@ -9,7 +9,7 @@ export const AI_ENABLED=true;
 /** 经营者的微信号：深度解读和提建议都用它。不要换成手机号。 */
 export const WECHAT='YJJ_080922';
 /** 经营者自我介绍，放在每处微信联系方式旁边，让人知道回复为什么慢。 */
-export const OPERATOR_NOTE='我是一名高中生，平时在上课，回复会慢一些，一般在晚上或周末，但每条消息都会回。';
+export const OPERATOR_NOTE='在线时间：工作日晚上和周末。其他时间回复会慢一些，每条消息都会回。';
 /** 一对一深度解读（付费，微信文字交付）。改价格、档位、退款规则只改这里，/deep/、使用条款和牌阵页入口都读它。
  *  price 留空时页面显示“开始前说明”。contact 为空时整个服务显示“即将开放”。 */
 export const DEEP_READING={
