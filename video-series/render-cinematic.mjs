@@ -55,6 +55,10 @@ const film = readFileSync(join(here, 'cinematic/film.js'), 'utf8');
 const scriptJson = value => JSON.stringify(value).replaceAll('<', '\\u003c');
 
 function voiceTiming() {
+  if (ep.voiceover === false) {
+    const timeline = ep.segments.map(s => ({...s, tempo: 1, end: s.textEnd ?? s.before}));
+    return {voiced: false, timeline};
+  }
   const lines = ep.segments.map(s => ({id: s.id, text: s.say}));
   const sid = process.env.TTS_SID || '3';
   const speed = process.env.TTS_SPEED || '1.03';
@@ -158,6 +162,7 @@ function mixAudio(voiced, timeline) {
   }, '0');
   const level = voiced ? `0.72-0.49*(${duck})` : '0.72';
   let filters = `[0:a]volume='${level}':eval=frame[score];`;
+  let loudness = 'loudnorm=I=-16:TP=-1.5:LRA=8';
   if (voiced) {
     timeline.forEach((s, i) => {
       args.push('-i', join(voice, s.id + '.wav'));
@@ -167,8 +172,20 @@ function mixAudio(voiced, timeline) {
     });
     filters += '[score]' + timeline.map((_, i) => `[v${i}]`).join('')
       + `amix=inputs=${timeline.length+1}:duration=first:normalize=0,`;
-  } else filters += '[score]';
-  filters += 'loudnorm=I=-16:TP=-1.5:LRA=8[a]';
+  } else {
+    filters += '[score]';
+    const measurement = spawnSync(ffmpeg, ['-hide_banner', '-nostats', '-i', score,
+      '-af', `volume=${level},${loudness}:print_format=json`, '-f', 'null', '-'], {encoding: 'utf8'});
+    const report = measurement.stderr?.match(/\{\s*"input_i"[\s\S]*?\}/)?.[0];
+    if (measurement.error || measurement.status !== 0 || !report) {
+      throw measurement.error ?? Error('无法测量无旁白音轨的响度');
+    }
+    const {input_i, input_tp} = JSON.parse(report);
+    const gain = Math.min(-16 - Number(input_i), -1.7 - Number(input_tp));
+    if (!Number.isFinite(gain)) throw Error('配乐响度测量无效');
+    loudness = `volume=${gain.toFixed(2)}dB`;
+  }
+  filters += loudness + '[a]';
   run(ffmpeg, [...args, '-filter_complex', filters, '-map', '[a]', '-ac', '2', '-ar', '48000',
     '-c:a', 'aac', '-b:a', '192k', '-t', String(duration), '-movflags', '+faststart', target]);
   return target;
@@ -213,7 +230,9 @@ function finish(picture, audio) {
   writeFileSync(join(out,slug+'.srt'),timeline.map((s,i) =>
     `${i+1}\n${timestamp(s.at)} --> ${timestamp(s.end)}\n${s.say}\n`).join('\n'));
   const {title, desc, tags} = ep.publish;
-  writeFileSync(join(out,'文案.md'), `# 牌的故事 03 · 女祭司\n\n${title}\n\n${desc}\n\n${tags.map(t=>'#'+t).join(' ')}\n\n## 旁白稿\n\n${timeline.map(s=>`- [${s.at.toFixed(2)}s] ${s.say}`).join('\n')}\n\n## 发布检查\n\n- [ ] 检查片尾域名与目标渠道的规则\n- [ ] 勾选「内容由 AI 生成」\n- [ ] 试听配乐、卡点与旁白\n`);
+  const scriptHeading = voiced ? '旁白稿' : '可选字幕稿';
+  const soundCheck = voiced ? '试听配乐、卡点与旁白' : '试听配乐、卡点与音效';
+  writeFileSync(join(out,'文案.md'), `# 牌的故事 03 · 女祭司\n\n${title}\n\n${desc}\n\n${tags.map(t=>'#'+t).join(' ')}\n\n## ${scriptHeading}\n\n${timeline.map(s=>`- [${s.at.toFixed(2)}s] ${s.say}`).join('\n')}\n\n## 发布检查\n\n- [ ] 检查片尾域名与目标渠道的规则\n- [ ] 勾选「内容由 AI 生成」\n- [ ] ${soundCheck}\n`);
   console.log('✓ 成片与单文件播放器已写入', out);
 }
 

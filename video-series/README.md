@@ -97,7 +97,7 @@ node video-series/render.mjs video-series/episodes/story-01-magician.json
 
 ## 第 3 集的 45 秒电影版
 
-[《女祭司》七幕电影版](episodes/story-02-high-priestess.json) 以节拍固定镜头时长，沿用网站牌背、字体、真实月面以及本地配音。须有 Python 和 NumPy 生成原声配乐，旁白按上文设置 Kokoro。短句的 `at` 和 `before` 分别是旁白入点及最迟结束时间。
+[《女祭司》七幕电影版](episodes/story-02-high-priestess.json) 以节拍固定镜头时长，沿用网站牌背、字体和真实月面。须有 Python 和 NumPy 生成配乐和音效。`voiceover: false` 关闭旁白，`at` 和 `textEnd` 保留可选字幕时点。
 
 ```sh
 node video-series/render-cinematic.mjs video-series/episodes/story-02-high-priestess.json --preview
