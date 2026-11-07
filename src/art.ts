@@ -1,7 +1,7 @@
 import type {Card} from './types.ts';
 /** 牌面：1909 年 Rider–Waite–Smith 原版扫描（Pamela Colman Smith 绘，公有领域），彩色 WebP，600×1029；thumb 为 320 宽小图。来源：维基共享资源。 */
 export const cardImageUrl=(id:string,thumb=false)=>`/rws/${thumb?'thumb/':''}${id}.webp`;
-export function cardImage(card:Card,thumb=false):string{return `<img class="rws" src="${cardImageUrl(card.id,thumb)}" alt="${card.nameZh}" width="${thumb?160:350}" height="${thumb?274:600}" decoding="async"${thumb?' loading="lazy"':''}>`}
+export function cardImage(card:Card,thumb=false):string{return `<img class="rws tarot-plate-img" src="${cardImageUrl(card.id,thumb)}" alt="${card.nameZh}" width="${thumb?160:350}" height="${thumb?274:600}" decoding="async"${thumb?' loading="lazy"':''}>`}
 // 下面的几何图形只用于牌背（未翻开的牌）和图片加载失败时的后备。
 export function art(card?:Card):string{const n=card?.number||0;const ink='#e6e2d8';const line=`fill="none" stroke="${ink}" stroke-width="1.3"`;let body='';const circle=(x:number,y:number,r:number)=>`<circle cx="${x}" cy="${y}" r="${r}" ${line}/>`;
 if(!card){body=`<path d="M180 170V350M90 260H270M116 196L244 324M116 324L244 196M180 210L210 260L180 310L150 260Z" ${line}/>${circle(180,260,100)}`}

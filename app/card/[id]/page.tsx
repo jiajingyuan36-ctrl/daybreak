@@ -4,6 +4,8 @@ import {pageMeta} from '../../../src/meta';
 import {cards} from '../../../src/cards';
 import {knowledgeById} from '../../../src/knowledge';
 import {cardAstro,ASTRO_SOURCE_LEAD,ASTRO_SOURCE_LINK,ASTRO_SOURCE_URL} from '../../../src/astro';
+import {TarotPlate} from '../../../src/components/tarot/tarot-plate';
+import {EditorialSection} from '../../../src/components/tarot/editorial-section';
 import {cardImageUrl} from '../../../src/art';
 // 每张牌一个静态页面（/card/m0/ … /card/pentacles-14/），给搜索和分享用。
 // 文字全部来自 plain.ts / knowledge.ts / astro.ts，这里只排版，不另写牌义。
@@ -20,11 +22,11 @@ export default async function CardPage({params}:{params:Promise<{id:string}>}){c
  const group=c.arcanaType==='major'?`大阿卡纳 · ${String(c.number).padStart(2,'0')}`:`小阿卡纳 · ${c.suit}`;
  return <main className="page-shell legal-page card-page">
   <nav className="card-crumb" aria-label="位置"><a href="/encyclopedia/">图鉴</a><span aria-hidden="true">›</span><span>{c.nameZh}</span></nav>
-  <header className="card-head"><img className="card-art" src={cardImageUrl(c.id)} alt={`${c.nameZh}（1909 年原版韦特塔罗）`} width={350} height={600}/><div><p className="card-group">{group}</p><h1>{c.nameZh}</h1><p className="card-en">{c.nameEn}</p><p className="card-intro">{c.plainIntro}</p></div></header>
-  <section><h2>正位</h2><ul className="card-keys" aria-label="正位关键词">{c.keywordsUpright.map(x=><li key={x}>{x}</li>)}</ul><p>{c.meaningUpright}</p></section>
-  <section><h2>逆位</h2><ul className="card-keys" aria-label="逆位关键词">{c.keywordsReversed.map(x=><li key={x}>{x}</li>)}</ul><p>{c.meaningReversed}</p></section>
+  <header className="card-head"><TarotPlate className="card-art" src={cardImageUrl(c.id)} alt={`${c.nameZh}（1909 年原版韦特塔罗）`} width={350} height={600}/><div><p className="card-group">{group}</p><h1>{c.nameZh}</h1><p className="card-en">{c.nameEn}</p><p className="card-intro">{c.plainIntro}</p></div></header>
+  <EditorialSection number="I" title="正位" heading="h2"><ul className="card-keys" aria-label="正位关键词">{c.keywordsUpright.map(x=><li key={x}>{x}</li>)}</ul><p>{c.meaningUpright}</p></EditorialSection>
+  <EditorialSection number="II" title="逆位" heading="h2"><ul className="card-keys" aria-label="逆位关键词">{c.keywordsReversed.map(x=><li key={x}>{x}</li>)}</ul><p>{c.meaningReversed}</p></EditorialSection>
   <section><h2>放到生活里</h2><dl className="card-life"><div><dt>关系</dt><dd>{c.lifeAspects.love}</dd></div><div><dt>学业事业</dt><dd>{c.lifeAspects.work}</dd></div><div><dt>资源与精力</dt><dd>{c.lifeAspects.money}</dd></div></dl></section>
-  <section><h2>今天可做</h2><p>{c.action}</p><p className="card-question">晚上可以问问自己：{c.reflectionPrompt}</p></section>
+  <EditorialSection number="III" title="今天可做" heading="h2" className="ritual-ticket"><p>{c.action}</p><p className="card-question">晚上可以问问自己：{c.reflectionPrompt}</p></EditorialSection>
   <section><h2>牌面符号</h2><p>{k.symbols}</p><p className="card-meta">元素：{k.element}</p>{astro&&<p className="card-meta">星座对应：{textGlyph(astro.label)}{astro.title?`（${astro.title.zh}）`:''}。{astro.plain}</p>}</section>
   <section className="card-source"><h2>出处与说明</h2><p>{k.tradition}{k.editorialNote}</p><p><a href={k.source} target="_blank" rel="noreferrer">韦特《塔罗图解》原文（维基文库）</a></p>{astro&&<p>{ASTRO_SOURCE_LEAD}<a href={ASTRO_SOURCE_URL} target="_blank" rel="noreferrer">{ASTRO_SOURCE_LINK}</a>。</p>}<p>塔罗在这里是帮你整理想法的工具，不预测确定的结果。</p></section>
   <div className="card-cta"><a className="card-draw" href="/ritual/"><span aria-hidden="true">✦</span>抽今天的牌</a><a href="/encyclopedia/">看全部 78 张</a></div>

@@ -8,6 +8,8 @@ import {cards} from '../../cards';
 import type {Card} from '../../types';
 import {knowledgeById} from '../../knowledge';
 import {cardAstro} from '../../astro';
+import {TarotPlate} from './tarot-plate';
+import {EditorialSection} from './editorial-section';
 import {cardImageUrl} from '../../art';
 import {cardBackSprite,cardBackUse} from '../../card-back';
 import {triggerHaptic} from '../../tactile';
@@ -24,7 +26,7 @@ export function roman(n:number){if(n===0)return '0';let out='';for(const [v,l] o
 function badge(c:Card){return c.suit==='大阿卡纳'?roman(c.number):`${ELEMENT[c.suit]} ${COURT[c.number]?.[1]??roman(c.number)}`}
 function eyebrow(c:Card){return c.suit==='大阿卡纳'?`ARCANA ${roman(c.number)}`:`${SUIT_EN[c.suit]} · ${COURT[c.number]?.[0]??roman(c.number)}`}
 // 星座符号后面加 U+FE0E，让手机按文字而不是彩色 emoji 显示
-function astroLine(c:Card){const a=cardAstro(c.id);if(!a)return null;const label=a.label.replace(/([\u2648-\u2653\u2609\u263D\u263F\u2640\u2642\u2643\u2644])/g,'$1\uFE0E');return label.includes('元素')?label:`${label} · ${a.element}元素`}
+function astroLine(c:Card){const a=cardAstro(c.id);if(!a)return null;const label=a.label.replace(/([\u2648-\u2653\u2609\u263D\u263F\u2640\u2642\u2643\u2644])/g,'$1\uFE0E');return a.element&&!label.includes('元素')?`${label} · ${a.element}元素`:label}
 /** 常见的另一种译名，搜它们也能找到网站里的牌名 */
 const ALIAS:Readonly<Record<string,string>>={愚者:'愚人',女祭司长:'女祭司',塔:'高塔',吊人:'倒吊人',死亡:'死神',审判日:'审判',钱币:'星币',金币:'星币',杯:'圣杯',剑:'宝剑',杖:'权杖'};
 /** 搜索：中文名、英文名、罗马数字、正逆位关键词、牌组名都能命中 */
@@ -60,7 +62,7 @@ export function Compendium(){
   <p className="codex-progress" aria-live="polite">{mine?<>已经遇见 <b>{met}</b> / 78 张牌</>:<>{list.length} / 78 张</>}</p>
   <div className="codex-grid" key={`${group}|${query}|${mine}`}>{list.map((c,i)=>{const seen=!!history[c.id],hide=mine&&!seen;
    return <button type="button" key={c.id} className={`codex-card${hide?' is-unmet':''}`} style={{['--i' as string]:Math.min(i,24)}} onClick={()=>setOpen(i)} aria-label={`${c.nameZh}，${c.nameEn}${mine?(seen?'，已遇见':'，还没遇见'):''}`}>
-    <span className="codex-face">{hide?<span className="codex-back" dangerouslySetInnerHTML={{__html:BACK_USE}}/>:<img src={cardImageUrl(c.id,true)} alt="" loading="lazy" decoding="async" width={320} height={549} ref={el=>{if(el?.complete&&el.naturalWidth)el.classList.add('is-loaded')}} onLoad={e=>e.currentTarget.classList.add('is-loaded')} onError={e=>e.currentTarget.classList.add('is-loaded')}/>}<span className="codex-badge">{badge(c)}</span>{seen&&mine&&<span className="codex-seen" aria-hidden="true">✦</span>}</span>
+    <span className="codex-face">{hide?<span className="codex-back" dangerouslySetInnerHTML={{__html:BACK_USE}}/>:<TarotPlate src={cardImageUrl(c.id,true)} alt="" loading="lazy" decoding="async" width={320} height={549} ref={el=>{if(el?.complete&&el.naturalWidth)el.classList.add('is-loaded')}} onLoad={e=>e.currentTarget.classList.add('is-loaded')} onError={e=>e.currentTarget.classList.add('is-loaded')}/>}<span className="codex-badge">{badge(c)}</span>{seen&&mine&&<span className="codex-seen" aria-hidden="true">✦</span>}</span>
     <span className="codex-name"><b>{c.nameZh}</b><small>{c.nameEn}</small></span></button>})}</div>
   {!list.length&&<p className="codex-empty">没有找到这张牌。试试更短的关键词，或换一个牌组。</p>}
   {open!==null&&list[open]&&<CardInspector list={list} index={open} history={history} onIndex={setOpen} onClose={()=>setOpen(null)}/>}
@@ -100,7 +102,7 @@ function CardInspector({list,index,history,onIndex,onClose}:{list:Card[];index:n
     <div className="insp-pad" onPointerMove={e=>{if(e.pointerType==='mouse'||press.current)move(e)}} onPointerDown={down} onPointerUp={up} onPointerCancel={()=>{press.current=null;aim(0,0)}} onPointerLeave={e=>{if(e.pointerType==='mouse')aim(0,0)}}>
      <div className="insp-tilt" ref={tilt}>
       <div className={`insp-card${reversed?' is-reversed':''}${flipped?' is-flipped':''}${zoom?' is-zoomed':''}`}>
-       <div className="insp-face insp-front"><img src={cardImageUrl(c.id)} alt={`${c.nameZh}牌面，${reversed?'逆位':'正位'}`} width={600} height={1029} decoding="async"/><span className="insp-glare" aria-hidden="true"/></div>
+       <div className="insp-face insp-front tarot-plate"><img className="tarot-plate-img" src={cardImageUrl(c.id)} alt={`${c.nameZh}牌面，${reversed?'逆位':'正位'}`} width={600} height={1029} decoding="async"/><span className="insp-glare" aria-hidden="true"/></div>
        <div className="insp-face insp-back" aria-hidden="true" dangerouslySetInnerHTML={{__html:BACK_USE}}/>
       </div></div></div>
     <div className="insp-bar" role="toolbar" aria-label="检视">
@@ -116,13 +118,13 @@ function CardInspector({list,index,history,onIndex,onClose}:{list:Card[];index:n
     {astro&&<p className="insp-astro">{astro}</p>}
     <div key={side} className="insp-swap">
      <p className="insp-chips">{keywords.map(w=><span key={w}>{w}</span>)}</p>
-     <section><h3>这张牌在说什么</h3><p>{c.plainIntro}</p>{k?.symbols&&<p className="insp-symbols">{k.symbols}</p>}</section>
-     <section><h3>今日解析 · {reversed?'逆位':'正位'}</h3><p>{reading}</p></section>
+     <EditorialSection number="I" title="这张牌在说什么"><p>{c.plainIntro}</p>{k?.symbols&&<p className="insp-symbols">{k.symbols}</p>}</EditorialSection>
+     <EditorialSection number="II" title={`今日解析 · ${reversed?'逆位':'正位'}`}><p>{reading}</p></EditorialSection>
     </div>
-    <section className="insp-morning"><h3>早上可以做的一件事</h3><p>{c.action}</p></section>
+    <EditorialSection className="insp-morning ritual-ticket" number="III" title="早上可以做的一件事"><p>{c.action}</p></EditorialSection>
     <section><h3>放到生活里</h3><dl className="insp-aspects"><div><dt>关系</dt><dd>{c.lifeAspects.love}</dd></div><div><dt>学业事业</dt><dd>{c.lifeAspects.work}</dd></div><div><dt>资源与精力</dt><dd>{c.lifeAspects.money}</dd></div></dl></section>
     <section><h3>晚间回顾</h3><p>{c.reflectionPrompt}</p></section>
-    {cardAstro(c.id)?.plain&&<p className="insp-note">{cardAstro(c.id)!.plain}</p>}
+    {cardAstro(c.id)?.plain&&<EditorialSection number="IV" title="星象对应"><p className="insp-note">{cardAstro(c.id)!.plain}</p></EditorialSection>}
     <p className="insp-echo">✦ {meet?<>在你的晨启记录里，这张牌和你相遇过 {meet.count} 次{meet.reversed?`（其中逆位 ${meet.reversed} 次）`:''}，最近一次是 {meet.last}。</>:'这张牌还在等你们第一次相遇。'}</p>
     <p className="insp-page"><a href={`/card/${c.id}/`}>打开这张牌的完整页面（可以分享）→</a></p>
     {k?.source&&<p className="insp-source"><a href={k.source} target="_blank" rel="noreferrer">Waite《The Pictorial Key to the Tarot》原文</a></p>}

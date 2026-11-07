@@ -9,7 +9,7 @@ import type {Metadata} from 'next';
 import {SITE_URL,SITE_DESCRIPTION} from '../src/site';
 import {InstallHint} from '../src/components/install-hint';
 const cinzel=Cinzel({subsets:['latin'],weight:['400','500'],variable:'--font-cinzel',display:'swap'});
-const prose=Cormorant_Garamond({subsets:['latin'],weight:['400','500','600'],variable:'--font-prose',display:'swap'});
+const prose=Cormorant_Garamond({subsets:['latin'],weight:['400','500','600'],style:['normal','italic'],variable:'--font-prose',display:'swap'});
 // 中文衬线字体用自己抽字的两个文件（见 scripts/font-css.mjs）：全站共用的 core 先预加载，日历才用到的 extra 按需下载。
 // 以前 Google 字体切成上百个分片，每个页面要下 11–22 个；现在一个文件缓存一次，所有页面通用。
 // 链接预览：分享到小红书、Instagram、Facebook、微信、X 时显示的标题、描述和图片。

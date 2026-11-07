@@ -57,7 +57,6 @@ export async function revealCard(result:HTMLElement,o:RevealOptions){
  try{await Promise.race([animateReveal(result,o,s=>{stage=s}),wait(5000)])}catch{}finally{finish()}}
 async function animateReveal(result:HTMLElement,o:RevealOptions,hold:(stage:HTMLElement)=>void){
  const target=result.querySelector<HTMLElement>('.tarot');if(!target){release(result);return}
- const groups=[[...result.querySelectorAll<HTMLElement>(':scope>.ritual-date,:scope>h1,:scope>.orientation')],[...result.querySelectorAll<HTMLElement>(':scope>.daily-reading')],[...result.querySelectorAll<HTMLElement>(':scope>.review-block,:scope>.result-tools')]];
  const front=new Image();front.src=(/src="([^"]+)"/.exec(o.frontHtml)||[])[1]||'';
  // 减少动态效果：不做位移和翻转，300ms 柔和淡入
  if(reducedMotion()){o.onPhase?.('revealed');release(result);await done(play(result,{opacity:[0,1]},{duration:300,easing:'ease'}));return}
@@ -65,7 +64,7 @@ async function animateReveal(result:HTMLElement,o:RevealOptions,hold:(stage:HTML
  // 浮层：固定在结果页大牌的位置，用 transform 从抽中那张牌的位置飞过来（FLIP）
  const stage=document.createElement('div');stage.className='draw-flight';stage.setAttribute('aria-hidden','true');
  Object.assign(stage.style,{left:`${r.left}px`,top:`${r.top}px`,width:`${r.width}px`,height:`${r.height}px`});
- stage.innerHTML=`<span class="flight-shadow"></span><div class="flight-card"><div class="flight-face flight-back">${o.backHtml}<i class="flight-sheen"></i></div><div class="flight-face flight-front${o.reversed?' is-reversed':''}">${o.frontHtml}<i class="flight-sheen"></i></div></div>`;
+ stage.innerHTML=`<span class="flight-shadow"></span><div class="flight-card"><div class="flight-face flight-back">${o.backHtml}<i class="flight-sheen"></i></div><div class="flight-face flight-front tarot-plate${o.reversed?' is-reversed':''}">${o.frontHtml}<i class="flight-sheen"></i></div></div>`;
  document.body.appendChild(stage);hold(stage);
  const card=stage.querySelector<HTMLElement>('.flight-card')!,shadow=stage.querySelector<HTMLElement>('.flight-shadow')!,sheens=[...stage.querySelectorAll<HTMLElement>('.flight-sheen')];
  const apex='translate(0px,0px) rotate(0deg) scale(1.05)';
@@ -87,9 +86,9 @@ async function animateReveal(result:HTMLElement,o:RevealOptions,hold:(stage:HTML
  // 折光：按缓动曲线算出转到 60° 和 140° 的时刻，只在这段里扫过
  const t60=bezierTimeFor(60/180,.22,1,.36,1)*flip,t140=bezierTimeFor(140/180,.22,1,.36,1)*flip,sweep=Math.max(90,t140-t60);
  sheens.forEach(el=>el.animate([{opacity:0,transform:'translateX(-120%)'},{opacity:1,offset:.25},{opacity:1,offset:.75},{opacity:0,transform:'translateX(120%)'}],{duration:sweep,delay:t60,easing:'linear',fill:'both'}));
- // 阶段 4：落定前 100ms 开始，三组内容每组相隔 80ms 浮现
+ // 阶段 4：落定前 100ms 开始，正文按模块依次浮现
  await wait(flip-100);o.onPhase?.('revealed');result.classList.remove('reveal-pending');
- const cascade=groups.flatMap((els,i)=>els.map(el=>el.animate({opacity:[0,1],transform:['translateY(10px)','translateY(0)'],filter:['blur(3px)','blur(0px)']},{duration:420,delay:i*80,easing:SPRING,fill:'backwards'})));
+ result.classList.add('editorial-reveal');
  await wait(100);result.classList.remove('card-pending');stage.remove();
- await Promise.all(cascade.map(done))}
+ await wait(660)}
 function release(result:HTMLElement){result.classList.remove('reveal-pending','card-pending')}

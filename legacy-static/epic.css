@@ -15,8 +15,8 @@ button,.primary,.secondary,.ritual-link,.outline-button,.quiet-button,.text{back
 .card-detail-dialog h3{margin:36px 0 10px;font-size:13px;letter-spacing:.12em;color:var(--muted);font-weight:500}.card-detail-dialog .reading-tags{margin:8px 0 0;font-size:14px;letter-spacing:.06em}.card-detail-dialog .life-aspects dd{font-size:16px;line-height:1.85}
 .personal-fortune{max-width:46ch;margin:72px auto 0;padding-top:40px;border-top:1px solid var(--line);text-align:left;display:grid;gap:20px}.personal-fortune h2{font-size:clamp(26px,4vw,34px);margin:0;text-wrap:balance}.fortune-kicker{margin:0;font-size:13px;letter-spacing:.14em;color:var(--muted)}.fortune-summary{margin:0;font-size:17px;line-height:1.9}.fortune-note{margin:0;font-size:15px;line-height:1.8;color:var(--muted);padding-left:14px;border-left:1px solid var(--line)}.fortune-areas{margin:0;display:grid}.fortune-areas div{display:grid;grid-template-columns:7.5em 1fr;gap:16px;padding:14px 0;border-top:1px solid var(--line)}.fortune-areas dt{font-size:14px;color:var(--muted);display:flex;flex-direction:column;gap:8px;align-items:flex-start}.fortune-areas dd{margin:0;font-size:16px;line-height:1.85;min-width:0}.fortune-level{font-size:12px;letter-spacing:.1em;padding:1px 10px;border:1px solid var(--fg);color:var(--fg)}.fortune-level.level-good{background:var(--fg);color:var(--bg)}.fortune-level.level-care{border-style:dashed}.fortune-dos{display:grid;gap:10px}.fortune-dos p{margin:0;font-size:16px;line-height:1.8;display:grid;grid-template-columns:3em 1fr;gap:12px}.fortune-dos span{font-size:13px;color:var(--muted);padding-top:3px}.fortune-meta,.fortune-basis{margin:0;font-size:13px;color:var(--muted);letter-spacing:.04em}.fortune-chart summary{cursor:pointer;font-size:14px;color:var(--muted)}.fortune-chart .pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0 8px;text-align:center}.fortune-chart .pillars div{display:grid;gap:4px;padding:10px 0;border:1px solid var(--line)}.fortune-chart .pillars small{font-size:11px;color:var(--muted)}.fortune-chart .pillars strong{font-size:20px;font-weight:500;letter-spacing:.1em}.fortune-chart p{margin:6px 0 0;font-size:14px;color:var(--muted)}.fortune-invite{display:block;width:fit-content;margin:56px auto 0;font-size:15px;border-bottom:1px solid var(--line);padding-bottom:4px}.birth-note{margin:0;font-size:13px;color:var(--muted);line-height:1.7}.birth-form .birth-clear{justify-self:start}@media(max-width:560px){.fortune-areas div{grid-template-columns:1fr;gap:8px}.fortune-areas dt{flex-direction:row;align-items:center;gap:12px}}
 .moon-stage{position:relative;width:fit-content;margin:0 auto}.moon-stage .minimal-moon{margin:0}.real-moon{position:absolute;left:18.18%;top:18.18%;width:63.64%;height:63.64%;border-radius:50%;opacity:0;transition:opacity .6s ease}.real-moon.shown{opacity:1}.moon-stage.textured .moon-phase{opacity:0;transition:opacity .6s ease}@media(prefers-reduced-motion:reduce){.real-moon,.moon-stage.textured .moon-phase{transition:none}}
-@view-transition{navigation:auto}.shared-header{view-transition-name:site-header}::view-transition-old(root){animation:vt-out .16s ease-in both}::view-transition-new(root){animation:vt-in .34s cubic-bezier(.2,.7,.2,1) both}@keyframes vt-out{to{opacity:0}}@keyframes vt-in{from{opacity:0;transform:translateY(8px)}}a,button,select,input,.catalog-card,.history-item,.deck-fan button{transition:opacity .2s ease,color .2s ease,border-color .2s ease,background-color .2s ease,transform .18s cubic-bezier(.2,.7,.2,1)}button:active:not(:disabled),.catalog-card:active,.history-item:active,.calendar-links a:active,.fortune-invite:active{transform:scale(.97)}@media(hover:hover){.catalog-card:hover,.deck-fan button:hover:not(:disabled){transform:translateY(-3px)}.shared-header nav a:hover,.calendar-links a:hover{opacity:.7}}.card-detail-dialog[open]{animation:dialog-in .3s cubic-bezier(.2,.7,.2,1)}.card-detail-dialog[open]::backdrop{animation:fade-in .3s ease}@keyframes dialog-in{from{opacity:0;transform:translateY(12px) scale(.98)}}@keyframes fade-in{from{opacity:0}}.fade-swap{animation:fade-in .32s ease}.daily-inscription{animation:ink-in .45s cubic-bezier(.2,.7,.2,1)}@keyframes ink-in{from{opacity:0;transform:translateY(6px)}}.personal-fortune{animation:ink-in .5s .08s cubic-bezier(.2,.7,.2,1) both}.minimal-ritual.drawing .tarot{animation:draw-lift .8s cubic-bezier(.4,0,.2,1) both}.minimal-ritual.drawing .primary{opacity:.4}@keyframes draw-lift{0%{transform:none}45%{transform:translateY(-14px) scale(1.03)}100%{transform:translateY(-6px) rotateY(88deg);opacity:.5}}.minimal-result .tarot.revealed.flip{animation:card-turn .6s cubic-bezier(.2,.7,.2,1) both}@keyframes card-turn{from{transform:rotateY(-88deg);opacity:.4}}.minimal-result.just-drawn .daily-reading,.minimal-result.just-drawn .review-block{animation:ink-in .5s .25s cubic-bezier(.2,.7,.2,1) both}.drawn-card{animation:ink-in .4s cubic-bezier(.2,.7,.2,1) both}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
-.tarot img.rws,.history-art img.rws{display:block;width:100%;height:100%;object-fit:cover}.minimal-result .tarot.is-reversed img.rws{transform:rotate(180deg)}.tarot.revealed{background:var(--bg)}.card-detail-dialog>img{width:150px;height:257px;object-fit:cover;border:1px solid var(--line)}.catalog-card img,.drawn-card img{object-fit:contain}@media(max-width:560px){.card-detail-dialog>img{width:112px;height:192px}}
+@view-transition{navigation:auto}.shared-header{view-transition-name:site-header}::view-transition-old(root){animation:vt-out .16s ease-in both}@keyframes vt-out{to{opacity:0}}a,button,select,input,.catalog-card,.history-item,.deck-fan button{transition:opacity .2s ease,color .2s ease,border-color .2s ease,background-color .2s ease,transform .18s cubic-bezier(.2,.7,.2,1)}button:active:not(:disabled),.catalog-card:active,.history-item:active,.calendar-links a:active,.fortune-invite:active{transform:scale(.97)}@media(hover:hover){.catalog-card:hover,.deck-fan button:hover:not(:disabled){transform:translateY(-3px)}.shared-header nav a:hover,.calendar-links a:hover{opacity:.7}}.card-detail-dialog[open]{animation:dialog-in .3s cubic-bezier(.2,.7,.2,1)}.card-detail-dialog[open]::backdrop{animation:fade-in .3s ease}@keyframes dialog-in{from{opacity:0;transform:translateY(12px) scale(.98)}}@keyframes fade-in{from{opacity:0}}.fade-swap{animation:fade-in .32s ease}.daily-inscription{animation:ink-in .45s cubic-bezier(.2,.7,.2,1)}@keyframes ink-in{from{opacity:0;transform:translateY(6px)}}.personal-fortune{animation:ink-in .5s .08s cubic-bezier(.2,.7,.2,1) both}.minimal-ritual.drawing .tarot{animation:draw-lift .8s cubic-bezier(.4,0,.2,1) both}.minimal-ritual.drawing .primary{opacity:.4}@keyframes draw-lift{0%{transform:none}45%{transform:translateY(-14px) scale(1.03)}100%{transform:translateY(-6px) rotateY(88deg);opacity:.5}}.minimal-result .tarot.revealed.flip{animation:card-turn .6s cubic-bezier(.2,.7,.2,1) both}@keyframes card-turn{from{transform:rotateY(-88deg);opacity:.4}}.minimal-result.just-drawn .daily-reading,.minimal-result.just-drawn .review-block{animation:ink-in .5s .25s cubic-bezier(.2,.7,.2,1) both}.drawn-card{animation:ink-in .4s cubic-bezier(.2,.7,.2,1) both}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
+.tarot img.rws,.history-art img.rws{display:block;width:100%;height:100%;object-fit:cover}.minimal-result .tarot.is-reversed img.rws{transform:rotate(180deg)}.tarot.revealed{background:var(--bg)}.catalog-card img,.drawn-card img{object-fit:contain}
 main,#app main{animation:none}.card-detail-dialog.closing{animation:dialog-out .18s ease-in forwards}.card-detail-dialog.closing::backdrop{animation:fade-out .18s ease-in forwards}@keyframes dialog-out{to{opacity:0;transform:translateY(8px) scale(.985)}}@keyframes fade-out{to{opacity:0}}::view-transition-old(root),::view-transition-new(root){mix-blend-mode:normal}
 .month-view{max-width:640px;margin:0 auto 56px;display:grid;gap:28px}.month-nav{display:flex;align-items:center;justify-content:space-between;gap:16px}.month-nav h2{margin:0;font-size:22px;letter-spacing:.08em;font-variant-numeric:tabular-nums}.month-step{background:none;border:1px solid var(--line);color:var(--fg);width:40px;height:40px;font-size:20px;line-height:1;cursor:pointer}.month-step:disabled{opacity:.25;cursor:default}.month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}.month-grid .wk{text-align:center;font-size:12px;color:var(--muted);padding-bottom:4px}.month-grid .day{position:relative;aspect-ratio:1/1.45;border:1px solid var(--line);display:flex;align-items:flex-end;justify-content:flex-end;padding:3px;min-width:0;overflow:hidden;background:none;color:var(--muted);font:inherit}.month-grid .day.blank{border-color:transparent}.month-grid .day.today{border-color:var(--fg)}.month-grid .day.has-card{cursor:pointer;color:var(--fg)}.month-grid .day-art{position:absolute;inset:0;display:block}.month-grid .day-art img{width:100%;height:100%;object-fit:cover;display:block;opacity:.88}.month-grid .day-art.is-reversed img{transform:rotate(180deg)}.month-grid .day-num{position:relative;font-size:11px;font-variant-numeric:tabular-nums;line-height:1;padding:2px 3px;background:var(--bg)}.month-grid .day.reviewed::after{content:"";position:absolute;top:4px;left:4px;width:6px;height:6px;border-radius:50%;background:var(--fg);box-shadow:0 0 0 2px var(--bg)}@media(hover:hover){.month-grid .day.has-card:hover img{opacity:1}}.month-summary{display:grid;gap:10px}.month-summary h3,.month-list-title{margin:12px 0 0;font-size:13px;letter-spacing:.14em;color:var(--muted);font-weight:500}.month-summary p{margin:0;font-size:16px;line-height:1.85}.month-summary blockquote{margin:0;padding:10px 0 10px 14px;border-left:1px solid var(--line);font-size:15px;line-height:1.8;display:grid;gap:2px}.month-summary blockquote small{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}.month-list-title{max-width:640px;margin:0 auto 8px}@media(max-width:560px){.month-grid{gap:3px}.month-grid .day-num{font-size:10px}}
 .legal-page{max-width:46ch;margin:0 auto;display:grid;gap:28px;text-align:left}.legal-page h1{text-align:center}.legal-page .legal-date{margin:-12px 0 0;text-align:center;font-size:13px;color:var(--muted)}.legal-page section{display:grid;gap:8px}.legal-page h2{margin:0;font-size:18px;letter-spacing:.06em}.legal-page p{margin:0;font-size:16px;line-height:1.9}.shared-footer{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:center;align-items:center}.shared-footer nav{display:flex;gap:18px}.shared-footer nav a{font-size:12px;color:var(--muted);border-bottom:1px solid transparent}.shared-footer nav a:hover{border-bottom-color:var(--line)}
@@ -171,8 +171,6 @@ html:root[data-theme=light]{--bg-primary:#f1ebe0;--bg-surface:#f1ebe0;
 
 /* 深色主题的背景：午夜曜石黑到深空靛的微弱径向渐变，叠一层很淡的胶片噪点 */
 html:root[data-theme=dark]{background:radial-gradient(ellipse at 50% 30%,#16151C 0%,#0B0A0E 65%,#050507 100%) fixed #0B0A0E}
-html:root[data-theme=dark] body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.035;
- background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
 /* 文字层级：浅色主题沿用原有墨色，深色主题用象牙白 / 亚麻灰 / 暗灰 */
 .minimal-ritual{--rt-title:var(--fg);--rt-sub:var(--muted);--rt-small:var(--muted);--rt-hint:var(--muted);--rt-pill:var(--fg);
@@ -460,8 +458,8 @@ html:root[data-theme=light] .fan-card.is-drawn,html:root[data-theme=light] .pile
 .codex-back,.codex-back svg{display:block;width:100%;height:100%}
 .codex-card.is-unmet .codex-back{opacity:.55}
 .codex-card.is-unmet .codex-name{opacity:.6}
-@media(hover:hover){.codex-card:hover .codex-face{transform:translateY(-6px) scale(1.02);border-color:rgba(212,175,55,.6);box-shadow:0 22px 40px -18px rgba(0,0,0,.85),0 0 18px rgba(197,160,89,.22)!important}}
-.codex-card:focus-visible{outline:none}.codex-card:focus-visible .codex-face{border-color:rgba(212,175,55,.75);box-shadow:0 0 0 2px rgba(212,175,55,.35)!important}
+@media(hover:hover){.codex-card:hover .codex-face{transform:translateY(-6px) scale(1.02);border-color:var(--border-hover)!important}}
+.codex-card:focus-visible{outline:none}.codex-card:focus-visible .codex-face{outline:2px solid var(--accent-gold);outline-offset:2px}
 .codex-badge{position:absolute;top:6px;left:6px;padding:2px 8px;border-radius:999px!important;font-size:10px;letter-spacing:.12em;line-height:1.6;color:#E6D2B5;background:rgba(11,10,15,.62);border:.5px solid rgba(212,175,55,.45);-webkit-backdrop-filter:blur(6px)!important;backdrop-filter:blur(6px)!important}
 .codex-seen{position:absolute;top:5px;right:8px;font-size:13px;color:var(--gold);text-shadow:0 0 6px rgba(11,10,15,.8)}
 .codex-name{display:flex;flex-direction:column;gap:2px}
@@ -469,7 +467,6 @@ html:root[data-theme=light] .fan-card.is-drawn,html:root[data-theme=light] .pile
 .codex-name small{font-size:11px;letter-spacing:.08em;color:var(--muted)}
 .codex-empty{margin:48px 0;color:var(--muted)}
 html:root[data-theme=light] .codex-badge{color:#6E5832;background:rgba(245,242,235,.78);border-color:rgba(140,109,50,.4)}
-html:root[data-theme=light] .codex-face{border-color:rgba(140,109,50,.28);box-shadow:0 12px 24px -16px rgba(60,45,20,.45)!important}
 @media(max-width:560px){.codex-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 12px}.codex-name b{font-size:13px}.codex-name small{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.codex-badge{font-size:9px;padding:1px 6px}.codex-segs button{padding:7px 12px!important}}
 
 /* 检视台 */
@@ -515,7 +512,6 @@ html:root[data-theme=light] dialog.inspector::backdrop{background:rgba(242,239,2
 .insp-dossier p,.insp-dossier dd{margin:0;font-size:15px;line-height:1.9;color:var(--text-secondary,var(--muted))}
 html:root[data-theme=dark] .insp-dossier p,html:root[data-theme=dark] .insp-dossier dd{color:#C8C2B8}
 .insp-symbols{margin-top:10px!important;font-size:14px!important;opacity:.85}
-.insp-morning{padding:16px 18px;border-radius:14px!important;border:1px solid rgba(212,175,55,.28);background:rgba(212,175,55,.05)}
 .insp-aspects{display:grid;gap:12px;margin:0}
 .insp-aspects div{display:grid;grid-template-columns:5.5em 1fr;gap:12px}
 .insp-aspects dt{font-size:13px;letter-spacing:.12em;color:var(--gold)}
@@ -858,9 +854,8 @@ html:root[data-theme=light] :is(.draw-arrow svg,.ribbon-btn svg){stroke:var(--ac
 /* 浅色背景：星盘线稿从页面背景里拿出来，单独铺一层，透明度降到 --watermark-opacity 的水平，不再和正文抢 */
 html:root[data-theme=light]{background:
   radial-gradient(ellipse 115% 85% at 50% 42%,rgba(0,0,0,0) 58%,rgba(126,92,44,.08) 100%) fixed,
-  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .27 0 0 0 0 .15 0 0 0 .08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0/240px 240px,
   var(--bg-primary)}
-html:root[data-theme=light] body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;background:url(/textures/astrolabe.svg) 50% -180px/min(1040px,165vw) auto no-repeat;opacity:.3}
+html:root[data-theme=light] body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;background:url(/textures/astrolabe.svg) 50% -180px/min(1040px,165vw) auto no-repeat;opacity:.3}
 html:root:not([data-theme=light]){background-color:var(--bg-primary)}
 /* 抽牌页最小号的灰字（日期）提亮到次级文字色，深色下也看得清 */
 html:root[data-theme=dark] .minimal-ritual{--rt-small:var(--text-muted)}
@@ -890,8 +885,6 @@ main h1,main h2,main h3,.page-heading h1,.tarot-workbench>h1{color:var(--text-pr
 @media (min-width:1024px){.codex-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important}}
 @media (min-width:1280px){.codex-grid{grid-template-columns:repeat(6,minmax(0,1fr))!important}}
 
-/* 韦特牌面融进暗色界面：外加一圈暗金画框 */
-:is(.drawn-card img,.card-detail-dialog>img,.pair-majors img,.zodiac-cards img,.history-art img.rws){padding:6px;background:var(--bg-elevated);border:1px solid var(--border-subtle)!important;border-radius:10px!important;box-sizing:border-box}
 
 /* 牌阵页底部：付费一对一深度解读，做成一张毛玻璃名片 */
 .deep-note.deep-card{position:relative;margin-top:72px;padding:28px 24px 24px!important;border:1px solid var(--border-subtle)!important;border-top:1px solid var(--border-subtle)!important;border-radius:12px!important;
@@ -1073,6 +1066,211 @@ html.home-stale .editorial-home .daily-inscription{visibility:hidden!important}
 .img-fallback strong{font-size:20px;font-weight:400}
 .img-fallback span{font-size:13px;color:var(--muted)}
 .history-art .img-fallback{gap:4px;padding:6px!important}.history-art .img-fallback strong{font-size:12px}.history-art .img-fallback span{display:none}
+
+/* Shared finishes for the card plates and editorial surfaces. */
+:root {
+ --radius-card:2px;
+ --radius-tarot:6px;
+ --radius-tag:4px;
+ --border-hairline-dark:.5px solid rgba(197,160,89,.22);
+ --border-hairline-light:.5px solid rgba(140,98,30,.20);
+ --surface-hairline:var(--border-hairline-dark);
+ --surface-edge:linear-gradient(135deg,rgba(212,175,55,.42),rgba(255,255,255,.03) 50%,rgba(197,160,89,.18));
+ --plate-grade:sepia(.16) saturate(.76) contrast(1.08) brightness(.93);
+ --plate-focus:sepia(.08) saturate(.88) contrast(1.10) brightness(1);
+ --plate-shadow:rgba(10,10,12,.58);
+ --editorial-rule:rgba(212,175,55,.28);
+ --editorial-animation:editorialReveal;
+ --paper-grain:.026;
+}
+:root[data-theme=light] {
+ --surface-hairline:var(--border-hairline-light);
+ --surface-edge:linear-gradient(135deg,rgba(140,98,30,.30),rgba(140,98,30,.05) 50%,rgba(140,98,30,.17));
+ --plate-grade:sepia(.12) saturate(.82) contrast(1.05) brightness(.98);
+ --plate-shadow:rgba(65,44,24,.26);
+ --editorial-rule:rgba(140,98,30,.43);
+ --paper-grain:.032;
+}
+body::before {
+ content:'';
+ position:fixed;
+ inset:0;
+ pointer-events:none;
+ z-index:9999;
+ opacity:var(--paper-grain);
+ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
+}
+.tarot-plate{display:block;position:relative;max-width:100%;overflow:hidden;border-radius:var(--radius-tarot)!important}
+.flight-face.tarot-plate,.insp-face.tarot-plate,.day-art.tarot-plate{position:absolute}
+.tarot-plate-img{
+ display:block;
+ max-width:100%;
+ height:auto;
+ filter:var(--plate-grade);
+ transition:filter 420ms var(--ease-soft);
+}
+.tarot-plate:focus-within .tarot-plate-img,
+.codex-card:focus-visible .tarot-plate-img,
+.inspector[open] .insp-front .tarot-plate-img{filter:var(--plate-focus)}
+@media(hover:hover){
+ .tarot-plate:hover .tarot-plate-img,.codex-card:hover .tarot-plate-img{filter:var(--plate-focus)}
+}
+.tarot-plate::after{
+ content:'';
+ position:absolute;
+ inset:0;
+ pointer-events:none;
+ outline:.5px solid rgba(197,160,89,.35);
+ outline-offset:-5px;
+ border-radius:inherit!important;
+ box-shadow:inset 0 0 var(--plate-vignette,28px) var(--plate-shadow),inset 0 0 2px rgba(212,175,55,.45)!important;
+}
+.tarot-plate .img-fallback{z-index:1}
+.tarot-plate:has(.img-fallback)::after{content:none}
+.codex-face>.tarot-plate{width:100%;height:100%;--plate-vignette:14px}
+.codex-face .tarot-plate-img{transition:opacity .4s ease,filter 420ms var(--ease-soft)}
+.insp-front{isolation:isolate}
+.insp-front .insp-glare,.flight-front .flight-sheen{z-index:1}
+:is(.history-art,.day-art,.z-card .tarot-plate,.dipper-slot .tarot-plate,.pair-spread .tarot-plate){--plate-vignette:9px}
+.drawn-card>.tarot-plate,.card-detail-dialog>.tarot-plate,.catalog-card>.tarot-plate{width:fit-content;margin-inline:auto}
+.drawn-card>.tarot-plate{margin-bottom:24px}
+.drawn-card>.tarot-plate>.tarot-plate-img{margin:0}
+.card-detail-dialog>.tarot-plate>.tarot-plate-img{width:150px;height:257px;object-fit:cover}
+.pair-spread article>.tarot-plate{flex:none}
+.card-head>.tarot-plate{width:100%}
+@media(max-width:560px){
+ .card-head>.tarot-plate{max-width:220px;margin-inline:auto}
+ .card-detail-dialog>.tarot-plate>.tarot-plate-img{width:112px;height:192px}
+}
+
+/* Surfaces share their geometry without replacing native control states. */
+:is(.codex-face,.consultation-reading,.deep-note.deep-card,.deep-card .deep-contact,.insp-bar,
+ .backup-nudge,.ask-card,.history-item,.month-summary,.card-detail-dialog,.inspector,
+ .spread-choice>button,.minimal-settings>form,.minimal-settings>fieldset,
+ .minimal-settings>.field,.minimal-settings>.setting-row,.personal-fortune){
+ border-radius:var(--radius-card)!important;
+ border:var(--surface-hairline)!important;
+ box-shadow:none!important;
+}
+:is(.consultation-reading,.deep-note.deep-card,.backup-nudge,.ask-card,.month-summary){
+ border-color:transparent!important;
+ background:linear-gradient(var(--bg-elevated),var(--bg-elevated)) padding-box,var(--surface-edge) border-box!important;
+ backdrop-filter:none!important;
+ -webkit-backdrop-filter:none!important;
+}
+.month-summary,.ask-card{padding:clamp(14px,3vw,26px)}
+.minimal-settings>form,.minimal-settings>fieldset,.minimal-settings>.field,.minimal-settings>.setting-row{
+ padding-inline:clamp(12px,3vw,20px);
+}
+.history-grid .history-item{padding-inline:12px}
+.history-item .history-note{max-width:48ch;line-height:1.88}
+:is(.codex-badge,.codex-seen,.mood-tag,.reading-tags,.insp-astro,.insp-chips>span,.deep-card .deep-pills>li){
+ border-radius:var(--radius-tag)!important;
+}
+:is(.fan-card,.pile-card,.flight-face,.insp-face,.dipper-pick){border-radius:var(--radius-tarot)!important}
+.insp-face{box-shadow:none!important}
+
+.editorial-row{
+ display:grid;
+ grid-template-columns:72px minmax(0,1fr);
+ align-items:start;
+ gap:clamp(12px,2.3vw,26px);
+ padding:1.25rem 0;
+ border-top:var(--surface-hairline);
+}
+.editorial-index{
+ position:relative;
+ align-self:stretch;
+ min-width:0;
+ font:italic 400 clamp(1.75rem,2.5vw,2.35rem)/1.1 var(--font-prose),Georgia,serif!important;
+ color:var(--editorial-rule);
+ font-variant-numeric:lining-nums;
+}
+.editorial-index::after{
+ content:'';
+ position:absolute;
+ top:.1em;
+ right:0;
+ bottom:0;
+ width:.5px;
+ background:linear-gradient(var(--editorial-rule),transparent 90%);
+}
+.editorial-copy{min-width:0;max-width:48ch}
+.editorial-copy :is(h2,h3){
+ margin:0 0 .85rem;
+ font-size:clamp(.94rem,1.65vw,1.13rem);
+ letter-spacing:.18em;
+}
+.editorial-copy :is(p,li,dd,blockquote):not(.mono){line-height:1.88!important;font-weight:400}
+.editorial-copy p{margin:0 0 1.5rem}
+.editorial-copy>:last-child,.editorial-copy .ritual-action>p{margin-bottom:0}
+.daily-reading{max-width:62ch}
+.daily-reading .plain-intro{font-size:inherit;color:var(--text-secondary)}
+.zodiac-page .editorial-copy{max-width:100%}
+.zodiac-page .editorial-copy :is(.z-plain,.z-facts){max-width:48ch}
+.zodiac-page .editorial-copy>h2{font-size:clamp(1.18rem,2.4vw,1.6rem)}
+.zodiac-page .zodiac-sign{margin-top:clamp(18px,5vw,38px)}
+.ritual-ticket .editorial-copy{
+ padding:14px clamp(12px,2vw,20px);
+ border-inline-start:2px solid var(--accent-gold);
+ border-radius:var(--radius-card)!important;
+ background:var(--dawn-glow);
+}
+.ritual-action{display:flex;flex-wrap:wrap;align-items:start;gap:8px 14px}
+.ritual-action>p{flex:1 1 14ch}
+.ritual-check,.ritual-done{
+ position:relative;
+ display:inline-flex;
+ align-items:center;
+ gap:7px;
+ min-height:44px;
+ flex-shrink:0;
+ font-size:.82rem;
+ letter-spacing:.05em;
+ color:var(--text-muted);
+}
+.ritual-check{cursor:pointer}
+.ritual-check input[type=checkbox]{width:1rem;height:1rem;min-height:0;margin:0;accent-color:var(--accent-gold)}
+.ritual-check input:checked+span,.ritual-done{color:var(--accent-gold)}
+.ritual-check input:checked+span::after{
+ content:'';
+ position:absolute;
+ inset:auto 0 8px;
+ height:1px;
+ background:linear-gradient(90deg,transparent,var(--accent-gold),transparent);
+ animation:ticketSheen 480ms var(--ease-soft) both;
+}
+@keyframes ticketSheen{from{opacity:0;transform:scaleX(0)}to{opacity:.68;transform:scaleX(1)}}
+@media(max-width:560px){
+ .editorial-row{grid-template-columns:2.35rem minmax(0,1fr);gap:12px;padding-block:1.05rem}
+ .editorial-copy :is(h2,h3){letter-spacing:.12em}
+}
+
+@keyframes editorialReveal{
+ from{opacity:0;transform:translateY(10px);filter:blur(3px)}
+ to{opacity:1;transform:translateY(0);filter:blur(0)}
+}
+::view-transition-new(root){animation:var(--editorial-animation) 480ms var(--ease-soft) 160ms both}
+:is(.editorial-reveal,.editorial-reveal>.daily-reading)>.editorial-row,
+.minimal-result.editorial-reveal>:is(.ritual-date,h1,.orientation,.review-block,.result-tools),
+.minimal-ritual>:is(.ritual-eyebrow,h1,.ritual-hint),
+.page-shell>:is(h1,.codex-head,.codex-segs,.consult-form,.zodiac-index),
+#app main>:is(.page-heading,.month-view,.empty,.minimal-settings),
+.almanac-grid:not(.exporting)>:is(.almanac-sky,.almanac-text){
+ animation:var(--editorial-animation) 480ms var(--ease-soft) var(--editorial-delay,0ms) backwards;
+}
+:is(.editorial-reveal,.editorial-reveal>.daily-reading)>.editorial-row:nth-of-type(2),
+.minimal-ritual>.ritual-hint,
+.page-shell>:is(.consult-form,.codex-segs,.zodiac-index),
+#app main>:is(.month-view,.empty,.minimal-settings),.almanac-grid>.almanac-text{--editorial-delay:70ms}
+:is(.editorial-reveal,.editorial-reveal>.daily-reading)>.editorial-row:nth-of-type(3){--editorial-delay:140ms}
+:is(.editorial-reveal,.editorial-reveal>.daily-reading)>.editorial-row:nth-of-type(4){--editorial-delay:210ms}
+.minimal-result.editorial-reveal>:is(.review-block,.result-tools){--editorial-delay:280ms}
+@media(prefers-reduced-motion:reduce){
+ :root{--editorial-animation:none}
+ .ritual-check input:checked+span::after{animation:none}
+ .tarot-plate-img,.codex-face .tarot-plate-img{transition:none!important}
+}
 
 /* 牌阵卡片是整行宽的大卡片：按下不再缩放回弹（手机上滑过列表时一碰就缩、松手再弹，看着像卡），只把底色压暗一点；
    选中框即时切换，不做 0.32 秒的渐变。选中底色用固定半透明色，不依赖 color-mix（较老的 iPhone Safari 不认）。 */

@@ -5,6 +5,7 @@ import {pairReading,signById,PAIR_SOURCES} from '../synastry';
 import {ZODIAC} from '../zodiac';
 import {cards,cardById} from '../cards';
 import {shuffleDeck} from '../random';
+import {TarotPlate} from './tarot/tarot-plate';
 import {cardImageUrl} from '../art';
 import type {Card} from '../types';
 // 两个人的星座：选生日或直接选星座，看相处方式；再抽三张牌看你们之间。
@@ -33,10 +34,10 @@ export function PairReading(){const [a,setA]=useState<Sign|null>(null),[b,setB]=
    <h3>容易卡住的地方</h3>{r.stuck.map(t=><p key={t}>{t}</p>)}
    <h3>相处小建议</h3>{r.tips.map(t=><p key={t}>{t}</p>)}
    <h3>你们的代表牌</h3>
-   <div className="pair-majors">{[a,b].map((s,i)=>{const c=cardById(major(s));return <figure key={i}><img src={cardImageUrl(c.id)} alt={c.nameZh} width={150} height={257}/><figcaption><span>{i===0?'你':'TA'} · {s.zh}</span><strong>{c.nameZh}</strong></figcaption></figure>})}</div>
+   <div className="pair-majors">{[a,b].map((s,i)=>{const c=cardById(major(s));return <figure key={i}><TarotPlate src={cardImageUrl(c.id)} alt={c.nameZh} width={150} height={257}/><figcaption><span>{i===0?'你':'TA'} · {s.zh}</span><strong>{c.nameZh}</strong></figcaption></figure>})}</div>
    {[a,b].map((s,i)=>{const c=cardById(major(s));return <p key={i} className="pair-love"><span>{i===0?'你':'TA'}的{c.nameZh}，在感情里：</span>{c.lifeAspects.love}</p>})}
    <h3>抽三张牌，看看你们之间</h3>
-   {!drawn?<button className="outline-button pair-draw" onClick={draw}>抽三张牌</button>:<div className="pair-spread">{drawn.map((d,i)=><article key={d.card.id}><img src={cardImageUrl(d.card.id,true)} alt={d.card.nameZh} width={96} height={164} style={d.reversed?{transform:'rotate(180deg)'}:undefined}/><div><p className="pair-pos">{['你','TA','你们之间'][i]}</p><strong>{d.card.nameZh} · {d.reversed?'逆位':'正位'}</strong><p>{i<2?(d.reversed?d.card.keywordsReversed:d.card.keywordsUpright).join('、'):d.card.lifeAspects.love}</p></div></article>)}<button className="text-button" onClick={draw}>再抽一次</button></div>}
+   {!drawn?<button className="outline-button pair-draw" onClick={draw}>抽三张牌</button>:<div className="pair-spread">{drawn.map((d,i)=><article key={d.card.id}><TarotPlate src={cardImageUrl(d.card.id,true)} alt={d.card.nameZh} width={96} height={164} style={d.reversed?{transform:'rotate(180deg)'}:undefined}/><div><p className="pair-pos">{['你','TA','你们之间'][i]}</p><strong>{d.card.nameZh} · {d.reversed?'逆位':'正位'}</strong><p>{i<2?(d.reversed?d.card.keywordsReversed:d.card.keywordsUpright).join('、'):d.card.lifeAspects.love}</p></div></article>)}<button className="text-button" onClick={draw}>再抽一次</button></div>}
    <div className="pair-actions"><button className="outline-button" onClick={share}>{copied?'链接已复制':'发给 TA'}</button></div>
    <p className="pair-note">这里只看太阳星座，是简化版的相处参考，不是对关系的判断。完整的合盘还要看月亮、金星、火星和上升星座。依据：{PAIR_SOURCES}</p>
   </section>}

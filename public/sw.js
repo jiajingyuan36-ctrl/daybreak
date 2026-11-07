@@ -1,5 +1,5 @@
 // 安装时缓存常用资源。页面和未版本化资源先用缓存，同时在后台更新。
-const CACHE='daybreak-v54';
+const CACHE='daybreak-v55';
 const IMMUTABLE=/\/_next\/static\/|\/fonts\/|\/rws\/|\/moon\/|\.(?:woff2|png|svg|webp|webmanifest)$/;
 const ASSET=/(?:href|src)="(\/(?:_next\/static|js)\/[^"?#]+)"/g;
 async function cacheAssets(cache,html){const urls=new Set([...html.matchAll(ASSET)].map(m=>m[1]));await Promise.all([...urls].map(u=>cache.match(u).then(hit=>hit||fetch(u).then(r=>r.ok?cache.put(u,r):undefined)).catch(()=>{})))}
