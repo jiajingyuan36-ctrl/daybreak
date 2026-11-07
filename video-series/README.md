@@ -95,6 +95,19 @@ node video-series/render.mjs video-series/episodes/story-01-magician.json
 
 每集在 `episodes/<集名>.sources.md` 按镜头记录事实出处。新历史图转为 WebP，记入 [CREDITS](CREDITS.md)。渲染器检查主牌和特写镜头数量，历史图与肖像仍需逐张看过。
 
+## 第 3 集的 45 秒电影版
+
+[《女祭司》七幕电影版](episodes/story-02-high-priestess.json) 以节拍固定镜头时长，沿用网站牌背、字体、真实月面以及本地配音。须有 Python 和 NumPy 生成原声配乐，旁白按上文设置 Kokoro。短句的 `at` 和 `before` 分别是旁白入点及最迟结束时间。
+
+```sh
+node video-series/render-cinematic.mjs video-series/episodes/story-02-high-priestess.json --preview
+node video-series/render-cinematic.mjs video-series/episodes/story-02-high-priestess.json
+```
+
+输出含 MP4、封面、总览、SRT、发布文案以及带完整音轨与画面资源的单文件 HTML。HTML 直接打开会静音播放，点「开启声音」同步听到成片混音。该片尾按官网宣传简报显示 `daybreaktarot.xyz`。
+
+画面已导出时，加 `--remix` 可保留 MP4 的画面流，重做混音、字幕和 HTML。
+
 ## 审核
 
 `lint.mjs` 在出片前检查所有会公开的文字（旁白、字幕、标签、标题、描述、话题），出现下面这些就不出片：
