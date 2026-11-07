@@ -2,6 +2,41 @@ const storyImage = () => `/public/rws/${EP.card}.webp`;
 const storyAssets = new Map();
 let storySegment;
 
+async function initDaybreak(ep, copy) {
+  document.body.classList.add('story-daybreak');
+  $('daybreakSeries').textContent = `${copy.series}  /  ${String(ep.no).padStart(2, '0')}`;
+  $('p4').textContent = copy.daybreakPromo;
+
+  // 网站日历的四极与 72 格观测度盘。
+  const axes = [0, 90, 180, 270].map(deg => `<g transform="rotate(${deg})">
+    <path d="M0 -104 V-112" stroke-opacity=".6"/>
+    <path d="M0 -118.6 L1.1 -116.5 L0 -114.4 L-1.1 -116.5Z" fill="currentColor" stroke="none"/>
+  </g>`).join('');
+  const ticks = Array.from({length: 72}, (_, i) => {
+    const major = i % 6 === 0;
+    return `<path d="M0 -${major ? 86 : 91} V-96" transform="rotate(${i * 5})"
+      stroke-opacity="${major ? .45 : .22}"/>`;
+  }).join('');
+  $('daybreakDial').innerHTML = `<circle r="104" stroke-opacity=".34"/>${axes}${ticks}`;
+
+  // 用网站自己的投影和贴图画一枚固定的残月。
+  const {MOON_TEXTURE, shadeMoon} = await import('./site-moon.js');
+  const texture = new Image();
+  texture.src = '/public' + MOON_TEXTURE;
+  await texture.decode();
+  const buffer = document.createElement('canvas');
+  buffer.width = texture.naturalWidth;
+  buffer.height = texture.naturalHeight;
+  const source = buffer.getContext('2d');
+  source.drawImage(texture, 0, 0);
+  const target = $('daybreakMoon').querySelector('canvas').getContext('2d');
+  const size = target.canvas.width;
+  const moon = target.createImageData(size, size);
+  shadeMoon(moon.data, size, source.getImageData(0, 0, buffer.width, buffer.height),
+    {elongation: 318, libLat: 0, libLon: 0});
+  target.putImageData(moon, 0, 0);
+}
+
 async function initStory(ep, timeline, back, copy) {
   document.body.classList.add('story');
   $('brand').firstChild.textContent = `DAYBREAK · ${copy.series} `;
@@ -30,7 +65,9 @@ async function initStory(ep, timeline, back, copy) {
     storyAssets.set(path, image);
   }));
   const fontSample = JSON.stringify([ep, copy]);
+  if (ep.layout === 'daybreak') await initDaybreak(ep, copy);
   await Promise.all([
+    ep.layout === 'daybreak' ? document.fonts.load('400 40px DaybreakSerif', fontSample) : null,
     document.fonts.load('300 40px "Noto Serif SC"', fontSample),
     document.fonts.load('400 40px "Noto Serif SC"', fontSample),
     document.fonts.load('400 40px Cinzel'),
@@ -89,7 +126,7 @@ function setStoryShot(shot) {
 function renderStoryCard(shot, time, elapsed) {
   const image = storyAssets.get(shot.image ?? storyImage());
   const {naturalWidth: width, naturalHeight: height} = image;
-  const fit = Math.min(620 / width, 832 / height);
+  const fit = EP.layout === 'daybreak' ? Math.min(560 / width, 778 / height) : Math.min(620 / width, 832 / height);
   const [x, y, zoom] = shot.focus ?? [.5, .5, 1.04];
   const movement = ease(elapsed / 1.15);
   const drift = clamp(elapsed / (shot.end - shot.start));
@@ -116,8 +153,16 @@ function renderStory(time) {
   const w = fade();
   const card = ['hook', 'story', 'glance'].includes(scene);
   const promo = scene === 'promo';
-  vis('brand', promo ? 0 : win(time, 0, 1e9, .8).o * (scene === 'era' ? .56 : 1));
-  $('astro').style.opacity = scene === 'era' ? .18 : .66;
+  const daybreak = EP.layout === 'daybreak';
+  const header = promo ? 0 : win(time, 0, 1e9, .8).o;
+  vis('brand', daybreak ? 0 : header * (scene === 'era' ? .56 : 1));
+  vis('daybreakHeader', daybreak ? header : 0);
+  $('astro').style.opacity = daybreak ? 0 : scene === 'era' ? .18 : .66;
+  if (daybreak) {
+    $('daybreakMoon').classList.toggle('outro', promo);
+    $('daybreakDial').setAttribute('transform', `rotate(${time * .8})`);
+    vis('daybreakMoon', promo || scene === 'era' ? fade(0, .55).o : 0);
+  }
   $('stage').style.opacity = card ? w.o : 0;
   if (card) renderStoryCard(shot, time, elapsed);
   vis('kicker', card && shot.label?.s ? fade(.34).o : 0);
@@ -144,10 +189,13 @@ function renderStory(time) {
   vis('nextBack', scene === 'next' ? w.o : 0, (1 - w.i) * 20, `rotateY(${5 * Math.sin(elapsed * 1.2)}deg)`);
   vis('nextK', scene === 'next' ? fade(.28).o : 0);
   vis('nextT', scene === 'next' ? fade(.46).o : 0);
-  for (const [id, delay] of [
+  const endElements = daybreak
+    ? [['p1', .2], ['p2', .35], ['p4', .5], ['disc', .6]]
+    : [
     ['promoBack', 0], ['p1', .35], ['p2', .53], ['p3', .78],
     ['p4', .97], ['p5', 1.22], ['disc', 1.42],
-  ]) {
+  ];
+  for (const [id, delay] of endElements) {
     const f = fade(delay, .68);
     vis(id, promo ? f.o : 0, (1 - f.i) * 12);
   }

@@ -6,7 +6,7 @@ import {readFileSync,writeFileSync,mkdirSync,existsSync,createReadStream,statSyn
 import {spawn,spawnSync} from 'node:child_process';
 import {once} from 'node:events';
 import {createServer} from 'node:http';
-import {createRequire} from 'node:module';
+import {createRequire,stripTypeScriptTypes} from 'node:module';
 import {basename,dirname,extname,join,resolve,sep} from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import {lint,STORY_COPY} from './lint.mjs';
@@ -18,7 +18,7 @@ const epPath=resolve(process.argv[2]||'');
 if(!existsSync(epPath))throw Error('用法：render.mjs <episodes/xx.json> [--preview 秒,秒]');
 const previewArg=process.argv.includes('--preview')?process.argv[process.argv.indexOf('--preview')+1]:null; // 秒,秒… 或 mid（每段 70% 处各一帧）
 const EP=JSON.parse(readFileSync(epPath,'utf8'));
-const story=EP.series==='story', ffmpeg=process.env.FFMPEG_PATH || 'ffmpeg';
+const story=EP.series==='story', daybreak=story&&EP.layout==='daybreak', ffmpeg=process.env.FFMPEG_PATH || 'ffmpeg';
 const slug=basename(epPath,'.json'),OUT=join(HERE,'out',slug),VO=join(OUT,'voice');mkdirSync(VO,{recursive:true});
 const FPS=30,TTS_PY=process.env.TTS_PY,TTS_MODEL=process.env.TTS_MODEL,VOICE=process.env.TTS_SID||'3',SPEED=process.env.TTS_SPEED||'1.0';
 
@@ -46,7 +46,8 @@ if(lines.length&&existsSync(keyFile)&&readFileSync(keyFile,'utf8')===cacheKey&&e
 else{console.warn('! 没有配置 TTS_PY / TTS_MODEL，按字数估算时长，出无旁白版');for(const l of lines)dur[l.id]=l.text.length/4.6}
 
 // 3. 时间轴：每段 = 画面引导 + 旁白 + 留白
-const LEAD=story?{hook:.62,promo:.8}:{hook:2.9,promo:1.0},TAIL={promo:2.2,quote:.9,summary:.7};
+const LEAD = story ? {hook: .62, promo: daybreak ? .35 : .8} : {hook: 2.9, promo: 1.0};
+const TAIL = {promo: daybreak ? 1.1 : 2.2, quote: .9, summary: .7};
 let t=0;const TL=EP.segments.map(s=>{
  const lead=LEAD[s.scene]??.4,tail=TAIL[s.scene]??TAIL[s.id]??.45;
  const voiceAt=t+lead,voiceEnd=voiceAt+(dur[s.id]||1.2);
@@ -64,8 +65,18 @@ console.log(`时长 ${DURATION.toFixed(1)} 秒，${TL.length} 段`);
 const {cardBack}=await import(pathToFileURL(join(ROOT,'src/card-back.ts')).href);const BACK=cardBack();
 
 // 5. 本地静态服务（仓库根目录），供模板读牌面图
-const MIME={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.webp':'image/webp','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml','.js':'text/javascript'};
-const server=createServer((q,r)=>{const f=join(ROOT,decodeURIComponent(q.url.split('?')[0]));if(!f.startsWith(ROOT+sep)||!existsSync(f)||statSync(f).isDirectory()){r.writeHead(404);return r.end()}r.writeHead(200,{'content-type':MIME[extname(f)]||'application/octet-stream'});createReadStream(f).pipe(r)});
+const MIME={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.webp':'image/webp','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml','.js':'text/javascript','.woff2':'font/woff2'};
+const moonModule=daybreak
+ ?stripTypeScriptTypes(readFileSync(join(ROOT,'src/lib/moon-render.ts'),'utf8')):null;
+const server=createServer((q,r)=>{
+ const path=decodeURIComponent(q.url.split('?')[0]);
+ if(path==='/video-series/template/site-moon.js'&&moonModule){
+  r.writeHead(200,{'content-type':MIME['.js']});return r.end(moonModule);
+ }
+ const f=join(ROOT,path.startsWith('/fonts/')?path.replace('/fonts/','/legacy-static/fonts/'):path);
+ if(!f.startsWith(ROOT+sep)||!existsSync(f)||statSync(f).isDirectory()){r.writeHead(404);return r.end()}
+ r.writeHead(200,{'content-type':MIME[extname(f)]||'application/octet-stream'});createReadStream(f).pipe(r)
+});
 await new Promise(r=>server.listen(0,'127.0.0.1',r));const PORT=server.address().port;
 
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH});

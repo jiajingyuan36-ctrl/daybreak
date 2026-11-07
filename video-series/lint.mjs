@@ -20,6 +20,7 @@ export const STORY_COPY = {
   brand: '晨启塔罗',
   promo: ['一张牌，一段故事', '用大白话读懂牌面'],
   features: '1909 年版牌面 · 78 张白话解读',
+  daybreakPromo: '78 张牌 · 白话解读',
   disclaimer: '塔罗文化与艺术科普 · 内容仅供参考',
 };
 

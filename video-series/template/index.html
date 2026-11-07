@@ -4,6 +4,8 @@
      视觉沿用晨启塔罗网站：近黑底、暖白字、香槟金细线、星盘细环、1909 RWS 原版牌面、网站同款牌背。 -->
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Serif+SC:wght@300;400;500&display=block" rel="stylesheet">
 <link href="story.css" rel="stylesheet">
+<link href="/legacy-static/fonts/serif-sc.css" rel="stylesheet">
+<link href="daybreak.css" rel="stylesheet">
 <style>
 :root{--bg:#0B0A0E;--hero:#EDE7DC;--body:#D9D2C5;--sub:#8F887C;--gold:#C5A56E;--gold-hi:#E6D2B5;--line:rgba(197,165,110,.3);
  --cb-bg-a:#17151E;--cb-bg-b:#0B0A0F;--cb-glow:#C5A059;--cb-f0:#7A5C29;--cb-f1:#C5A059;--cb-f2:#FFF2CC;--cb-f3:#D4AF37;--cb-f4:#6B4F22;--cb-hl:#FFF2CC}
@@ -57,6 +59,13 @@ body{position:relative;font-family:'Noto Serif SC',serif;color:var(--body);
 </style></head><body>
 <svg id="astro" viewBox="-500 -500 1000 1000"><g id="astroG" fill="none" stroke="#C5A56E"><circle r="480" stroke-opacity=".10"/><circle r="440" stroke-opacity=".06" stroke-dasharray="2 12"/><circle r="330" stroke-opacity=".05"/><g id="ticks"></g></g></svg>
 <p class="el center" id="brand">DAYBREAK · 读一张牌 <b id="epno"></b></p>
+<header class="el" id="daybreakHeader">
+ <span class="lat">DAYBREAK</span><span id="daybreakSeries"></span>
+</header>
+<div class="el" id="daybreakMoon" aria-hidden="true">
+ <svg viewBox="-120 -120 240 240"><g id="daybreakDial"></g><circle r="79" stroke-dasharray="1 3" stroke-opacity=".22"/></svg>
+ <canvas width="256" height="256"></canvas>
+</div>
 <div id="stage"><div id="cam"><div id="flip"><div class="face" id="front"><img id="cardImg"></div><div class="face" id="back"></div></div>
  <svg id="marks" viewBox="0 0 600 1029"></svg></div></div>
 <div id="tags"></div>

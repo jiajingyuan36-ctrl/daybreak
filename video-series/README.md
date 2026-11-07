@@ -50,11 +50,15 @@ export TTS_SID=3 TTS_SPEED=1.1   # 3–57 中文女声，58–102 中文男声�
 
 ## 故事系列
 
-`series: "story"` 启用「牌的故事」版式。每集 50–75 秒，从今天的牌面讲回历史，中间用年代和版本推进故事，末尾用一句当代读法收束。完整范例是 [第 1 集《愚人》](episodes/story-00-fool.json)。在仓库根目录运行：
+`series: "story"` 启用「牌的故事」版式。每集 50–75 秒，从今天的牌面讲回历史，中间用年代和版本推进故事，末尾用一句当代读法收束。完整范例有 [第 1 集《愚人》](episodes/story-00-fool.json) 和 [第 2 集《魔术师》](episodes/story-01-magician.json)。
+
+第 2 集使用 `layout: "daybreak"`，采用网站字标、细金分隔线和 DaybreakSerif 字体子集，年代卡和片尾调用网站的月面着色与贴图。这个版式的片尾只保留品牌、短介绍和免责文字，`promo.say` 写一句简短口播即可控制在约 4 秒。
+
+在仓库根目录运行：
 
 ```sh
-node video-series/render.mjs video-series/episodes/story-00-fool.json --preview mid
-node video-series/render.mjs video-series/episodes/story-00-fool.json
+node video-series/render.mjs video-series/episodes/story-01-magician.json --preview mid
+node video-series/render.mjs video-series/episodes/story-01-magician.json
 ```
 
 预览写入每段中点的 `preview-01.png` 等单帧和 `sheet.png` 总览。出片生成同名 MP4、SRT、`cover.jpg` 和 `文案.md`。旁白时长驱动镜头长度，故事系列建议将 `TTS_SPEED` 设在 1.00–1.05。Windows PowerShell 可用 `$env:TTS_PY = 'C:/path/to/python.exe'` 和 `$env:TTS_MODEL = 'C:/path/to/kokoro-multi-lang-v1_1'` 指定本地环境。

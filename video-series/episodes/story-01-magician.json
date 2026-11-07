@@ -1,0 +1,107 @@
+{
+  "series": "story",
+  "layout": "daybreak",
+  "no": 2,
+  "card": "m1",
+  "nameZh": "魔术师",
+  "nameEn": "THE MAGICIAN",
+  "roman": "I",
+  "next": { "card": "m2", "nameZh": "女祭司" },
+  "publish": {
+    "title": "魔术师以前是个街头艺人｜牌的故事 02 魔术师",
+    "desc": "十五世纪的米兰牌上，他坐在桌边。十八世纪的法国牌上，他站着变戏法。到了 1909 年，韦特和帕梅拉·科尔曼·史密斯把整副牌的四种花色摆上了他的桌子。",
+    "tags": ["塔罗", "塔罗冷知识", "艺术史", "韦特塔罗", "魔术师"]
+  },
+  "segments": [
+    {
+      "id": "hook",
+      "scene": "hook",
+      "say": "这位魔术师，以前是个街头艺人。",
+      "sub": "这位魔术师\n曾是街头艺人"
+    },
+    {
+      "id": "today",
+      "scene": "story",
+      "focus": [0.49, 0.43, 1.07],
+      "label": { "t": "魔术师", "s": "I · THE MAGICIAN" },
+      "say": "一九零九年版里，他站在桌前，一手举杖，一手指地。",
+      "sub": "1909 年版 · 一手举杖，一手指地"
+    },
+    {
+      "id": "era-italy",
+      "scene": "era",
+      "year": "1400s",
+      "place": "十五世纪 · 意大利北部",
+      "say": "往前翻到十五世纪，那张桌子已经在了。"
+    },
+    {
+      "id": "milan",
+      "scene": "story",
+      "image": "/video-series/assets/historic/visconti-sforza-magician.webp",
+      "focus": [0.49, 0.56, 1.08],
+      "say": "米兰的手绘牌里，他坐在长凳上。面前有杯子，还有一把小刀。",
+      "sub": "十五世纪 · 米兰手绘牌"
+    },
+    {
+      "id": "dodal",
+      "scene": "glance",
+      "image": "/video-series/assets/historic/dodal-magician.webp",
+      "focus": [0.42, 0.62, 1.43],
+      "ring": [0.35, 0.631, 0.181, 0.075],
+      "say": "十八世纪初的法国牌上，他已经站了起来。桌上摆着杯子和小球。",
+      "sub": "十八世纪初 · 桌上的杯子与小球"
+    },
+    {
+      "id": "bateleur",
+      "scene": "story",
+      "image": "/video-series/assets/historic/dodal-magician.webp",
+      "focus": [0.5, 0.54, 1.02],
+      "say": "旧牌的法语名字，说的就是在集市上变戏法的人。",
+      "sub": "Le Bateleur · 变戏法的街头艺人"
+    },
+    {
+      "id": "compare",
+      "scene": "compare",
+      "cards": [
+        { "image": "/video-series/assets/historic/visconti-sforza-magician.webp", "caption": "十五世纪\n维斯孔蒂—斯福尔扎" },
+        { "image": "/video-series/assets/historic/dodal-magician.webp", "caption": "1701–1715\n让·多达尔马赛式塔罗" },
+        { "caption": "1909\n韦特—史密斯版" }
+      ],
+      "keepLast": true,
+      "say": "到了一九零九年的伦敦，桌子还在。桌上的东西，却有了新意思。"
+    },
+    {
+      "id": "table",
+      "scene": "glance",
+      "focus": [0.37, 0.57, 1.4],
+      "ring": [0.315, 0.567, 0.281, 0.136],
+      "say": "韦特在书里说，桌上的四样东西，正好对应整副牌的四种花色。",
+      "sub": "杖、杯、剑、星币 · 四种花色"
+    },
+    {
+      "id": "artist",
+      "scene": "person",
+      "name": "Pamela Colman Smith",
+      "years": "1878–1951",
+      "bio": "帕梅拉·科尔曼·史密斯 · 画师",
+      "say": "画下这张桌子的是史密斯。她也做过剧场的布景和服装设计。"
+    },
+    {
+      "id": "meaning",
+      "scene": "quote",
+      "quote": "让手边的东西，\n派上用场。",
+      "say": "今天看这张牌，像在说，让手边的东西先派上用场。"
+    },
+    {
+      "id": "next",
+      "scene": "next",
+      "say": "下一张，女祭司。旧牌里，她叫女教皇。",
+      "sub": "旧牌上，她叫「女教皇」"
+    },
+    {
+      "id": "promo",
+      "scene": "promo",
+      "say": "晨启塔罗，读懂每张牌。"
+    }
+  ]
+}
