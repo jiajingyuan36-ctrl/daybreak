@@ -1,0 +1,106 @@
+{
+  "series": "story",
+  "no": 1,
+  "card": "m0",
+  "nameZh": "愚人",
+  "nameEn": "THE FOOL",
+  "roman": "0",
+  "next": { "card": "m1", "nameZh": "魔术师" },
+  "publish": {
+    "title": "这张牌曾叫「疯子」｜牌的故事 01 愚人",
+    "desc": "从十五世纪米兰的手绘牌，到十八世纪法国的马赛式木刻，再到 1909 年帕梅拉·科尔曼·史密斯画下的悬崖边。看三张不同时代的「愚人」，也聊聊法式牌戏里那张可以不跟花色的特例牌。",
+    "tags": ["塔罗", "塔罗冷知识", "艺术史", "韦特塔罗", "冷知识"]
+  },
+  "segments": [
+    {
+      "id": "hook",
+      "scene": "hook",
+      "say": "这张牌，以前叫「疯子」。",
+      "sub": "这张牌\n曾叫「疯子」"
+    },
+    {
+      "id": "today",
+      "scene": "story",
+      "focus": [0.5, 0.42, 1.1],
+      "label": { "t": "愚人", "s": "0 · THE FOOL" },
+      "say": "一九零九年版的愚人，背着包袱仰头走，脚边就是悬崖。",
+      "sub": "1909 年版 · 悬崖边的旅人"
+    },
+    {
+      "id": "era-italy",
+      "scene": "era",
+      "year": "1400s",
+      "place": "十五世纪 · 意大利北部",
+      "say": "把时间拨回十五世纪的意大利。"
+    },
+    {
+      "id": "milan",
+      "scene": "story",
+      "image": "/video-series/assets/historic/visconti-sforza-fool.webp",
+      "focus": [0.5, 0.36, 1.09],
+      "say": "那时塔罗是纸牌游戏。你看米兰这张手绘牌，衣衫破旧，头上还插着羽毛。",
+      "sub": "十五世纪 · 米兰手绘牌"
+    },
+    {
+      "id": "dodal",
+      "scene": "glance",
+      "image": "/video-series/assets/historic/dodal-fool.webp",
+      "focus": [0.31, 0.64, 1.38],
+      "ring": [0.22, 0.64, 0.17, 0.106],
+      "say": "十八世纪的法国牌上，一只动物攀着他的裤腿，像是要把他拽住。",
+      "sub": "十八世纪 · 动物攀着他的裤腿"
+    },
+    {
+      "id": "excuse",
+      "scene": "story",
+      "image": "/video-series/assets/historic/dodal-fool.webp",
+      "focus": [0.5, 0.5, 1.02],
+      "say": "这张牌没印编号。按法式塔罗牌戏的规则，打出它就可以不跟花色。",
+      "sub": "打出特例牌 Excuse，可以不跟花色"
+    },
+    {
+      "id": "compare",
+      "scene": "compare",
+      "cards": [
+        { "image": "/video-series/assets/historic/visconti-sforza-fool.webp", "caption": "十五世纪末\n维斯孔蒂—斯福尔扎" },
+        { "image": "/video-series/assets/historic/dodal-fool.webp", "caption": "1701–1715\n让·多达尔马赛式塔罗" },
+        { "caption": "1909\n韦特—史密斯版" }
+      ],
+      "keepLast": true,
+      "say": "到了一九零九年的伦敦，画家史密斯给愚人换了一个样子。"
+    },
+    {
+      "id": "dog",
+      "scene": "glance",
+      "focus": [0.7, 0.7, 1.4],
+      "ring": [0.78, 0.702, 0.162, 0.106],
+      "say": "他脚边仍有一只动物。这回是条白狗，跳起来，像在陪他走。",
+      "sub": "脚边的白狗，像在陪他走"
+    },
+    {
+      "id": "artist",
+      "scene": "person",
+      "name": "Pamela Colman Smith",
+      "years": "1878–1951",
+      "bio": "帕梅拉·科尔曼·史密斯 · 画师",
+      "say": "她叫帕梅拉·科尔曼·史密斯。整副七十八张牌，都是她画的。"
+    },
+    {
+      "id": "meaning",
+      "scene": "quote",
+      "quote": "还没想好，\n就先走一步。",
+      "say": "从像被拽住，到抬头往前。还没想好，也可以先走一步。"
+    },
+    {
+      "id": "next",
+      "scene": "next",
+      "say": "下一张，魔术师。他的前身是个街头艺人。",
+      "sub": "他原本是个街头艺人"
+    },
+    {
+      "id": "promo",
+      "scene": "promo",
+      "say": "想接着听，来看看晨启塔罗。七十八张牌，都有白话解读。"
+    }
+  ]
+}

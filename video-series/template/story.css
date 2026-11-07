@@ -1,0 +1,97 @@
+body.story {
+  background: radial-gradient(ellipse 72% 46% at 50% 39%, rgba(197, 165, 110, .055), transparent 74%), var(--bg);
+  --cb-bg-a: var(--bg);
+  --cb-bg-b: var(--bg);
+  --cb-glow: var(--gold);
+  --cb-f0: var(--sub);
+  --cb-f1: var(--gold);
+  --cb-f2: var(--gold-hi);
+  --cb-f3: var(--gold);
+  --cb-f4: var(--sub);
+  --cb-hl: var(--gold-hi);
+}
+.story #brand {
+  top: 219px;
+  font: 400 23px 'Cinzel', 'Noto Serif SC', serif;
+  letter-spacing: .24em;
+}
+.story #brand b { margin-left: .55em; }
+.story #stage { top: 270px; mask-image: none; }
+.story .face, .story #nextBack, .story #promoBack {
+  border: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+}
+.story #front { background: var(--bg); }
+.story #marks { width: 100%; height: 100%; }
+.story #kicker { top: 1206px; }
+.story #label { top: 1246px; font-size: 49px; }
+.story #sub {
+  top: 1353px;
+  left: 100px;
+  width: 880px;
+  font-size: 40px;
+  line-height: 1.46;
+  text-shadow: 0 2px 8px var(--bg);
+}
+.story #hookText {
+  top: 1191px;
+  left: 90px;
+  width: 900px;
+  font-size: 68px;
+  line-height: 1.34;
+  white-space: pre-line;
+  letter-spacing: .03em;
+}
+.story #quote {
+  top: 568px;
+  left: 90px;
+  width: 900px;
+  font-size: 74px;
+  letter-spacing: .04em;
+}
+.story #quoteRule { top: 853px; }
+.story #nextK { font-family: 'Cinzel', 'Noto Serif SC', serif; }
+.story #p4 { white-space: pre-line; }
+.story #p5 { top: 1264px; }
+.story #disc { top: 1407px; color: var(--sub); }
+
+.story-panel { display: none; }
+.story .story-panel { display: block; left: 78px; width: 924px; text-align: center; }
+.story-eyebrow { font-size: 25px; color: var(--gold); letter-spacing: .22em; }
+.story #storyEra { top: 491px; }
+.story #eraYear {
+  color: var(--hero);
+  font-size: 164px;
+  line-height: 1.15;
+  margin: 34px 0 32px;
+  letter-spacing: .025em;
+}
+.story #eraRule { margin: auto; width: 402px; height: 1px; background: var(--gold); transform-origin: left; }
+.story #eraPlace { margin-top: 35px; color: var(--body); font-size: 44px; letter-spacing: .18em; }
+
+.story #storyCompare { top: 348px; }
+.story #compareCards { display: flex; justify-content: center; gap: 30px; margin-top: 52px; }
+.story #compareCards figure { width: 284px; min-width: 0; }
+.story #compareCards figure:only-child { width: 435px; }
+.story #compareCards img { display: block; width: 100%; height: 545px; object-fit: contain; }
+.story #compareCards figcaption {
+  margin-top: 34px;
+  padding: 20px 3px 0;
+  border-top: 1px solid var(--line);
+  font-size: 27px;
+  line-height: 1.45;
+  color: var(--gold-hi);
+  text-wrap: balance;
+  white-space: pre-line;
+}
+.story #compareCards figcaption::first-line { font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-size: 32px; }
+.story #storyPerson { top: 515px; }
+.story #storyPerson.with-portrait { top: 350px; }
+.story #personPortrait { display: block; height: 360px; max-width: 380px; object-fit: contain; margin: 24px auto 0; filter: grayscale(1) contrast(.75); }
+.story #personPortrait[hidden] { display: none; }
+.story #personDiamond { width: 12px; height: 12px; border: 1px solid var(--gold); transform: rotate(45deg); margin: 51px auto 37px; }
+.story .with-portrait #personDiamond { margin: 34px auto 23px; }
+.story #personName { color: var(--hero); font-size: 68px; line-height: 1.1; }
+.story #personYears { color: var(--gold); font-size: 41px; margin-top: 22px; letter-spacing: .09em; }
+.story #personBio { color: var(--body); font-size: 35px; margin-top: 35px; }

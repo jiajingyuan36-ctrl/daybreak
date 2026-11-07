@@ -3,6 +3,7 @@
 <!-- 「读一张牌」系列模板：1080×1920 竖屏。由 render.mjs 打开，调用 init(EP, TL, BACK) 后逐帧调用 render(t)。
      视觉沿用晨启塔罗网站：近黑底、暖白字、香槟金细线、星盘细环、1909 RWS 原版牌面、网站同款牌背。 -->
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Serif+SC:wght@300;400;500&display=block" rel="stylesheet">
+<link href="story.css" rel="stylesheet">
 <style>
 :root{--bg:#0B0A0E;--hero:#EDE7DC;--body:#D9D2C5;--sub:#8F887C;--gold:#C5A56E;--gold-hi:#E6D2B5;--line:rgba(197,165,110,.3);
  --cb-bg-a:#17151E;--cb-bg-b:#0B0A0F;--cb-glow:#C5A059;--cb-f0:#7A5C29;--cb-f1:#C5A059;--cb-f2:#FFF2CC;--cb-f3:#D4AF37;--cb-f4:#6B4F22;--cb-hl:#FFF2CC}
@@ -70,6 +71,18 @@ body{position:relative;font-family:'Noto Serif SC',serif;color:var(--body);
 <p class="el center" id="p4">每天早上抽一张牌<br>用大白话说说今天的状态</p>
 <p class="el center" id="p5">1909 原版牌面<i>·</i>78 张正逆位解读<i>·</i>不用注册</p>
 <p class="el center" id="disc">塔罗文化与艺术科普 · 内容仅供参考</p>
+<div id="storyEra" class="el story-panel">
+ <p id="eraK" class="story-eyebrow"></p><p id="eraYear" class="num"></p>
+ <div id="eraRule"></div><p id="eraPlace"></p>
+</div>
+<div id="storyCompare" class="el story-panel">
+ <p id="compareK" class="story-eyebrow"></p><div id="compareCards"></div>
+</div>
+<div id="storyPerson" class="el story-panel">
+ <p id="personK" class="story-eyebrow"></p><img id="personPortrait" alt="">
+ <div id="personDiamond"></div><p id="personName" class="num"></p>
+ <p id="personYears" class="num"></p><p id="personBio"></p>
+</div>
 <script>
 const $=id=>document.getElementById(id);
 const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
@@ -83,7 +96,9 @@ function win(t,a,b,fi=.6,fo=.45){const i=out((t-a)/fi),o=b>=1e9?1:1-ease((t-(b-f
 const STAGE={w:1080,h:900},BASE=900/1029; // 牌高 = 取景区高度时的缩放
 let EP,TL,SEG={},SC={},DUR;
 const lemniscate=(cx,cy,w)=>{let d='';for(let i=0;i<=120;i++){const t=i/120*2*Math.PI,den=1+Math.sin(t)**2,x=Math.cos(t)/den,y=Math.sin(t)*Math.cos(t)/den;d+=(i?'L':'M')+(cx+x*w/2).toFixed(1)+' '+(cy+y*w/2*1.05).toFixed(1)}return d};
-window.init=(ep,tl,back)=>{EP=ep;TL=tl;DUR=tl[tl.length-1].end;tl.forEach(s=>{SEG[s.id]=s;SC[s.scene]??=s});
+window.init=(ep,tl,back,storyCopy)=>{EP=ep;TL=tl;DUR=tl[tl.length-1].end;
+ if(ep.series==='story')return initStory(ep,tl,back,storyCopy);
+ tl.forEach(s=>{SEG[s.id]=s;SC[s.scene]??=s});
  $('cardImg').src=`/public/rws/${ep.card}.webp`;$('back').innerHTML=back;$('nextBack').innerHTML=back;$('promoBack').innerHTML=back;
  $('epno').textContent='No.'+String(ep.no).padStart(2,'0');$('nextT').textContent=ep.next?ep.next.nameZh:'';
  // 标记层：在牌面坐标里画，跟镜头一起缩放；线宽不随缩放
@@ -109,6 +124,7 @@ const toScreen=(c,x,y)=>{const s=BASE*c[2];return [STAGE.w/2+(x-c[0])*s,262+STAG
 
 window.render=function(t){
  $('astroG').setAttribute('transform',`rotate(${t*1.1})`);
+ if(EP.series==='story')return renderStory(t);
  const cur=TL.find(s=>t>=s.start&&t<s.end)||TL[TL.length-1];
  vis('brand',win(t,.6,SC.promo.start+.3,1.2).o);
  // 牌：镜头 + 翻面 + 逆位旋转
@@ -151,4 +167,4 @@ window.render=function(t){
  const p=SC.promo.start;[['promoBack',0,30],['p1',.7,14],['p2',1.1,14],['p3',1.5,0],['p4',1.9,14],['p5',2.8,10],['disc',3.3,0]].forEach(([id,d,dy])=>{const w=win(t,p+d,1e9,.9);vis(id,w.o,(1-w.i)*dy)});
  document.body.style.filter=t>DUR-.7?`brightness(${clamp((DUR-t)/.7)})`:'';
 };
-</script></body></html>
+</script><script src="story.js"></script></body></html>
