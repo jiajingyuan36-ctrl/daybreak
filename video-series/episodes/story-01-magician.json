@@ -16,13 +16,15 @@
     {
       "id": "hook",
       "scene": "hook",
+      "motion": [[0, 0.5, 0.5, 1], [1, 0.5, 0.5, 1.035]],
+      "meteor": { "at": 1.65, "x": 0.9, "y": 0.21, "angle": 23 },
       "say": "这位魔术师，以前是个街头艺人。",
       "sub": "这位魔术师\n曾是街头艺人"
     },
     {
       "id": "today",
       "scene": "story",
-      "focus": [0.49, 0.43, 1.07],
+      "motion": [[0, 0.5, 0.5, 1.035], [0.66, 0.36, 0.245, 1.88], [1, 0.48, 0.415, 1.78]],
       "label": { "t": "魔术师", "s": "I · THE MAGICIAN" },
       "say": "一九零九年版里，他站在桌前，一手举杖，一手指地。",
       "sub": "1909 年版 · 一手举杖，一手指地"
@@ -30,6 +32,7 @@
     {
       "id": "era-italy",
       "scene": "era",
+      "meteor": { "at": 1.68, "x": 0.89, "y": 0.22, "angle": 29 },
       "year": "1400s",
       "place": "十五世纪 · 意大利北部",
       "say": "往前翻到十五世纪，那张桌子已经在了。"
@@ -38,7 +41,7 @@
       "id": "milan",
       "scene": "story",
       "image": "/video-series/assets/historic/visconti-sforza-magician.webp",
-      "focus": [0.49, 0.56, 1.08],
+      "motion": [[0, 0.5, 0.5, 1], [0.52, 0.54, 0.43, 1.29], [1, 0.48, 0.61, 1.51]],
       "say": "米兰的手绘牌里，他坐在长凳上。面前有杯子，还有一把小刀。",
       "sub": "十五世纪 · 米兰手绘牌"
     },
@@ -46,8 +49,10 @@
       "id": "dodal",
       "scene": "glance",
       "image": "/video-series/assets/historic/dodal-magician.webp",
-      "focus": [0.42, 0.62, 1.43],
+      "motion": [[0, 0.5, 0.5, 1], [0.62, 0.37, 0.619, 1.68], [1, 0.37, 0.65, 1.74]],
+      "meteor": { "at": 1.06, "x": 0.3, "y": 0.22, "angle": 21 },
       "ring": [0.35, 0.631, 0.181, 0.075],
+      "ringAt": 0.44,
       "say": "十八世纪初的法国牌上，他已经站了起来。桌上摆着杯子和小球。",
       "sub": "十八世纪初 · 桌上的杯子与小球"
     },
@@ -55,13 +60,14 @@
       "id": "bateleur",
       "scene": "story",
       "image": "/video-series/assets/historic/dodal-magician.webp",
-      "focus": [0.5, 0.54, 1.02],
+      "motion": [[0, 0.37, 0.65, 1.74], [0.76, 0.5, 0.5, 1.04], [1, 0.5, 0.5, 1.015]],
       "say": "旧牌的法语名字，说的就是在集市上变戏法的人。",
       "sub": "Le Bateleur · 变戏法的街头艺人"
     },
     {
       "id": "compare",
       "scene": "compare",
+      "meteor": { "at": 1.45, "x": 0.9, "y": 0.165, "angle": 25 },
       "cards": [
         { "image": "/video-series/assets/historic/visconti-sforza-magician.webp", "caption": "十五世纪\n维斯孔蒂—斯福尔扎" },
         { "image": "/video-series/assets/historic/dodal-magician.webp", "caption": "1701–1715\n让·多达尔马赛式塔罗" },
@@ -73,14 +79,16 @@
     {
       "id": "table",
       "scene": "glance",
-      "focus": [0.37, 0.57, 1.4],
+      "motion": [[0, 0.5, 0.5, 1.04], [0.66, 0.345, 0.56, 1.76], [1, 0.36, 0.588, 1.83]],
       "ring": [0.315, 0.567, 0.281, 0.136],
+      "ringAt": 0.36,
       "say": "韦特在书里说，桌上的四样东西，正好对应整副牌的四种花色。",
       "sub": "杖、杯、剑、星币 · 四种花色"
     },
     {
       "id": "artist",
       "scene": "person",
+      "meteor": { "at": 2.3, "x": 0.91, "y": 0.24, "angle": 24 },
       "name": "Pamela Colman Smith",
       "years": "1878–1951",
       "bio": "帕梅拉·科尔曼·史密斯 · 画师",
@@ -89,6 +97,7 @@
     {
       "id": "meaning",
       "scene": "quote",
+      "meteor": { "at": 2.65, "x": 0.32, "y": 0.205, "angle": 28 },
       "quote": "让手边的东西，\n派上用场。",
       "say": "今天看这张牌，像在说，让手边的东西先派上用场。"
     },

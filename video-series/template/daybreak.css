@@ -1,5 +1,39 @@
 #daybreakHeader, #daybreakMoon { display: none; }
 
+#daybreakSky {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+.story-star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: var(--gold-hi);
+}
+.story-meteor {
+  position: absolute;
+  width: 112px;
+  height: 1px;
+  border-radius: 1px;
+  transform-origin: 0 50%;
+  background: linear-gradient(to left, transparent, var(--hero) 92%);
+  opacity: 0;
+}
+.story-meteor::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: -1px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--hero);
+  box-shadow: 0 0 4px 1px var(--hero);
+}
+
 /* 把网站日历和图鉴的版式放进竖屏的文字安全区。 */
 body.story-daybreak {
   isolation: isolate;

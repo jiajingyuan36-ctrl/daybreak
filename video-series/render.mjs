@@ -28,6 +28,14 @@ if(story){
  const safeCards=['m0','m1','m2','m8','m9','m10','m11','m14','m18'];
  if(!safeCards.includes(EP.card))throw Error('故事系列主牌必须在画面安全清单内');
  if(EP.segments.filter(s=>s.scene==='glance').length>3)throw Error('每集至多使用三个 glance 镜头');
+ for(const {id,motion} of EP.segments){
+  if(motion===undefined)continue;
+  const valid=Array.isArray(motion)&&motion.length>=2
+   &&motion.every((frame,index)=>Array.isArray(frame)&&frame.length===4
+    &&frame.every(Number.isFinite)&&(index===0||frame[0]>motion[index-1][0]))
+   &&motion[0][0]===0&&motion.at(-1)[0]===1;
+  if(!valid)throw Error(`${id} 的 motion 需要从 0 到 1 的递增关键帧 [时间, x, y, 倍率]`);
+ }
 }
 console.log('✓ 审核用词检查通过');
 
@@ -128,7 +136,12 @@ else{
   if(ff.exitCode===null)ff.kill();
  }
  // 7. 封面：开场钩子字幕完全出现时
- const hook=TL[0];await page.evaluate(x=>render(x),hook.end-.4);await page.screenshot({path:join(OUT,'cover.jpg'),type:'jpeg',quality:92});
+ const hook=TL[0];
+ const coverTime=daybreak&&hook.meteor
+  ?Math.min(hook.end-.4,Math.max(hook.start+1.42,hook.start+hook.meteor.at+.55))
+  :hook.end-.4;
+ await page.evaluate(x=>render(x),coverTime);
+ await page.screenshot({path:join(OUT,'cover.jpg'),type:'jpeg',quality:92});
  // 8. 混音：旁白按时间轴放置 + 程序合成的环境音底（无版权素材）
  const pad=`aevalsrc='0.20*sin(2*PI*73.42*t)*(0.75+0.25*sin(2*PI*0.07*t))+0.14*sin(2*PI*146.83*t)*(0.7+0.3*sin(2*PI*0.11*t+1))+0.10*sin(2*PI*220*t)*(0.6+0.4*sin(2*PI*0.09*t+2))+0.07*sin(2*PI*277.18*t)*(0.5+0.5*sin(2*PI*0.05*t+3))+0.05*sin(2*PI*329.63*t)*(0.5+0.5*sin(2*PI*0.13*t+0.5))':s=48000:d=${DURATION.toFixed(2)}`;
  const args=['-y','-loglevel','error','-i',silent,'-f','lavfi','-i',pad];let fc='[1:a]lowpass=f=1600,aecho=0.8:0.7:120|260:0.25|0.15,volume=0.32,afade=t=in:d=2.5,afade=t=out:st='+(DURATION-3).toFixed(2)+':d=3[bg];',mix='[bg]';

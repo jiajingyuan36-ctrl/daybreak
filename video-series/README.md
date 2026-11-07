@@ -74,6 +74,8 @@ node video-series/render.mjs video-series/episodes/story-01-magician.json
 | `person` | `name` 为姓名，`years` 为生卒年，`bio` 为一行介绍。有许可清楚的公有领域肖像时可填 `portrait`，否则显示名字与金色菱形。 |
 | `hook` / `quote` / `next` / `promo` | 开场用 `sub` 做大字（可用 `\n` 分两行），金句用 `quote`，预告读取 `next.nameZh`，片尾使用固定品牌介绍和免责文字。 |
 
+`hook`、`story`、`glance` 可用 `motion` 指定一组 `[进度, x, y, 倍率]` 运镜关键帧，进度从 0 递增到 1，按旁白驱动的镜头时长插值。例如 `[[0,0.5,0.5,1],[1,0.36,0.24,1.8]]` 从全牌缓推到牌面左上方。相邻镜头使用同一张牌且首尾构图相同，就连续衔接牌面。`glance` 可用 `ringAt` 指定细圈出现的镜头进度（0–1）。Daybreak 版式可在需要的镜头加 `meteor: {"at":1.65,"x":0.9,"y":0.21,"angle":23}`，以镜头内秒数和画布归一化坐标定位网站式流星。
+
 可用下方短例验证开场、单图回退和片尾。实际集数可参考《愚人》的长度与完整结构。
 
 ```json
