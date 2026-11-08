@@ -11,7 +11,7 @@ import {pageMeta} from '../src/meta';
 import {InstallHint} from '../src/components/install-hint';
 const cinzel=Cinzel({subsets:['latin'],weight:['400','500'],variable:'--font-cinzel',display:'swap'});
 const prose=Cormorant_Garamond({subsets:['latin'],weight:['400','500','600'],style:['normal','italic'],variable:'--font-prose',display:'swap'});
-// 中文衬线字体用自己抽字的两个文件（见 scripts/font-css.mjs）：全站共用的 core 先预加载，日历才用到的 extra 按需下载。
+// 中文衬线字体用自己抽字的两个文件（见 scripts/font-css.mjs），正文先用回退字体绘制。
 // 以前 Google 字体切成上百个分片，每个页面要下 11–22 个；现在一个文件缓存一次，所有页面通用。
 // 链接预览：分享到小红书、Instagram、Facebook、微信、X 时显示的标题、描述和图片。
 export const metadata:Metadata={
@@ -26,4 +26,4 @@ export const metadata:Metadata={
 // 安卓 Chrome 很早就会发出“可安装”事件，先存起来，等提示条出现时再用。
 const captureInstall="addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__bip=e})";
 const speculation=JSON.stringify({prerender:[{where:{and:[{href_matches:'/*'},{not:{href_matches:'/*.*'}}]},eagerness:'moderate'}]});
-export default function RootLayout({children}:{children:React.ReactNode}){preload(serifFont.core,{as:'font',type:'font/woff2',crossOrigin:'anonymous'});return <html lang="zh-CN"><body className={`${cinzel.variable} ${prose.variable}`}><script type="speculationrules" dangerouslySetInnerHTML={{__html:speculation}}/><script dangerouslySetInnerHTML={{__html:captureInstall}}/><SiteChrome/>{children}<footer className="shared-footer"><span>{BRAND_TITLE}</span><nav aria-label="说明"><a href="/about/">关于</a><a href="/feedback/">提建议</a><a href="/deep/">深度解读</a><a href="/privacy/">隐私说明</a><a href="/terms/">使用条款</a></nav></footer><InstallHint/></body></html>}
+export default function RootLayout({children}:{children:React.ReactNode}){preload(serifFont.core,{as:'font',type:'font/woff2',crossOrigin:'anonymous',fetchPriority:'low'});return <html lang="zh-CN"><body className={`${cinzel.variable} ${prose.variable}`}><script type="speculationrules" dangerouslySetInnerHTML={{__html:speculation}}/><script dangerouslySetInnerHTML={{__html:captureInstall}}/><SiteChrome/>{children}<footer className="shared-footer"><span>{BRAND_TITLE}</span><nav aria-label="说明"><a href="/about/">关于</a><a href="/feedback/">提建议</a><a href="/deep/">深度解读</a><a href="/privacy/">隐私说明</a><a href="/terms/">使用条款</a></nav></footer><InstallHint/></body></html>}

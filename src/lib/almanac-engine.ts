@@ -2,25 +2,14 @@ import calendar from 'lunar-javascript';
 import { Body, Illumination, MoonPhase } from 'astronomy-engine';
 import { dailyEditorials, editorialDictionary, sensoryByElement } from './editorial-dictionary.ts';
 import type { Element, GravityEditorial, SensoryToken, ModernTerm } from './editorial-dictionary.ts';
+import {chinaDateString,dateAtChinaNoon,chinaDateTimeFormatter} from './china-date.ts';
+export {chinaDateString,dateAtChinaNoon} from './china-date.ts';
 const {Solar,Lunar}=calendar;
 const DAY=86_400_000;
 const GAN:Readonly<Record<string,Element>>={甲:'木',乙:'木',丙:'火',丁:'火',戊:'土',己:'土',庚:'金',辛:'金',壬:'水',癸:'水'};
 const ZHI:Readonly<Record<string,Element>>={子:'水',丑:'土',寅:'木',卯:'木',辰:'土',巳:'火',午:'火',未:'土',申:'金',酉:'金',戌:'土',亥:'水'};
 const GENERATES:Readonly<Record<Element,Element>>={木:'火',火:'土',土:'金',金:'水',水:'木'};
 const CONTROLS:Readonly<Record<Element,Element>>={木:'土',土:'水',水:'火',火:'金',金:'木'};
-const formatter=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'});
-export function chinaDateString(date:Date):string {
-  if(!Number.isFinite(date.valueOf()))throw new RangeError('无效时间');
-  const p=formatter.formatToParts(date);const v=(key:Intl.DateTimeFormatPartTypes)=>p.find(x=>x.type===key)!.value;
-  return `${v('year')}-${v('month')}-${v('day')}`;
-}
-/** 无时刻的公历日期采用中国历书民用日；固定正午使生日/日签与设备时区无关。 */
-export function dateAtChinaNoon(dateStr:string):Date {
-  if(!/^\d{4}-\d{2}-\d{2}$/.test(dateStr))throw new RangeError('日期格式须为 YYYY-MM-DD');
-  const d=new Date(`${dateStr}T12:00:00+08:00`);
-  if(!Number.isFinite(d.valueOf())||chinaDateString(d)!==dateStr||Number(dateStr.slice(0,4))<1900||Number(dateStr.slice(0,4))>2100)throw new RangeError('支持1900—2100年的有效公历日期');
-  return d;
-}
 export interface SolarTerm {name:string;at:string;chinaTime:string}
 export interface Almanac {
   solar:{date:string;year:number;month:number;day:number;timeZone:'Asia/Shanghai';at:string};
@@ -39,7 +28,7 @@ function lunarPhaseName(angle:number):string {
 /** 历书按北京时间；天文数据使用传入 Date 表示的实际瞬间，而非农历日粗略推断。 */
 export function calculateAlmanac(date:Date):Almanac {
   const dateStr=chinaDateString(date);dateAtChinaNoon(dateStr);
-  const parts=formatter.formatToParts(date);const n=(key:Intl.DateTimeFormatPartTypes)=>Number(parts.find(p=>p.type===key)!.value);
+  const parts=chinaDateTimeFormatter.formatToParts(date);const n=(key:Intl.DateTimeFormatPartTypes)=>Number(parts.find(p=>p.type===key)!.value);
   const solar=Solar.fromYmdHms(n('year'),n('month'),n('day'),n('hour'),n('minute'),n('second'));const lunar=solar.getLunar();
   // Round-trip also verifies leap-month identity through Lunar, rather than treating it as a solar month.
   const lunarDate=Lunar.fromYmd(lunar.getYear(),lunar.getMonth(),lunar.getDay());

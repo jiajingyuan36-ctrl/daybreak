@@ -1,8 +1,7 @@
 'use client';
 import {useEffect,useRef,useState} from 'react';
-import {chinaDateString,dateAtChinaNoon,generateDailyGravity} from '../lib/almanac-engine';
+import {chinaDateString,dateAtChinaNoon} from '../lib/china-date';
 import type {DailyGravity} from '../lib/almanac-engine';
-import {personalFortune} from '../lib/bazi-fortune';
 import type {PersonalFortune} from '../lib/bazi-fortune';
 import {RealMoon} from './real-moon';
 import {saveBirth} from '../lib/birth-store';
@@ -26,18 +25,34 @@ function phasePath(light:number){const r=70,rx=Math.max(.001,Math.abs(2*light-1)
 function move(date:string,days:number){const d=dateAtChinaNoon(date);d.setUTCDate(d.getUTCDate()+days);return chinaDateString(d)}
 const PILLARS=[['year','年柱'],['month','月柱'],['day','日柱'],['time','时柱']] as const;
 function FortunePanel({f}:{f:PersonalFortune}){const c=f.chart;return <section className="personal-fortune" aria-labelledby="fortune-title"><p className="fortune-kicker">今日运势 · {f.shiShen}</p><h2 id="fortune-title">{f.title}</h2><p className="fortune-summary">{f.summary}</p>{f.branchNote&&<p className="fortune-note">{f.branchNote}</p>}<dl className="fortune-areas">{f.areas.map(a=><div key={a.name}><dt>{a.name}<span className={`fortune-level level-${a.level==='顺'?'good':a.level==='平'?'even':'care'}`}>{a.level}</span></dt><dd>{a.text}</dd></div>)}</dl><div className="fortune-dos"><p><span>适合</span>{f.doThis}</p><p><span>先别</span>{f.avoid}</p></div><p className="fortune-meta">今日 {f.dayPillar} · 喜神{f.positions.xi} · 财神{f.positions.cai}</p><details className="fortune-chart"><summary>你的八字</summary><div className="pillars">{PILLARS.map(([k,label])=><div key={k}><small>{label}</small><strong>{c.pillars[k]??'—'}</strong></div>)}</div><p>{f.why}</p><p>日主 {c.dayMaster}（{c.dayMasterElement}） · 生肖{c.shengXiao}{c.hourKnown?'':' · 未填出生时间，时柱不排'}</p><p>五行 {Object.entries(c.elements).map(([e,n])=>`${e}${n}`).join(' ')}</p></details><p className="fortune-basis">{f.basis} <a href="/settings/">修改生辰</a></p></section>}
-export function AlmanacDashboard({initialDate}:{initialDate?:string}){
- const [date,setDate]=useState(initialDate??''),[birth,setBirth]=useState(''),[birthTime,setBirthTime]=useState(''),[fortune,setFortune]=useState<PersonalFortune|null>(null),[textured,setTextured]=useState(false),[reading,setReading]=useState<DailyGravity|null>(()=>{try{return initialDate?generateDailyGravity(initialDate):null}catch{return null}}),[status,setStatus]=useState(''),[busy,setBusy]=useState(false),[follow,setFollow]=useState(true);const sheet=useRef<HTMLElement>(null),fadeLeft=useRef<HTMLDivElement>(null),fadeRight=useRef<HTMLDivElement>(null),[exporting,setExporting]=useState(false),shown=useRef(''),[showFortune,setShowFortune]=useState(false);
+export function AlmanacDashboard({initialReading}:{initialReading:DailyGravity}){
+ const [date,setDate]=useState(initialReading.date),[birth,setBirth]=useState(''),[birthTime,setBirthTime]=useState(''),[fortune,setFortune]=useState<PersonalFortune|null|false>(null),[textured,setTextured]=useState(false),[reading,setReading]=useState(initialReading),[status,setStatus]=useState(''),[busy,setBusy]=useState(false),[follow,setFollow]=useState(true);const sheet=useRef<HTMLElement>(null),fadeLeft=useRef<HTMLDivElement>(null),fadeRight=useRef<HTMLDivElement>(null),[exporting,setExporting]=useState(false),shown=useRef(''),[showFortune,setShowFortune]=useState(false);
  // 「今日运势」：点开才展开在日签下方（没填生辰时展开的是填生辰），并滚过去
  function openFortune(){setShowFortune(true);requestAnimationFrame(()=>document.getElementById('today-fortune')?.scrollIntoView({behavior:'smooth',block:'start'}))}
- useEffect(()=>{document.documentElement.classList.remove('home-stale');setDate(chinaDateString(new Date()));try{const p=JSON.parse(localStorage.getItem(STORE)||'{}');if(p.birth){dateAtChinaNoon(p.birth);setBirth(p.birth);if(typeof p.birthTime==='string')setBirthTime(p.birthTime)}}catch{}},[]);
- useEffect(()=>{if(!date)return;try{setReading(generateDailyGravity(date,birth&&birth<=date?birth:undefined))}catch{setStatus('日期超出计算范围')}},[date,birth]);
- useEffect(()=>{if(!date||!birth||birth>date){setFortune(null);return}try{setFortune(personalFortune(date,{date:birth,time:birthTime||undefined}))}catch{setFortune(null)}},[date,birth,birthTime]);
+ useEffect(()=>{setDate(chinaDateString(new Date()));try{const p=JSON.parse(localStorage.getItem(STORE)||'{}');if(p.birth){dateAtChinaNoon(p.birth);setBirth(p.birth);if(typeof p.birthTime==='string')setBirthTime(p.birthTime)}}catch{}},[]);
+ useEffect(()=>{
+  if(date===initialReading.date&&(!birth||birth>date)){setReading(initialReading);return}
+  let live=true;
+  import('../lib/almanac-engine').then(({generateDailyGravity})=>{
+   if(live)setReading(generateDailyGravity(date,birth&&birth<=date?birth:undefined));
+  }).catch(()=>{if(live)setStatus('日期超出计算范围')});
+  return()=>{live=false};
+ },[date,birth,initialReading]);
+ useEffect(()=>{if(reading.date===chinaDateString(new Date()))document.documentElement.classList.remove('home-stale')},[reading]);
+ useEffect(()=>{
+  setFortune(null);
+  if(!showFortune||!birth||birth>date)return;
+  let live=true;
+  import('../lib/bazi-fortune').then(({personalFortune})=>{
+   if(live)setFortune(personalFortune(date,{date:birth,time:birthTime||undefined}));
+  }).catch(()=>{if(live)setFortune(false)});
+  return()=>{live=false};
+ },[date,birth,birthTime,showFortune]);
  useEffect(()=>{const tick=()=>{if(follow)setDate(chinaDateString(new Date()))};const timer=setInterval(tick,30000);window.addEventListener('focus',tick);return()=>{clearInterval(timer);window.removeEventListener('focus',tick)}},[follow]);
  // 换日期：农历、节气、星象、大字和两句建议 240ms 轻微错落淡入；月面原地重画，不闪
  useEffect(()=>{if(!reading)return;const prev=shown.current;shown.current=date;if(!prev||prev===date||typeof Element.prototype.animate!=='function'||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   [fadeRight.current,fadeLeft.current].forEach((el,i)=>el?.animate([{opacity:0,transform:'translateY(6px)',filter:'blur(2px)'},{opacity:1,transform:'none',filter:'blur(0)'}],{duration:240,delay:i*60,easing:'cubic-bezier(.22,1,.36,1)',fill:'backwards'}))},[reading]);
- async function download(){if(!sheet.current||busy)return;setBusy(true);try{await document.fonts.ready;// 日签图片始终用竖排：导出时临时切到竖版，日期控件不进图
+ async function download(){if(!sheet.current||busy||reading.date!==date)return;setBusy(true);try{await document.fonts.ready;// 日签图片始终用竖排：导出时临时切到竖版，日期控件不进图
  setExporting(true);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
  // 背景色在 html 上（body 是透明的），取不到时按主题给一个默认色；margin 归零，免得居中用的 auto 被算成固定偏移
  const pick=(el:Element)=>getComputedStyle(el).backgroundColor,clear=(c:string)=>!c||c==='transparent'||/rgba\(.*,\s*0\)$/.test(c);
@@ -66,10 +81,10 @@ export function AlmanacDashboard({initialDate}:{initialDate?:string}){
     <h1 className="almanac-keyword">{reading.keyword}</h1>
     <ol className="daily-actions verse">{reading.dos.slice(0,2).map((item,i)=><li key={item.text}><span className="action-no" aria-hidden="true">0{i+1}.</span><span className="verse-line">{item.text}。</span></li>)}</ol>
    </div>
-   {!exporting&&<div className="home-actions"><button className="home-ghost" aria-expanded={showFortune} onClick={()=>showFortune?setShowFortune(false):openFortune()}>今日运势</button><button className="home-ghost" onClick={download} disabled={busy||!reading}>{busy?'正在生成':'保存日签 ↓'}</button></div>}
+   {!exporting&&<div className="home-actions"><button className="home-ghost" aria-expanded={showFortune} onClick={()=>showFortune?setShowFortune(false):openFortune()}>今日运势</button><button className="home-ghost" onClick={download} disabled={busy||reading.date!==date}>{busy?'正在生成':'保存日签 ↓'}</button></div>}
   </div>
   <p className="export-date">{date} · {BRAND_NAME} · {SITE_HOST}</p>
  </article>:<div className="minimal-loading" role="status">正在读取日期</div>}
- {showFortune&&<div id="today-fortune">{fortune?<FortunePanel f={fortune}/>:<BirthInline onSaved={(d,t)=>{setBirthTime(t);setBirth(d)}}/>}</div>}
+ {showFortune&&<div id="today-fortune">{fortune?<FortunePanel f={fortune}/>:fortune===false?<p role="status">无法读取日期，请重试。</p>:birth&&birth<=date?<div className="minimal-loading" role="status">正在读取日期</div>:<BirthInline onSaved={(d,t)=>{setBirthTime(t);setBirth(d)}}/>}</div>}
  <p className="status-message" role="status">{status}</p></main>
 }

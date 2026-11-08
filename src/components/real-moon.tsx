@@ -1,6 +1,5 @@
 'use client';
 import {useEffect,useRef,useState} from 'react';
-import {Libration} from 'astronomy-engine';
 import {MOON_TEXTURE,shadeMoon} from '../lib/moon-render';
 import type {MoonTexture} from '../lib/moon-render';
 // 月面贴图来自 three.js 开源示例 moon_1024.jpg（github.com/mrdoob/three.js，MIT），转成黑白 WebP 放在本站，
@@ -11,5 +10,19 @@ function loadTexture(){pending??=new Promise<MoonTexture>((resolve,reject)=>{con
 /** 叠在线条月相上的真实月面；贴图就绪后才通知父组件隐藏线条明暗。 */
 export function RealMoon({at,elongation,onReady}:{at:Date;elongation:number;onReady:(ok:boolean)=>void}){
  const canvas=useRef<HTMLCanvasElement>(null);const [shown,setShown]=useState(false);
- useEffect(()=>{let live=true;loadTexture().then(tex=>idle(()=>{const c=canvas.current;if(!live||!c)return;const css=c.getBoundingClientRect().width||140,size=Math.round(Math.min(400,css*Math.min(2,window.devicePixelRatio||1)));c.width=c.height=size;const x=c.getContext('2d')!;const img=x.createImageData(size,size);const lib=Libration(at);shadeMoon(img.data,size,tex,{elongation,libLat:lib.elat,libLon:lib.elon});x.putImageData(img,0,0);setShown(true);onReady(true)})).catch(()=>{if(live)onReady(false)});return()=>{live=false}},[at.valueOf(),elongation]);
+ useEffect(()=>{
+  let live=true;
+  idle(()=>{
+   if(!live)return;
+   Promise.all([loadTexture(),import('astronomy-engine')]).then(([tex,{Libration}])=>idle(()=>{
+    const c=canvas.current;if(!live||!c)return;
+    const css=c.getBoundingClientRect().width||140,size=Math.round(Math.min(400,css*Math.min(2,window.devicePixelRatio||1)));
+    c.width=c.height=size;const x=c.getContext('2d');if(!x)return;
+    const img=x.createImageData(size,size),lib=Libration(at);
+    shadeMoon(img.data,size,tex,{elongation,libLat:lib.elat,libLon:lib.elon});
+    x.putImageData(img,0,0);setShown(true);onReady(true);
+   })).catch(()=>{if(live)onReady(false)});
+  });
+  return()=>{live=false};
+ },[at.valueOf(),elongation]);
  return <canvas ref={canvas} className={`real-moon${shown?' shown':''}`} aria-hidden="true"/>}
