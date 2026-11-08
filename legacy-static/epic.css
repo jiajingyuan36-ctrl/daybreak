@@ -720,6 +720,7 @@ html:root[data-theme=light] .minimal-ritual .primary.draw{background:rgba(255,25
 .draw-main small{font-family:var(--font-display)!important;font-size:9px;letter-spacing:.28em;color:rgba(197,165,110,.75);margin-top:5px}
 .minimal-ritual .primary.draw .draw-arrow{border-left:1px solid rgba(197,165,110,.3)}
 .draw-arrow svg{width:30px;height:10px;fill:none;stroke:#c5a56e;stroke-width:1}
+.minimal-ritual:not(.fan-replay)>.primary.draw{margin-bottom:24px}
 .ritual-eyebrow,.brand-sub{display:none}
 
 /* 桌面宽屏（≥1024px）：左栏讲述与操作，右栏是星盘和牌堆的舞台；抽完牌后左边是牌，右边是解读。手机上不变；北斗方式保持原样 */
@@ -727,7 +728,8 @@ html:root[data-theme=light] .minimal-ritual .primary.draw{background:rgba(255,25
  .shared-header{max-width:1440px;width:calc(100% - 128px)}
  .brand-sub{display:inline;margin-left:18px;font-family:var(--font-display)!important;font-size:10px;letter-spacing:.28em;opacity:.45}
  body #app>main:has(>.minimal-ritual:not(.dipper-mode)),body #app>main:has(>.minimal-result){max-width:1440px!important;padding:6vh 64px!important}
- .minimal-ritual:not(.dipper-mode){position:relative;display:grid;grid-template-columns:minmax(0,42fr) minmax(0,58fr);grid-template-rows:1fr repeat(8,auto) 1fr auto;grid-template-areas:". stage" "eye stage" "title stage" "promise stage" "hint stage" "mood stage" "sw stage" "act stage" "keep stage" ". stage" ". phint";column-gap:4vw;text-align:left;min-height:min(78vh,760px)}
+ .minimal-ritual:not(.dipper-mode){position:relative;display:grid;grid-template-columns:minmax(0,42fr) minmax(0,58fr);grid-template-rows:1fr repeat(8,auto) 1fr auto;grid-template-areas:". stage" "eye stage" "title stage" "promise stage" "act stage" "hint stage" "mood stage" "sw stage" "keep stage" ". stage" ". phint";column-gap:4vw;text-align:left;min-height:min(78vh,760px)}
+ .minimal-ritual.fan-replay{grid-template-areas:". stage" "eye stage" "title stage" "promise stage" "hint stage" "mood stage" "sw stage" "act stage" "keep stage" ". stage" ". phint"}
  .minimal-ritual:not(.dipper-mode)>.ritual-date{display:none}
  .ritual-eyebrow{display:flex;grid-area:eye;align-items:center;gap:14px;margin:0 0 28px;font-family:var(--font-display)!important;font-size:11px;letter-spacing:.28em;color:var(--muted)}
  .ritual-eyebrow i{width:32px;height:1px;background:#c5a56e}
@@ -740,7 +742,7 @@ html:root[data-theme=light] .minimal-ritual .primary.draw{background:rgba(255,25
  .minimal-ritual:not(.dipper-mode) .mood-chip:not(.on){border-color:rgba(197,165,110,.2)!important;background:rgba(12,15,22,.65)!important}
  html:root[data-theme=light] .minimal-ritual:not(.dipper-mode) .mood-chip:not(.on){background:transparent!important;border-color:rgba(126,96,48,.25)!important}
  .minimal-ritual:not(.dipper-mode)>.ritual-switch{grid-area:sw;justify-self:start;margin:0 0 40px}
- .minimal-ritual:not(.dipper-mode)>.primary.draw{grid-area:act;justify-self:start;margin:0;width:300px!important}
+ .minimal-ritual:not(.dipper-mode)>.primary.draw{grid-area:act;justify-self:start;margin-inline:0;width:300px!important}
  .minimal-ritual:not(.dipper-mode)>.keep-card{grid-area:keep;justify-self:start;margin:16px 0 0}
  .minimal-ritual:not(.dipper-mode)>.ritual-scene{grid-area:stage;align-self:center;justify-self:center;width:420px;height:300px;scale:1.3;transform-origin:50% 70%;margin:0!important;z-index:1}
  .minimal-ritual:not(.dipper-mode)>.pick-hint{grid-area:phint;margin:12px 0 0}
@@ -922,7 +924,10 @@ main h1,main h2,main h3,.page-heading h1,.tarot-workbench>h1{color:var(--text-pr
 /* ===== 首页杂志版式（2026-11）===== */
 /* 首页：最大 960px，一屏之内两栏——左 44% 月相星盘，右 56% 刊头 / 关键词 / 晨间行动 / 操作 */
 .page-shell.editorial-home{max-width:960px!important}
-.editorial-home .almanac-grid{display:grid!important;grid-template-columns:minmax(0,44fr) minmax(0,56fr);gap:64px;align-items:center;min-height:calc(100vh - 220px);padding:24px 0!important;text-align:left}
+.home-intro{display:flex;align-items:center;justify-content:space-between;gap:12px 28px;padding:12px 0 20px;border-bottom:var(--surface-hairline)}
+.home-intro p{margin:0;font-size:clamp(17px,2.25vw,23px);line-height:1.65;letter-spacing:.06em;color:var(--text-primary);text-wrap:balance}
+.home-intro .home-cta{flex-shrink:0}
+.editorial-home .almanac-grid{display:grid!important;grid-template-columns:minmax(0,44fr) minmax(0,56fr);gap:64px;align-items:center;min-height:calc(100vh - 290px);padding:24px 0!important;text-align:left}
 .editorial-home .almanac-sky{display:grid;justify-items:center;gap:22px;margin:0}
 .editorial-home .almanac-plaque{text-align:center}
 .editorial-home .calendar-caption{margin:0!important;font-size:1.25rem;color:var(--text-primary)}
@@ -956,7 +961,7 @@ button.sky-pill.bind-chart{min-height:0!important;border:1px dashed var(--border
 .daily-actions.verse li+li{background:linear-gradient(90deg,transparent,rgba(212,175,55,.28),transparent) top/100% 1px no-repeat!important}
 .daily-actions.verse .action-no{font-size:1.35rem;letter-spacing:.04em;color:var(--accent-gold)}
 .verse-line{font-size:18px;line-height:1.7;color:var(--text-secondary)}
-/* 第 4 层：一主两辅的操作 */
+/* 主入口与日历的两个辅助操作 */
 .home-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;margin-top:10px}
 /* 主按钮：不用金边金字，只用象牙白文字 + 一圈很淡的中性细线；金色只留给前面那颗小星芒 */
 .home-cta{display:inline-flex;align-items:center;gap:12px;height:46px;padding:0 26px;border:1px solid rgba(244,239,230,.2);border-radius:999px!important;background:transparent;color:var(--text-primary)!important;font-size:15px;letter-spacing:.16em;text-decoration:none;transition:border-color .32s var(--ease-soft),background-color .32s var(--ease-soft)}
@@ -972,6 +977,8 @@ html:root[data-theme=light] .home-cta{border-color:rgba(28,25,23,.18)}
 .editorial-home .exporting .export-date{display:block}
 #today-fortune{scroll-margin-top:24px}
 @media (max-width:820px){
+ .home-intro{flex-direction:column;text-align:center;padding:0 0 18px}
+ .home-intro p{max-width:22em}
  .editorial-home .almanac-grid{grid-template-columns:1fr;gap:28px;min-height:0;text-align:center}
  .dateline-row{justify-content:center}.editorial-home .keyword-kicker{text-align:center}
  .almanac-keyword{display:table!important;margin:4px auto 0!important}
@@ -1267,6 +1274,7 @@ body::before {
 :is(.editorial-reveal,.editorial-reveal>.daily-reading)>.editorial-row:nth-of-type(4){--editorial-delay:210ms}
 .minimal-result.editorial-reveal>:is(.review-block,.result-tools){--editorial-delay:280ms}
 @media(prefers-reduced-motion:reduce){
+ @view-transition{navigation:none}
  :root{--editorial-animation:none}
  .ritual-check input:checked+span::after{animation:none}
  .tarot-plate-img,.codex-face .tarot-plate-img{transition:none!important}

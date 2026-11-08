@@ -49,6 +49,10 @@ export function AlmanacDashboard({initialDate}:{initialDate?:string}){
  // 日期只在刊头出现一次；底部「日期 · 晨启塔罗 · 网址」只在保存日签的图片里出现。
  const lunarDay=a?a.lunar.label.split(/\s+/).pop():'';
  return <main className="page-shell minimal-calendar editorial-home">
+ <section className="home-intro" aria-label="晨启塔罗">
+  <p>每天抽一张牌，带走一件今天能做的小事。</p>
+  <a className="home-cta" href="/ritual/"><span aria-hidden="true">✦</span>抽取今日塔罗<span aria-hidden="true">→</span></a>
+ </section>
  {reading&&a&&at?<article ref={sheet} className={`daily-inscription almanac-grid${exporting?' exporting':''}`}>
   <div className="almanac-sky">
    <div className={`moon-stage${textured?' textured':''}`}><svg className="minimal-moon" viewBox="-120 -120 240 240" role="img" aria-label={`${a.moon.name}，照明${Math.round(a.moon.illuminationPercent)}%`}><Reticle angle={a.moon.angle}/><circle className="moon-phase" r="70" fill="currentColor" opacity=".12"/><path className="moon-phase" d={phasePath(a.moon.illumination)} fill="currentColor" transform={a.moon.waxing?'':'scale(-1 1)'}/></svg><RealMoon at={at} elongation={a.moon.angle} onReady={setTextured}/></div>
@@ -62,7 +66,7 @@ export function AlmanacDashboard({initialDate}:{initialDate?:string}){
     <h1 className="almanac-keyword">{reading.keyword}</h1>
     <ol className="daily-actions verse">{reading.dos.slice(0,2).map((item,i)=><li key={item.text}><span className="action-no" aria-hidden="true">0{i+1}.</span><span className="verse-line">{item.text}。</span></li>)}</ol>
    </div>
-   {!exporting&&<div className="home-actions"><a className="home-cta" href="/ritual/"><span aria-hidden="true">✦</span>抽取今日塔罗<span aria-hidden="true">→</span></a><button className="home-ghost" aria-expanded={showFortune} onClick={()=>showFortune?setShowFortune(false):openFortune()}>今日运势</button><button className="home-ghost" onClick={download} disabled={busy||!reading}>{busy?'正在生成':'保存日签 ↓'}</button></div>}
+   {!exporting&&<div className="home-actions"><button className="home-ghost" aria-expanded={showFortune} onClick={()=>showFortune?setShowFortune(false):openFortune()}>今日运势</button><button className="home-ghost" onClick={download} disabled={busy||!reading}>{busy?'正在生成':'保存日签 ↓'}</button></div>}
   </div>
   <p className="export-date">{date} · 晨启塔罗 · {SITE_HOST}</p>
  </article>:<div className="minimal-loading" role="status">正在读取日期</div>}
