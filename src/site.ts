@@ -3,6 +3,11 @@
 // 自有域名 daybreaktarot.xyz 已接通；旧的 Render 地址仍可打开。
 export const SITE_HOST='daybreaktarot.xyz';
 export const SITE_URL=`https://${SITE_HOST}`;
+export const BRAND_NAME='晨启塔罗';
+export const BRAND_MARK='DAYBREAK';
+export const BRAND_TITLE=`${BRAND_NAME} · ${BRAND_MARK}`;
+export const BRAND_PROMISE='每天抽一张牌，做一件小事。';
+export const SITE_SHARE_IMAGE='/og-brand.png';
 /** 「抽牌后问一个问题」的后端（server/，放在 Render，密钥只在那边）。AI_ENABLED 为 false 时网页上不显示这个入口。 */
 export const AI_API='https://daybreak-ai.onrender.com';
 export const AI_ENABLED=true;
@@ -25,4 +30,4 @@ export const DEEP_READING={
  ],
  refund:['付款后、开始解读前，可以全额退款。','解读交付后不退款。','如果因为我的原因超过约定时间没有交付，全额退款。'],
 };
-export const SITE_DESCRIPTION='晨启塔罗：每天早上抽一张塔罗，用大白话说说今天的状态和能做的一件小事；配真实月相和按生辰推算的今日运势。免费，不用注册。';
+export const SITE_DESCRIPTION=`${BRAND_TITLE}。${BRAND_PROMISE} 白话牌义、真实月相和今日运势。免费，无需注册。`;

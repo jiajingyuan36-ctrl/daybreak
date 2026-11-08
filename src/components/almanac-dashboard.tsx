@@ -6,7 +6,7 @@ import {personalFortune} from '../lib/bazi-fortune';
 import type {PersonalFortune} from '../lib/bazi-fortune';
 import {RealMoon} from './real-moon';
 import {saveBirth} from '../lib/birth-store';
-import {SITE_HOST} from '../site';
+import {BRAND_NAME,BRAND_PROMISE,SITE_HOST} from '../site';
 import {validBirth} from '../fortune';
 /** 还没有生辰时，直接在日历页填写；选好日期立即保存并显示运势，之后这台设备不用再填。 */
 function BirthInline({onSaved}:{onSaved:(date:string,time:string)=>void}){const [time,setTime]=useState('');const [date,setDate]=useState('');const [hint,setHint]=useState('');
@@ -49,8 +49,8 @@ export function AlmanacDashboard({initialDate}:{initialDate?:string}){
  // 日期只在刊头出现一次；底部「日期 · 晨启塔罗 · 网址」只在保存日签的图片里出现。
  const lunarDay=a?a.lunar.label.split(/\s+/).pop():'';
  return <main className="page-shell minimal-calendar editorial-home">
- <section className="home-intro" aria-label="晨启塔罗">
-  <p>每天抽一张牌，带走一件今天能做的小事。</p>
+ <section className="home-intro" aria-label={BRAND_NAME}>
+  <p>{BRAND_PROMISE}</p>
   <a className="home-cta" href="/ritual/"><span aria-hidden="true">✦</span>抽取今日塔罗<span aria-hidden="true">→</span></a>
  </section>
  {reading&&a&&at?<article ref={sheet} className={`daily-inscription almanac-grid${exporting?' exporting':''}`}>
@@ -68,7 +68,7 @@ export function AlmanacDashboard({initialDate}:{initialDate?:string}){
    </div>
    {!exporting&&<div className="home-actions"><button className="home-ghost" aria-expanded={showFortune} onClick={()=>showFortune?setShowFortune(false):openFortune()}>今日运势</button><button className="home-ghost" onClick={download} disabled={busy||!reading}>{busy?'正在生成':'保存日签 ↓'}</button></div>}
   </div>
-  <p className="export-date">{date} · 晨启塔罗 · {SITE_HOST}</p>
+  <p className="export-date">{date} · {BRAND_NAME} · {SITE_HOST}</p>
  </article>:<div className="minimal-loading" role="status">正在读取日期</div>}
  {showFortune&&<div id="today-fortune">{fortune?<FortunePanel f={fortune}/>:<BirthInline onSaved={(d,t)=>{setBirthTime(t);setBirth(d)}}/>}</div>}
  <p className="status-message" role="status">{status}</p></main>

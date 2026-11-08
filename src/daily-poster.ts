@@ -3,7 +3,7 @@ import {cardImageUrl} from './art.ts';
 import {cardById,roman} from './cards.ts';
 import {calculateAlmanac,dateAtChinaNoon,deterministicHash} from './lib/almanac-engine.ts';
 import {posterHeadline} from './poster-copy.ts';
-import {SITE_HOST,SITE_URL} from './site.ts';
+import {BRAND_TITLE,BRAND_PROMISE,SITE_HOST,SITE_URL} from './site.ts';
 import type {Day} from './types.ts';
 
 export const POSTER_SIZES = {
@@ -67,7 +67,7 @@ export async function preparePoster(day:Day){
  const css=getComputedStyle(document.body);
  const serif=css.getPropertyValue('--font-prose').trim()||'Georgia';
  const family=`${serif}, DaybreakSerif, "Noto Serif CJK SC", "Songti SC", SimSun, serif`;
- const glyphs=[title,...headline,quote,reading,action,shareAction,note.slice(0,420),dateLine,'今日心境 一句话看懂 今日解析 今日可做一件小事 晚间回望 晨启塔罗 不讲宿命，不搞迷信 每天清晨与自己对话十分钟 扫码开启今日晨间抽牌 抽一张你的日签 一张牌，一件今天可做的小事 免费 无需注册',day.mood,day.intent].join(' ');
+ const glyphs=[BRAND_TITLE,BRAND_PROMISE,title,...headline,quote,reading,action,shareAction,note.slice(0,420),dateLine,'今日心境 一句话看懂 今日解析 今日可做一件小事 晚间回望 扫码开启今日晨间抽牌 抽一张你的日签 免费 无需注册',day.mood,day.intent].join(' ');
  const fonts=document.fonts;
  const [,image]=await Promise.all([
   fonts?Promise.allSettled([fonts.load(`18px ${family}`,glyphs),fonts.load(`italic 19px ${family}`,english)]).then(()=>fonts.ready):Promise.resolve(),
@@ -337,7 +337,7 @@ export async function renderPoster(data:PosterData,options:PosterOptions):Promis
    const tall=options.format==='story';
    const heroTop=tall?242:218,heroHeight=tall?388:312,heroBottom=heroTop+heroHeight;
    const titleTop=tall?104:94,titleSize=tall?45:47,footerTop=tall?806:655;
-   text('DAYBREAK · 晨启塔罗',left,56,16,palette.gold);
+   text(BRAND_TITLE,left,56,16,palette.gold);
    text(data.day.date.slice(5).replace('-','.'),right,57,15,palette.muted,'right');
    data.headline.forEach((line,i)=>text(line,cx,titleTop+i*titleSize*1.15,titleSize,palette.ink,'center',false,width));
    meteor(ctx,w,heroTop,palette.gold);
@@ -350,7 +350,7 @@ export async function renderPoster(data:PosterData,options:PosterOptions):Promis
    ctx.fillStyle=foil;
    ctx.fillRect(left,footerTop,width,.5);
    text('抽一张你的日签 ↗',left,footerTop+14,27,palette.ink);
-   text('一张牌，一件今天可做的小事',left,footerTop+51,15,palette.muted);
+   text(BRAND_PROMISE,left,footerTop+51,15,palette.muted);
    const byline=options.domain?`${SITE_HOST} · 免费 · 无需注册`:'免费 · 无需注册';
    text(byline,left,footerTop+77,13,palette.gold);
    if(options.qr)drawQR(ctx,right,footerTop+9,tall?96:91,palette.gold,POSTER_DRAW_URL);
@@ -372,7 +372,7 @@ export async function renderPoster(data:PosterData,options:PosterOptions):Promis
   ctx.textAlign='left';
   ctx.fillStyle=palette.gold;
   let letterX=left;
-  for(const letter of 'DAYBREAK · MORNING RITUAL'){
+  for(const letter of BRAND_TITLE){
    ctx.fillText(letter,letterX,60);
    letterX+=ctx.measureText(letter).width+12*.22;
   }
@@ -411,8 +411,8 @@ export async function renderPoster(data:PosterData,options:PosterOptions):Promis
   ctx.fillRect(left,footer,width,.5);
   ctx.fillStyle=palette.gold;
   star(ctx,cx,footer,4);
-  text('DAYBREAK · 晨启塔罗',left,footer+12,18,palette.ink);
-  text('不讲宿命，不搞迷信 · 每天清晨与自己对话十分钟',left,footer+36,10.5,palette.muted);
+  text(BRAND_TITLE,left,footer+12,18,palette.ink);
+  text(BRAND_PROMISE,left,footer+36,10.5,palette.muted);
   if(options.domain)capsule(`✦  ${SITE_HOST}  ✦`,left,footer+51,13,false);
   if(options.qr){
    const qrSize=options.format==='story'?80:69;

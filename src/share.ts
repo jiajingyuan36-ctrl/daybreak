@@ -1,5 +1,5 @@
 import {dipperSky,DIPPER,bearingLabel,CHART_RADIUS,labelPositions} from './lib/dipper.ts';
-import type {Day} from './types.ts';import {cardById} from './cards.ts';import {art,cardImageUrl} from './art.ts';import {SITE_HOST} from './site.ts';import {cachedSky} from './sky.ts';
+import type {Day} from './types.ts';import {cardById} from './cards.ts';import {art,cardImageUrl} from './art.ts';import {BRAND_TITLE,SITE_HOST} from './site.ts';import {cachedSky} from './sky.ts';
 export type ShareLayout='classic'|'space'|'night';
 export function download(blob:Blob,name:string){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),10000)}
 /** 分享图用的精简解析：取今日解析的第一句，太短就带上第二句。 */
@@ -12,7 +12,7 @@ export async function createShareImage(day:Day,tall=false,layout:ShareLayout='cl
  await Promise.allSettled([document.fonts.load(`600 40px ${display}`,'DAYBREAK 晨启'),document.fonts.load(`400 32px ${prose}`,'今日行动')]);
  const c=document.createElement('canvas');c.width=1080;c.height=tall?1920:1350;const x=c.getContext('2d');if(!x)throw Error('浏览器不支持图片导出');
  const night=layout==='night',fg=night?'#E6E2D8':'#141413',bg=night?'#0A0A0B':'#F2EFE9',gold=fg;x.fillStyle=bg;x.fillRect(0,0,c.width,c.height);x.textAlign='center';const font=(size:number,heading:boolean)=>`${heading?600:400} ${size}px ${heading?display:prose}`;const text=(s:string,y:number,size=28,width=800,heading=false)=>{x.fillStyle=fg;x.font=font(size,heading);const all=lines(x,s,width);all.forEach((line,i)=>x.fillText(line,540,y+i*size*1.65));return y+all.length*size*1.65};const measure=(s:string,size:number,width:number,heading=false)=>{x.font=font(size,heading);return lines(x,s,width).length*size*1.65};
- text('DAYBREAK · 晨启',130,34,850,true);text(day.date+' · 今日塔罗',184,22);
+ text(BRAND_TITLE,130,34,850,true);text(day.date+' · 今日塔罗',184,22);
  const sky=cachedSky(day.date),radius=31,cx=540,cy=260;x.fillStyle=night?'#252a32':'#ccc3b3';x.beginPath();x.arc(cx,cy,radius,0,Math.PI*2);x.fill();x.save();if(sky.phase>180){x.translate(cx*2,0);x.scale(-1,1)}const rx=Math.max(.01,Math.abs(2*sky.illumination-1)*radius);x.fillStyle=gold;x.beginPath();x.moveTo(cx,cy-radius);x.ellipse(cx,cy,radius,radius,0,-Math.PI/2,Math.PI/2);x.ellipse(cx,cy,rx,radius,0,Math.PI/2,3*Math.PI/2,sky.illumination<.5);x.closePath();x.fill();x.restore();text(`${sky.phaseName} · 照明 ${Math.round(sky.illumination*100)}%`,320,19);
  const card=cardById(day.cardId),title=card.nameZh+(day.reversed?' · 逆位':' · 正位'),meaning=briefReading(day.reversed?card.meaningReversed:card.meaningUpright),action='今天可做 · '+card.action,bottom=c.height-120;
  if(layout==='space'){let y=tall?660:510;y=text(title,y,44,760,true)+40;y=text(meaning,y,35,740)+55;text('今天可做',y,24,760,true);text(card.action,y+54,29,740)}else{const load=(src:string)=>new Promise<HTMLImageElement>((resolve,reject)=>{const i=new Image();i.onload=()=>resolve(i);i.onerror=()=>reject(Error('卡牌图形加载失败'));i.src=src});const url=URL.createObjectURL(new Blob([art(card)],{type:'image/svg+xml'}));try{const image=await load(cardImageUrl(card.id)).catch(()=>load(url));const block=measure(title,40,760,true)+24+measure(meaning,27,760)+12+measure(action,25,760);const h=Math.min(tall?820:500,bottom-365-68-block),w=h*image.naturalWidth/image.naturalHeight;x.save();if(day.reversed){x.translate(540,365+h/2);x.rotate(Math.PI);x.drawImage(image,-w/2,-h/2,w,h)}else x.drawImage(image,540-w/2,365,w,h);x.restore();let y=text(title,365+h+68,40,760,true)+24;y=text(meaning,y,27,760)+12;text(action,y,25,760)}finally{URL.revokeObjectURL(url)}}
@@ -31,7 +31,7 @@ export async function createDipperShare(day:Day,showLat=false):Promise<Blob>{
  const dark=document.documentElement.dataset.theme!=='light',bg=dark?'#0B0A0E':'#F2EFE9',fg=dark?'#E6E2D8':'#141413',muted=dark?'#8C877E':'#6E6A63';
  x.fillStyle=bg;x.fillRect(0,0,1080,1920);x.textAlign='center';x.textBaseline='alphabetic';
  const text=(s:string,y:number,size:number,color=fg,heading=false,width=860)=>{x.fillStyle=color;x.font=`${heading?500:400} ${size}px ${heading?display:prose}`;const all=lines(x,s,width);all.forEach((l,i)=>x.fillText(l,540,y+i*size*1.6));return y+all.length*size*1.6};
- text('DAYBREAK · 晨启',96,34,fg,true);text(`${day.date} · 今日北斗`,144,24,muted);
+ text(BRAND_TITLE,96,34,fg,true);text(`${day.date} · 今日北斗`,144,24,muted);
  // 星图
  const sky=dipperSky(k.at?new Date(k.at):new Date(`${day.date}T21:00:00`),k.lat,k.lon??120),cx=540,cy=650,R=420,P=([px,py]:[number,number])=>[cx+px*R,cy+py*R] as const;
  x.strokeStyle=fg;x.lineWidth=1.5;x.globalAlpha=.35;x.beginPath();x.arc(cx,cy,R,0,Math.PI*2);x.stroke();

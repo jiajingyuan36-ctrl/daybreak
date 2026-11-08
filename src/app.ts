@@ -8,7 +8,7 @@ import {monthSummary,shiftMonth} from './insights.ts';
 import {particles} from './particles.ts';
 
 import {lockStage,holdResult,exitResult,revealCard,reducedMotion,type DrawPhase} from './draw-motion.ts';import {guardCardImages} from './card-img.ts';
-import {moods} from './engine.ts';import {moodLead} from './mood-copy.ts';import {buildReminderIcs} from './reminder.ts';import {shouldRemindBackup,snooze,readBackupState,writeBackupState} from './backup-reminder.ts';import {SITE_URL} from './site.ts';import {AI_ENABLED} from './site.ts';import {askCard,checkQuestion,warmUp,ASKS_PER_DAY,ASK_MAX} from './ai-ask.ts';import {pastDraws,noteExcerpt,shortDate} from './card-history.ts';
+import {moods} from './engine.ts';import {moodLead} from './mood-copy.ts';import {buildReminderIcs} from './reminder.ts';import {shouldRemindBackup,snooze,readBackupState,writeBackupState} from './backup-reminder.ts';import {SITE_URL} from './site.ts';import {AI_ENABLED,BRAND_PROMISE} from './site.ts';import {askCard,checkQuestion,warmUp,ASKS_PER_DAY,ASK_MAX} from './ai-ask.ts';import {pastDraws,noteExcerpt,shortDate} from './card-history.ts';
 import type {ParticleHandle} from './particles.ts';
 import type {Day,Preferences} from './types.ts';
 import {cards,cardById,roman} from './cards.ts';import {shuffleDeck,cutDeck,randomInteger} from './random.ts';import {cardAstro,sunSign,moonSign,birthSign,resonance,ASTRO_SOURCE_LEAD,ASTRO_SOURCE_LINK,ASTRO_SOURCE_URL} from './astro.ts';import {art,cardImage,cardBack} from './art.ts';import {triggerHaptic,busyButton} from './tactile.ts';import {glassSelect} from './popover.ts';import {localDate,ensureDay,draw,dayFromCard} from './engine.ts';import {read,write,fresh,defaults,validate} from './storage.ts';import {download,shareCard,dipperShareCard} from './share.ts';import {mountDipper,SLOTS,type DipperRitual} from './dipper-ritual.ts';import {startDeck,cutForStar,pickSlot} from './lib/dipper-draw.ts';import {defaultObserver,bearingLabel,type DipperSky} from './lib/dipper.ts';
@@ -44,7 +44,7 @@ let dipperCtl:DipperRitual|null=null,dipperReplay=false;
 // 牌扇方式的“换一张”：回到洗牌、切牌、选牌，和第一次一样；选定之后才用掉一次机会，中途离开原来的牌不变
 let fanReplay:{old:Day;used:number}|null=null;
 // 站点的承诺：放在抽牌页标题下面（换一张时不显示）。不用“最”字这类绝对化说法
-const PROMISE=`<p class="brand-promise"><span>专注一件事：</span><span>把每一张塔罗牌，解读得专业、清楚、用得上。</span></p>`;
+const PROMISE=`<p class="brand-promise"><span>${BRAND_PROMISE}</span><span>白话解读 · 免费 · 无需注册</span></p>`;
 const ritualMode=()=>data.preferences.ritual??'fan';
 /** 观测地：设置里填过就用它，否则按时区估计 */
 function observer(){const o=data.preferences.observer,d=defaultObserver();return o?{lat:o.lat,lon:o.lon??d.lon,estimated:false}:{...d,estimated:true}}

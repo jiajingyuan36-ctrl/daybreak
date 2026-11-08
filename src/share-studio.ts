@@ -1,7 +1,7 @@
 import {cardById} from './cards.ts';
 import {POSTER_DRAW_URL,preparePoster,renderPoster,type PosterOptions} from './daily-poster.ts';
 import {posterHeadline} from './poster-copy.ts';
-import {SITE_HOST} from './site.ts';
+import {BRAND_TITLE,SITE_HOST} from './site.ts';
 import {triggerHaptic} from './tactile.ts';
 import type {Day} from './types.ts';
 
@@ -25,7 +25,7 @@ export function openShareStudio(day:Day,trigger:HTMLButtonElement){
  dialog.setAttribute('aria-modal','true');
  dialog.innerHTML=`<div class="poster-studio-inner">
   <header class="poster-header">
-   <div><p>DAYBREAK · MORNING RITUAL</p><h2 id="poster-title">晨启日签</h2></div>
+   <div><p>${BRAND_TITLE}</p><h2 id="poster-title">晨启日签</h2></div>
    <button type="button" class="poster-close" aria-label="关闭海报" autofocus>×</button>
   </header>
   <div class="poster-options">
@@ -190,7 +190,7 @@ export function openShareStudio(day:Day,trigger:HTMLButtonElement){
    const file=new File([blob],filename,{type:'image/png'});
    try{
     if(navigator.canShare({files:[file]})){
-     await navigator.share({files:[file],title:'DAYBREAK · 晨启塔罗',text:shareText});
+     await navigator.share({files:[file],title:BRAND_TITLE,text:shareText});
      if(!closed&&version===currentVersion)status.textContent='已交给系统分享。';
      return;
     }
@@ -223,7 +223,7 @@ export function openShareStudio(day:Day,trigger:HTMLButtonElement){
    }
   }catch{/* Fall through to the public link. */}
   try{
-   if(shareLinkNatively)await navigator.share({title:'DAYBREAK · 晨启塔罗',url:POSTER_DRAW_URL});
+   if(shareLinkNatively)await navigator.share({title:BRAND_TITLE,url:POSTER_DRAW_URL});
    else if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(POSTER_DRAW_URL);
    else throw Error();
    if(!closed&&version===currentVersion)status.textContent=shareLinkNatively?'已交给系统分享。':'已复制晨启塔罗链接。';

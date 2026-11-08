@@ -986,7 +986,8 @@ html:root[data-theme=light] .home-cta{border-color:rgba(28,25,23,.18)}
 
 /* 顶部导航：品牌只留 DAYBREAK 和小号斜体 Morning Ritual；底边换成两头渐隐的细金线；外观是一个图标按钮 */
 .shared-brand{display:inline-flex!important;flex-direction:column;align-items:flex-start;line-height:1.05}
-.shared-brand .brand-sub{display:block!important;margin:3px 0 0!important;font-size:11px!important;letter-spacing:.22em;opacity:.55}
+.shared-brand .brand-main{margin:0;font-size:clamp(18px,2vw,23px);letter-spacing:.10em;color:var(--text-primary)}
+.shared-brand .brand-sub{display:block!important;margin:5px 0 0!important;font-size:10px!important;letter-spacing:.22em;color:var(--text-muted);opacity:1}
 .shared-header{border-bottom:0!important;position:relative}
 .shared-header::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.2),transparent);pointer-events:none}
 .shared-header nav{gap:28px}
