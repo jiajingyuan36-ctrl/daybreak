@@ -27,6 +27,7 @@
     "lucide-react": "^0.577.0",
     "lunar-javascript": "1.7.7",
     "next": "16.4.3",
+    "qrcode-generator": "2.0.4",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "simplex-noise": "4.0.3"

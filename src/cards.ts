@@ -8,3 +8,4 @@ function card(id:string,nameZh:string,nameEn:string,arcanaType:Card['arcanaType'
 export const cards:Card[]=majors.map(([zh,en],n)=>card(`m${n}`,zh,en,'major','大阿卡纳',n,`major-${n}`));
 for(const s of suites)ranks.forEach((rank,i)=>cards.push(card(`${s.en.toLowerCase()}-${i+1}`,s.zh+rank,`${ens[i]} of ${s.en}`,'minor',s.zh,i+1,`${s.en}-${i+1}`)));
 export const cardById=(id:string)=>cards.find(c=>c.id===id)!;
+export function roman(n:number):string{if(n===0)return '0';let out='';for(const [value,label] of [[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']] as const){while(n>=value){out+=label;n-=value}}return out}

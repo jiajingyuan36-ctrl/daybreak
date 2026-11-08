@@ -45,7 +45,7 @@ export function calculateAlmanac(date:Date):Almanac {
   const lunarDate=Lunar.fromYmd(lunar.getYear(),lunar.getMonth(),lunar.getDay());
   const aliases:Readonly<Record<string,string>>={DA_XUE:'大雪',DONG_ZHI:'冬至',XIAO_HAN:'小寒',DA_HAN:'大寒',LI_CHUN:'立春',YU_SHUI:'雨水',JING_ZHE:'惊蛰'};
   const table=lunar.getJieQiTable();const terms=Object.entries(table).map(([name,s])=>solarTerm(s,aliases[name]??name)).sort((a,b)=>Date.parse(a.at)-Date.parse(b.at));
-  const current=terms.filter(t=>Date.parse(t.at)<=date.valueOf()).at(-1);const upcoming=terms.find(t=>Date.parse(t.at)>date.valueOf());
+  const current=terms.filter(t=>Date.parse(t.at)<=date.valueOf()).pop();const upcoming=terms.find(t=>Date.parse(t.at)>date.valueOf());
   if(!current||!upcoming)throw new RangeError('节气表没有覆盖该时刻');
   const angle=MoonPhase(date);const illumination=Math.min(1,Math.max(0,Illumination(Body.Moon,date).phase_fraction));
   const stemElement=GAN[lunar.getDayGan()],branchElement=ZHI[lunar.getDayZhi()];if(!stemElement||!branchElement)throw new Error('无效干支五行');
