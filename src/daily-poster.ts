@@ -2,6 +2,7 @@ import qrcode from 'qrcode-generator';
 import {cardImageUrl} from './art.ts';
 import {cardById,roman} from './cards.ts';
 import {calculateAlmanac,dateAtChinaNoon,deterministicHash} from './lib/almanac-engine.ts';
+import {posterHeadline} from './poster-copy.ts';
 import {SITE_HOST,SITE_URL} from './site.ts';
 import type {Day} from './types.ts';
 
@@ -13,7 +14,8 @@ const PALETTES = {
  night: {bg:'#0F0F11',ink:'#F4EFE6',muted:'#C8C4BC',gold:'#D4AF37',rule:'#C5A059',grain:.028,ticket:'rgba(212,175,55,.05)',grade:[.16,.76,1.08,.93],vignette:.58},
  plaster: {bg:'#F4EFE6',ink:'#141413',muted:'#3D3A35',gold:'#8C621E',rule:'#8C621E',grain:.032,ticket:'rgba(140,98,30,.055)',grade:[.12,.82,1.05,.98],vignette:.26},
 } as const;
-export type PosterOptions = {format:keyof typeof POSTER_SIZES;theme:keyof typeof PALETTES;qr:boolean;reflection:boolean};
+export const POSTER_DRAW_URL=`${SITE_URL}/ritual/`;
+export type PosterOptions = {format:keyof typeof POSTER_SIZES;theme:keyof typeof PALETTES;layout:'share'|'journal';qr:boolean;domain:boolean;reflection:boolean};
 const SCALE=3;
 const NO_START=/^[、。，？！：；）》」…\uFF0E\uFF3D\uFF5D\u3009\u300F\u3011\u3015,.!?;:%)\]}]/u;
 const NO_END=/[（《「\uFF3B\uFF5B\u3008\u300E\u3010\u3014(\[{]$/u;
@@ -52,9 +54,11 @@ export async function preparePoster(day:Day){
  const card=cardById(day.cardId);
  const english=`${roman(card.number)} · ${card.nameEn.toUpperCase()}`;
  const title=`${card.nameZh} · ${day.reversed?'逆位':'正位'}`;
+ const headline=posterHeadline(card);
  const quote=card.plainIntro;
  const reading=(day.reading.message|| (day.reversed?card.meaningReversed:card.meaningUpright)).match(/[^。！？]+[。！？]*/g)?.slice(0,3).join('')||quote;
  const action=day.reading.action||card.action;
+ const shareAction=card.id==='m19'?'放一首喜欢的歌。听完再去忙。':action;
  const note=day.review?.note.trim()||'';
  // Imported dates can fall outside the almanac's supported range.
  const calendar=(()=>{try{return calculateAlmanac(dateAtChinaNoon(day.date))}catch{return null}})();
@@ -63,13 +67,13 @@ export async function preparePoster(day:Day){
  const css=getComputedStyle(document.body);
  const serif=css.getPropertyValue('--font-prose').trim()||'Georgia';
  const family=`${serif}, DaybreakSerif, "Noto Serif CJK SC", "Songti SC", SimSun, serif`;
- const glyphs=[title,quote,reading,action,note.slice(0,420),dateLine,'今日心境 一句话看懂 今日解析 今日可做一件小事 晚间回望 晨启塔罗 不讲宿命，不搞迷信 每天清晨与自己对话十分钟 扫码开启今日晨间抽牌',day.mood,day.intent].join(' ');
+ const glyphs=[title,...headline,quote,reading,action,shareAction,note.slice(0,420),dateLine,'今日心境 一句话看懂 今日解析 今日可做一件小事 晚间回望 晨启塔罗 不讲宿命，不搞迷信 每天清晨与自己对话十分钟 扫码开启今日晨间抽牌 抽一张你的日签 一张牌，一件今天可做的小事 免费 无需注册',day.mood,day.intent].join(' ');
  const fonts=document.fonts;
  const [,image]=await Promise.all([
   fonts?Promise.allSettled([fonts.load(`18px ${family}`,glyphs),fonts.load(`italic 19px ${family}`,english)]).then(()=>fonts.ready):Promise.resolve(),
   loadImage(cardImageUrl(card.id)).catch(()=>loadImage(cardImageUrl(card.id,true))),
  ]);
- return {day,image,english,title,quote,reading,action,note,dateLine,moon:calendar?.moon,family};
+ return {day,image,english,title,headline,quote,reading,action,shareAction,note,dateLine,moon:calendar?.moon,family};
 }
 
 type PosterData=Awaited<ReturnType<typeof preparePoster>>;
@@ -231,15 +235,15 @@ function moonIcon(ctx:Context,x:number,y:number,moon:NonNullable<PosterData['moo
  ctx.restore();
 }
 
-function qrMatrix(){
+function qrMatrix(url:string){
  const code=qrcode(0,'M');
- code.addData(SITE_URL,'Byte');
+ code.addData(url,'Byte');
  code.make();
  return code;
 }
 
-function drawQR(ctx:Context,right:number,top:number,size:number,color:string){
- const code=qrMatrix(),count=code.getModuleCount(),quiet=4,unit=size/(count+2*quiet);
+function drawQR(ctx:Context,right:number,top:number,size:number,color:string,url=SITE_URL){
+ const code=qrMatrix(url),count=code.getModuleCount(),quiet=4,unit=size/(count+2*quiet);
  const x=right-size+quiet*unit,y=top+quiet*unit;
  ctx.fillStyle=color;
  for(let row=0;row<count;row++)for(let col=0;col<count;col++){
@@ -251,6 +255,30 @@ function drawQR(ctx:Context,right:number,top:number,size:number,color:string){
    ctx.fill();
   }
  }
+}
+
+function meteor(ctx:Context,w:number,top:number,color:string){
+ const startX=w*.91,startY=top-20,endX=w*.75,endY=top+47;
+ const tail=ctx.createLinearGradient(startX,startY,endX,endY);
+ tail.addColorStop(0,'transparent');
+ tail.addColorStop(.7,color);
+ tail.addColorStop(1,color);
+ ctx.save();
+ ctx.globalAlpha=.62;
+ ctx.lineCap='round';
+ ctx.lineWidth=1.3;
+ ctx.strokeStyle=tail;
+ ctx.beginPath();
+ ctx.moveTo(startX,startY);
+ ctx.lineTo(endX,endY);
+ ctx.stroke();
+ ctx.fillStyle=color;
+ star(ctx,endX,endY,3.5);
+ ctx.restore();
+}
+
+function encodePoster(canvas:HTMLCanvasElement){
+ return new Promise<Blob>((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(Error('图片生成失败，请重试。')),'image/png'));
 }
 
 export async function renderPoster(data:PosterData,options:PosterOptions):Promise<Blob>{
@@ -279,18 +307,19 @@ export async function renderPoster(data:PosterData,options:PosterOptions):Promis
   ctx.fillStyle=ctx.strokeStyle=foil;
   frame(ctx,w,h);
   const font=(size:number,italic=false)=>`${italic?'italic ':''}${size}px ${data.family}`;
-  const text=(value:string,x:number,y:number,size:number,color:string,align:CanvasTextAlign='left',italic=false)=>{
+  const text=(value:string,x:number,y:number,size:number,color:string,align:CanvasTextAlign='left',italic=false,maxWidth?:number)=>{
    ctx.font=font(size,italic);
    ctx.fillStyle=color;
    ctx.textAlign=align;
-   ctx.fillText(value,x,y);
+   if(maxWidth)ctx.fillText(value,x,y,maxWidth);
+   else ctx.fillText(value,x,y);
   };
-  const paragraph=(value:string,x:number,y:number,maxWidth:number,height:number,size:number,color:string,align:CanvasTextAlign='left',italic=false)=>{
+  const paragraph=(value:string,x:number,y:number,maxWidth:number,height:number,size:number,color:string,align:CanvasTextAlign='left',lineSpacing=1.75)=>{
    let rows:string[],lineHeight:number;
    do{
-    ctx.font=font(size,italic);
+    ctx.font=font(size);
     rows=wrapPosterText(value,maxWidth,s=>ctx.measureText(s).width);
-    lineHeight=size*1.75;
+    lineHeight=size*lineSpacing;
     if(rows.length*lineHeight<=height||size<=12)break;
     size-=.5;
    }while(true);
@@ -301,8 +330,32 @@ export async function renderPoster(data:PosterData,options:PosterOptions):Promis
     while(last.length&&ctx.measureText(last.join('')+'…').width>maxWidth)last.pop();
     visible[visible.length-1]=last.join('').replace(/[，、。！？：；\s]+$/u,'')+'…';
    }
-   visible.forEach((row,i)=>text(row,x,y+i*lineHeight,size,color,align,italic));
+   visible.forEach((row,i)=>text(row,x,y+i*lineHeight,size,color,align));
   };
+  const personal=options.reflection&&!!data.note;
+  if(options.layout==='share'){
+   const tall=options.format==='story';
+   const heroTop=tall?242:218,heroHeight=tall?388:312,heroBottom=heroTop+heroHeight;
+   const titleTop=tall?104:94,titleSize=tall?45:47,footerTop=tall?806:655;
+   text('DAYBREAK · 晨启塔罗',left,56,16,palette.gold);
+   text(data.day.date.slice(5).replace('-','.'),right,57,15,palette.muted,'right');
+   data.headline.forEach((line,i)=>text(line,cx,titleTop+i*titleSize*1.15,titleSize,palette.ink,'center',false,width));
+   meteor(ctx,w,heroTop,palette.gold);
+   ctx.strokeStyle=foil;
+   plate(ctx,data,cx,heroTop,heroHeight,palette.vignette,palette.grade);
+   text(data.title,cx,heroBottom+15,16,palette.gold,'center');
+   if(personal)text('晚间回望',cx,heroBottom+41,12,palette.gold,'center');
+   const actionTop=heroBottom+(personal?59:43);
+   paragraph(personal?data.note:data.shareAction,cx,actionTop,width-8,footerTop-actionTop-12,22,palette.ink,'center',1.4);
+   ctx.fillStyle=foil;
+   ctx.fillRect(left,footerTop,width,.5);
+   text('抽一张你的日签 ↗',left,footerTop+14,27,palette.ink);
+   text('一张牌，一件今天可做的小事',left,footerTop+51,15,palette.muted);
+   const byline=options.domain?`${SITE_HOST} · 免费 · 无需注册`:'免费 · 无需注册';
+   text(byline,left,footerTop+77,13,palette.gold);
+   if(options.qr)drawQR(ctx,right,footerTop+9,tall?96:91,palette.gold,POSTER_DRAW_URL);
+   return await encodePoster(canvas);
+  }
   const capsule=(value:string,x:number,y:number,size:number,centered:boolean)=>{
    ctx.font=font(size);
    const span=ctx.measureText(value).width+24;
@@ -348,7 +401,6 @@ export async function renderPoster(data:PosterData,options:PosterOptions):Promis
   ctx.fillRect(left,ticket,width,ticketHeight);
   ctx.fillStyle=palette.gold;
   ctx.fillRect(left,ticket,2,ticketHeight);
-  const personal=options.reflection&&!!data.note;
   text(personal?'✦  晚间回望':'✦  10 MIN RITUAL / 今日可做一件小事',left+13,ticket+9,11,palette.gold);
   paragraph(personal?data.note:data.action,left+13,ticket+27,width-26,ticketHeight-29,14,palette.ink);
   const line=ctx.createLinearGradient(left,footer,right,footer);
@@ -361,13 +413,13 @@ export async function renderPoster(data:PosterData,options:PosterOptions):Promis
   star(ctx,cx,footer,4);
   text('DAYBREAK · 晨启塔罗',left,footer+12,18,palette.ink);
   text('不讲宿命，不搞迷信 · 每天清晨与自己对话十分钟',left,footer+36,10.5,palette.muted);
-  capsule(`✦  ${SITE_HOST}  ✦`,left,footer+51,13,false);
+  if(options.domain)capsule(`✦  ${SITE_HOST}  ✦`,left,footer+51,13,false);
   if(options.qr){
    const qrSize=options.format==='story'?80:69;
    drawQR(ctx,right-2,footer+3,qrSize,palette.gold);
    text('扫码开启今日晨间抽牌',right-2-qrSize/2,footer+qrSize+2,8.5,palette.muted,'center');
   }
-  return await new Promise<Blob>((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(Error('图片生成失败，请重试。')),'image/png'));
+  return await encodePoster(canvas);
  }finally{
   canvas.width=0;
   canvas.height=0;

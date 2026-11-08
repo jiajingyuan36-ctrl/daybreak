@@ -1,6 +1,7 @@
 import {cardById} from './cards.ts';
-import {preparePoster,renderPoster,type PosterOptions} from './daily-poster.ts';
-import {SITE_HOST,SITE_URL} from './site.ts';
+import {POSTER_DRAW_URL,preparePoster,renderPoster,type PosterOptions} from './daily-poster.ts';
+import {posterHeadline} from './poster-copy.ts';
+import {SITE_HOST} from './site.ts';
 import {triggerHaptic} from './tactile.ts';
 import type {Day} from './types.ts';
 
@@ -10,13 +11,14 @@ const canceled=(error:unknown)=>!!error&&typeof error==='object'&&'name' in erro
 
 export function openShareStudio(day:Day,trigger:HTMLButtonElement){
  closeShareStudio();
- const options:PosterOptions={format:'story',theme:'night',qr:true,reflection:false};
+ const options:PosterOptions={format:'portrait',theme:'night',layout:'share',qr:true,domain:true,reflection:false};
  const mobile=matchMedia('(pointer: coarse)').matches||/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
  const embedded=/MicroMessenger|Weibo|XiaoHongShu|xhsdiscover|REDnote/i.test(navigator.userAgent);
  const shareLinkNatively=mobile&&!embedded&&typeof navigator.share==='function';
  const canCopyImage=typeof ClipboardItem==='function'&&typeof navigator.clipboard?.write==='function';
- const filename=`DAYBREAK-晨启日签-${day.date.replace(/-/g,'')}-${cardById(day.cardId).nameZh}.png`;
- const shareText=`我在晨启塔罗抽到了今日日签 ✦ ${SITE_URL}`;
+ const card=cardById(day.cardId);
+ const filename=`DAYBREAK-晨启日签-${day.date.replace(/-/g,'')}-${card.nameZh}.png`;
+ const shareText=`${posterHeadline(card).join('')} 抽一张你的日签 ✦ ${POSTER_DRAW_URL}`;
  const dialog=document.createElement('dialog');
  dialog.className='poster-studio';
  dialog.setAttribute('aria-labelledby','poster-title');
@@ -27,9 +29,13 @@ export function openShareStudio(day:Day,trigger:HTMLButtonElement){
    <button type="button" class="poster-close" aria-label="关闭海报" autofocus>×</button>
   </header>
   <div class="poster-options">
+   <fieldset class="poster-segment"><legend>版式</legend><div>
+    <label><input type="radio" name="poster-layout" value="share" checked><span>分享卡</span></label>
+    <label><input type="radio" name="poster-layout" value="journal"><span>完整日签</span></label>
+   </div></fieldset>
    <fieldset class="poster-segment"><legend>画幅</legend><div>
-    <label><input type="radio" name="poster-format" value="story" checked><span>9:16 锁屏长图</span></label>
-    <label><input type="radio" name="poster-format" value="portrait"><span>3:4 小红书画报</span></label>
+    <label><input type="radio" name="poster-format" value="portrait" checked><span>3:4 小红书画报</span></label>
+    <label><input type="radio" name="poster-format" value="story"><span>9:16 锁屏长图</span></label>
    </div></fieldset>
    <fieldset class="poster-segment"><legend>配色</legend><div>
     <label><input type="radio" name="poster-theme" value="night" checked><span>● 玄夜黑金</span></label>
@@ -37,6 +43,7 @@ export function openShareStudio(day:Day,trigger:HTMLButtonElement){
    </div></fieldset>
    <div class="poster-toggles">
     <label><input type="checkbox" name="poster-qr" checked>附带宣传码</label>
+    <label><input type="checkbox" name="poster-domain" checked>显示网站地址</label>
     ${day.review?.note.trim()?'<label><input type="checkbox" name="poster-reflection">展示晚间回望</label>':''}
    </div>
   </div>
@@ -46,7 +53,7 @@ export function openShareStudio(day:Day,trigger:HTMLButtonElement){
   </div>
   <footer class="poster-actions">
    <p class="poster-status" role="status" aria-live="polite"></p>
-   <a class="poster-link" href="${SITE_URL}" hidden>${SITE_HOST}</a>
+   <a class="poster-link" href="${POSTER_DRAW_URL}" hidden>${SITE_HOST}</a>
    <div class="poster-buttons">
     <button type="button" class="poster-save" disabled>↓ ${mobile?'保存高清图到相册':'下载高清图片'}</button>
     <button type="button" class="poster-copy" disabled>${canCopyImage?'复制图片':'分享链接'}</button>
@@ -165,9 +172,11 @@ export function openShareStudio(day:Day,trigger:HTMLButtonElement){
  dialog.onchange=e=>{
   const input=e.target as HTMLInputElement;
   switch(input.name){
+   case 'poster-layout': options.layout=input.value==='journal'?'journal':'share';break;
    case 'poster-format': options.format=input.value==='portrait'?'portrait':'story';break;
    case 'poster-theme': options.theme=input.value==='plaster'?'plaster':'night';break;
    case 'poster-qr': options.qr=input.checked;break;
+   case 'poster-domain': options.domain=input.checked;break;
    case 'poster-reflection': options.reflection=input.checked;break;
    default:return;
   }
@@ -214,8 +223,8 @@ export function openShareStudio(day:Day,trigger:HTMLButtonElement){
    }
   }catch{/* Fall through to the public link. */}
   try{
-   if(shareLinkNatively)await navigator.share({title:'DAYBREAK · 晨启塔罗',url:SITE_URL});
-   else if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(SITE_URL);
+   if(shareLinkNatively)await navigator.share({title:'DAYBREAK · 晨启塔罗',url:POSTER_DRAW_URL});
+   else if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(POSTER_DRAW_URL);
    else throw Error();
    if(!closed&&version===currentVersion)status.textContent=shareLinkNatively?'已交给系统分享。':'已复制晨启塔罗链接。';
   }catch(error){
