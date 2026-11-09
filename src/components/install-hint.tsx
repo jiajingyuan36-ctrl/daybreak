@@ -1,6 +1,7 @@
 'use client';
 import {useEffect,useRef,useState} from 'react';
 import {recordVisit} from '../lib/visit';
+import {trackDailyVisit} from '../track';
 // “添加到主屏幕”提示：只在用户第二天回来、或已经抽过两次牌之后出现；关掉后 14 天内不再打扰。
 // 放到主屏幕后打开更快，iPhone 上也不容易因为 7 天没打开而被 Safari 清掉记录。
 const KEY='daybreak:install-hint';
@@ -14,7 +15,7 @@ function engaged(visitDays:number){try{const d=JSON.parse(localStorage.getItem('
 export function InstallHint(){const [platform,setPlatform]=useState<Platform|null>(null),[leaving,setLeaving]=useState(false),box=useRef<HTMLElement>(null);
  // 提示条显示时，给页面底部留出它的高度，不挡住「保存生辰」「保存日签」和页脚
  useEffect(()=>{const el=box.current;if(!platform||!el)return;const fit=()=>{document.body.style.paddingBottom=`${el.offsetHeight+28}px`};fit();addEventListener('resize',fit);return()=>{removeEventListener('resize',fit);document.body.style.paddingBottom=''}},[platform]);
- useEffect(()=>{const visit=recordVisit(location.search,localDay());if(standalone())return;try{if(localStorage.getItem(DISMISSED)==='true')return;const s=localStorage.getItem(KEY);if(s==='installed'||(s&&Date.now()-Number(s)<14*864e5))return}catch{return}if(!engaged(visit?.days.length??0))return;
+ useEffect(()=>{const visit=recordVisit(location.search,localDay());trackDailyVisit(visit,localDay(),standalone());if(standalone())return;try{if(localStorage.getItem(DISMISSED)==='true')return;const s=localStorage.getItem(KEY);if(s==='installed'||(s&&Date.now()-Number(s)<14*864e5))return}catch{return}if(!engaged(visit?.days.length??0))return;
   const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)&&!/crios|fxios|edgios/i.test(navigator.userAgent);const t=setTimeout(()=>setPlatform(ios?'ios':(window as Window&{__bip?:Prompt}).__bip?'prompt':'other'),2500);return()=>clearTimeout(t)},[]);
  if(!platform)return null;
  function close(remember:string){try{localStorage.setItem(KEY,remember)}catch{}setLeaving(true);setTimeout(()=>setPlatform(null),matchMedia('(prefers-reduced-motion: reduce)').matches?0:380)}

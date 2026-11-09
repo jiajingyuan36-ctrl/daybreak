@@ -6,7 +6,7 @@ import '../legacy-static/epic.css';
 import '../legacy-static/fonts/serif-sc.css';
 import {SiteChrome} from '../src/components/site-chrome';
 import type {Metadata} from 'next';
-import {BRAND_NAME,BRAND_TITLE,SITE_URL} from '../src/site';
+import {BRAND_NAME,BRAND_TITLE,SITE_URL,SITE_HOST,ANALYTICS_ENABLED,UMAMI_WEBSITE_ID} from '../src/site';
 import {pageMeta} from '../src/meta';
 import {InstallHint} from '../src/components/install-hint';
 const cinzel=Cinzel({subsets:['latin'],weight:['400','500'],variable:'--font-cinzel',display:'swap'});
@@ -26,4 +26,4 @@ export const metadata:Metadata={
 // 安卓 Chrome 很早就会发出“可安装”事件，先存起来，等提示条出现时再用。
 const captureInstall="addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__bip=e})";
 const speculation=JSON.stringify({prerender:[{where:{and:[{href_matches:'/*'},{not:{href_matches:'/*.*'}}]},eagerness:'moderate'}]});
-export default function RootLayout({children}:{children:React.ReactNode}){preload(serifFont.core,{as:'font',type:'font/woff2',crossOrigin:'anonymous',fetchPriority:'low'});return <html lang="zh-CN"><body className={`${cinzel.variable} ${prose.variable}`}><script type="speculationrules" dangerouslySetInnerHTML={{__html:speculation}}/><script dangerouslySetInnerHTML={{__html:captureInstall}}/><SiteChrome/>{children}<footer className="shared-footer"><span>{BRAND_TITLE}</span><nav aria-label="说明"><a href="/about/">关于</a><a href="/feedback/">提建议</a><a href="/deep/">深度解读</a><a href="/privacy/">隐私说明</a><a href="/terms/">使用条款</a></nav></footer><InstallHint/></body></html>}
+export default function RootLayout({children}:{children:React.ReactNode}){preload(serifFont.core,{as:'font',type:'font/woff2',crossOrigin:'anonymous',fetchPriority:'low'});return <html lang="zh-CN"><body className={`${cinzel.variable} ${prose.variable}`}><script type="speculationrules" dangerouslySetInnerHTML={{__html:speculation}}/><script dangerouslySetInnerHTML={{__html:captureInstall}}/><SiteChrome/>{children}<footer className="shared-footer"><span>{BRAND_TITLE}</span><nav aria-label="说明"><a href="/about/">关于</a><a href="/feedback/">提建议</a><a href="/deep/">深度解读</a><a href="/privacy/">隐私说明</a><a href="/terms/">使用条款</a></nav></footer><InstallHint/>{ANALYTICS_ENABLED&&<script defer src="/stats/umami.js" data-website-id={UMAMI_WEBSITE_ID} data-host-url="https://gateway.umami.is" data-domains={`${SITE_HOST},www.${SITE_HOST}`} data-exclude-hash="true" data-do-not-track="true" data-performance="true"/>}</body></html>}

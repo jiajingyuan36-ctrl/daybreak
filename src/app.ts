@@ -1,3 +1,4 @@
+import {track} from './track.ts';
 import {readConsultations,type Saved} from './lib/consultation-history.ts';
 import {findSpread} from './lib/tarot-catalog.ts';
 import type {ShareLayout} from './share.ts';
@@ -89,7 +90,7 @@ function pastBlock(d:Day){const past=pastDraws(data.days,d.cardId,d.date);if(!pa
  return `<aside class="card-past"><h2>这张牌你以前抽到过</h2><p>${past.length>1?`算上这次，一共抽到 ${past.length+1} 次。`:''}上一次是 ${shortDate(last.date,today)}，${last.reversed?'逆位':'正位'}${last.reversed===d.reversed?'，和今天一样':`，今天是${d.reversed?'逆位':'正位'}`}。</p>${note?`<blockquote>那天晚上你写下：${esc(noteExcerpt(note))}</blockquote>`:'<p class="past-empty">那天没有写回望。今晚可以写一句，下次再抽到它就能看到。</p>'}<button type="button" class="text-button past-day" data-past="${last.date}">看那一天</button></aside>`}
 /** 抽牌后“问一个问题”：只在今天这张牌上出现；已问过的问答存在本机，刷新还在 */
 /** 导出全部记录，并记下这次备份的时间（备份提醒据此隔 30 天再提） */
-function exportBackup(){download(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),`daybreak-backup-${today}.json`);writeBackupState(storage,{at:new Date().toISOString()});toast('已导出。把这个文件存到网盘或发给自己，换手机时在「设置」里导入就能找回。')}
+function exportBackup(){track('backup-export');download(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),`daybreak-backup-${today}.json`);writeBackupState(storage,{at:new Date().toISOString()});toast('已导出。把这个文件存到网盘或发给自己，换手机时在「设置」里导入就能找回。')}
 /** 记录攒到 7 天、又 30 天没备份时，轻轻提醒一次 */
 function backupNudge(){const n=Object.keys(data.days).length;if(!shouldRemindBackup(n,readBackupState(storage),new Date()))return '';
  return `<aside class="backup-nudge" aria-label="备份提醒"><p>你已经记录了 ${n} 天。这些记录只存在这台设备的浏览器里，清缓存或换手机就会没了。</p><div class="backup-actions"><button type="button" class="backup-now">导出一份备份</button><button type="button" class="text-button backup-later">以后再说</button></div></aside>`}
@@ -141,6 +142,7 @@ function bindDipper(){dipperCtl?.destroy();dipperCtl=null;
 async function dipperDraw(deck:ReturnType<typeof startDeck<(typeof cards)[number]>>){if(revealing||drawPhase!=='idle'||!dipperCtl)return;revealing=true;const ctl=dipperCtl,ob=observer();
  root.querySelectorAll<HTMLButtonElement>('.draw,.mood-chip,.ritual-switch button').forEach(el=>{el.disabled=true});
  const index=pickSlot(SLOTS),chosen=deck[index];
+ track('draw-done',{mode:'dipper',redraw:!!dipperReplay});
  drawPhase='locking';const pick=await ctl.turnAndPick(index);const from=await lockStage(root.querySelector<HTMLElement>('.minimal-ritual')!,pick);
  today=localDate();const d=ensureDay(data.days,today,data.preferences,mood,intent,chosen);d.ritual='dipper';d.dipper=dipperFacts(ctl.sky,ob);data.days[today]=d;save();ctl.destroy();dipperCtl=null;
  render();scrollTo({top:0,behavior:'instant'});const result=root.querySelector<HTMLElement>('.minimal-result');
@@ -157,6 +159,7 @@ function bindAsk(){if(AI_ENABLED&&root.querySelector('.ask-card'))warmUp();
   const slow=setTimeout(()=>{status.textContent='还在连接，服务刚醒，再等一会儿…'},8000);
   const r=await askCard({cardId:day.cardId,reversed:day.reversed,mood:day.mood||'',question:q});
   clearTimeout(slow);asking=false;
+  track('ask',{result:r.ok?(r.crisis?'care':'answered'):'failed'});
   if(!r.ok){btn.disabled=false;input.readOnly=false;status.textContent=r.message;return}
   day.asks=[...(day.asks||[]),{q,a:r.answer,at:new Date().toISOString(),...(r.crisis?{crisis:true}:{})}].slice(-10);
   if(!save())toast(error);triggerHaptic('success');
@@ -173,6 +176,7 @@ const beginDraw=async(picked?:HTMLElement)=>{if(revealing||drawPhase!=='idle')re
  // 牌扇展开时，浮起的是牌扇里被抽中的那张；还在洗牌或切牌时（点了「替我选一张」），浮起的是牌堆最上面那张
  const ritual=root.querySelector<HTMLElement>('.minimal-ritual')!,stage=root.querySelector<HTMLElement>('.ritual-scene')?.dataset.stage;
  const source=(stage==='pick'?fan[index]:null)??root.querySelector<HTMLElement>('.pile-card:last-of-type')??fan[index];
+ track('draw-done',{mode:stage==='pick'&&picked?'fan':'quick',redraw:!!fanReplay});
  drawPhase='locking';const from=source?await lockStage(ritual,source):null;
  // 换一张：同一天才算换牌（保留心情和晚间回望，次数加一）；跨过零点就是新一天的第一次抽牌
  const replay=fanReplay;fanReplay=null;today=localDate();let d:Day;
@@ -224,7 +228,7 @@ if(poster)poster.onclick=async()=>{
  poster.setAttribute('aria-busy','true');
  try{
   shareStudio??=await import('./share-studio.ts');
-  if(poster.isConnected)shareStudio.openShareStudio(day,poster);
+  if(poster.isConnected){shareStudio.openShareStudio(day,poster);track('share-open')}
  }catch{if(poster.isConnected)toast('图片导出失败，请重试')}
  finally{poster.removeAttribute('aria-busy')}
 };
@@ -252,10 +256,10 @@ if(action)action.onchange=()=>{
  triggerHaptic(action.checked?'success':'selection');
 };
 const redraw=root.querySelector<HTMLButtonElement>('.redraw');if(redraw)redraw.onclick=async()=>{if(redrawPhase!=='idle'||drawPhase!=='idle')return;const old=data.days[today];const used=(old?.redraws||0)+1;if(used>MAX_REDRAWS)return;
- redrawPhase='exiting';redraw.disabled=true;triggerHaptic('light');
+ redrawPhase='exiting';redraw.disabled=true;track('redraw-start');triggerHaptic('light');
  const leaving=root.querySelector<HTMLElement>('.minimal-result');if(leaving)await exitResult(leaving);
  if(old?.ritual==='dipper'){redrawPhase='drawing';dipperReplay=true;render();scrollTo({top:0,behavior:'instant'});const ctl=dipperCtl,ob=observer();
-  if(ctl){const deck=startDeck(cards),index=pickSlot(SLOTS),chosen=deck[index];const pick=await ctl.turnAndPick(index);const from=await lockStage(root.querySelector<HTMLElement>('.minimal-ritual')!,pick);
+  if(ctl){const deck=startDeck(cards),index=pickSlot(SLOTS),chosen=deck[index];track('draw-done',{mode:'dipper',redraw:true});const pick=await ctl.turnAndPick(index);const from=await lockStage(root.querySelector<HTMLElement>('.minimal-ritual')!,pick);
    const next=dayFromCard(today,data.preferences,old.mood||'',old.intent||'',chosen);next.redraws=used;if(old.review)next.review=old.review;next.ritual='dipper';next.dipper=dipperFacts(ctl.sky,ob);data.days[today]=next;save();ctl.destroy();dipperCtl=null;dipperReplay=false;
    tickFrom=MAX_REDRAWS-(old.redraws||0);render();scrollTo({top:0,behavior:'instant'});redrawPhase='entering';const fresh=root.querySelector<HTMLElement>('.minimal-result');
    if(fresh){holdResult(fresh);await revealCard(fresh,{backHtml:cardBack(),frontHtml:cardImage(cardById(next.cardId)),reversed:next.reversed,from,onPhase:p=>{drawPhase=p}})}
@@ -268,7 +272,7 @@ const bf=root.querySelector<HTMLFormElement>('#birth-form');if(bf)bf.onsubmit=e=
 // 添加到手机桌面：浏览器支持安装提示时直接弹出；不支持（比如 iPhone Safari）就把操作步骤亮出来
 const inst=root.querySelector<HTMLButtonElement>('.install-now');if(inst)inst.onclick=async()=>{const p=(window as Window&{__bip?:Event&{prompt:()=>Promise<void>}}).__bip;if(p){await p.prompt();return}root.querySelector('.install-how')?.classList.add('is-shown');toast('按上面的步骤添加就好。')};
 const ex=root.querySelector<HTMLButtonElement>('.export-data');if(ex)ex.onclick=exportBackup;
-const rem=root.querySelector<HTMLButtonElement>('.add-reminder');if(rem)rem.onclick=()=>{const [h,m]=(root.querySelector<HTMLInputElement>('#reminder-time')?.value||'07:30').split(':').map(Number);try{download(new Blob([buildReminderIcs({hour:h,minute:m,url:`${SITE_URL}/ritual/`,from:new Date()})],{type:'text/calendar;charset=utf-8'}),'daybreak-morning.ics');triggerHaptic('success');toast(`已生成日历文件。打开它，选「添加」，每天 ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')} 提醒你。`)}catch{toast('时间不对，请重新选一下。')}};
+const rem=root.querySelector<HTMLButtonElement>('.add-reminder');if(rem)rem.onclick=()=>{track('reminder-add');const [h,m]=(root.querySelector<HTMLInputElement>('#reminder-time')?.value||'07:30').split(':').map(Number);try{download(new Blob([buildReminderIcs({hour:h,minute:m,url:`${SITE_URL}/ritual/`,from:new Date()})],{type:'text/calendar;charset=utf-8'}),'daybreak-morning.ics');triggerHaptic('success');toast(`已生成日历文件。打开它，选「添加」，每天 ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')} 提醒你。`)}catch{toast('时间不对，请重新选一下。')}};
 root.querySelectorAll<HTMLButtonElement>('.backup-now').forEach(b=>b.onclick=()=>{exportBackup();root.querySelector('.backup-nudge')?.remove()});
 root.querySelectorAll<HTMLButtonElement>('.backup-later').forEach(b=>b.onclick=()=>{writeBackupState(storage,{...readBackupState(storage),...snooze(new Date())});root.querySelector('.backup-nudge')?.remove()});
 const imp=root.querySelector<HTMLInputElement>('#import-data');if(imp)imp.onchange=async()=>{const f=imp.files?.[0];if(!f)return;try{if(f.size>10_000_000)throw Error('文件不能超过 10 MB');const next=validate(JSON.parse(await f.text()));if(confirm('导入会替换当前浏览器中的全部记录与偏好，继续吗？')){data=next;const ok=save();render();toast(ok?'数据已恢复。':error)}}catch(e){toast(e instanceof Error?e.message:'无法导入此文件')}finally{imp.value=''}};

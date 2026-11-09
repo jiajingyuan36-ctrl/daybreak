@@ -1,7 +1,7 @@
 import type {Metadata} from 'next';
 import {pageMeta} from '../../src/meta';
 import {ASKS_PER_DAY} from '../../src/ai-ask';
-import {AI_ENABLED} from '../../src/site';
+import {AI_ENABLED,ANALYTICS_ENABLED} from '../../src/site';
 export const metadata:Metadata=pageMeta('/about/','关于与方法','晨启塔罗怎么抽牌、牌义从哪里来、AI 怎么用、你的记录存在哪里。抽牌只由密码学随机数决定，塔罗在这里不预测未来。');
 // 这页写的是网站真实的做法。改了抽牌（src/random.ts）、提问（server/）、存储（src/storage.ts）的做法，要回来同步这里。
 export default function About(){return <main className="page-shell legal-page about-page"><h1>关于与方法</h1><p className="legal-date">晨启塔罗是怎么做的</p>
@@ -27,7 +27,7 @@ export default function About(){return <main className="page-shell legal-page ab
  <li>回答不符合这些规则，就不会显示给你。我们的服务不保存你的问题和回答。每天最多问 {ASKS_PER_DAY} 次。</li>
 </ul></section>}
 <section><h2>日历和运势</h2><p>农历、节气和八字排盘用开源的 lunar-javascript；月相和日月位置用 Astronomy Engine 按天文公式计算。「今日运势」按传统八字的规则推算，用于娱乐和自我反思，不是对未来的判断。</p></section>
-<section><h2>你的记录</h2><p>用晨启不需要注册。抽牌记录、晚间回望、生辰都只存在你自己的浏览器里，可以在「设置」里导出备份，也可以一键清除。网站不放第三方统计，也没有广告。详细见<a href="/privacy/">隐私说明</a>。</p></section>
+<section><h2>你的记录</h2><p>用晨启不需要注册。抽牌记录、晚间回望、生辰都只存在你自己的浏览器里，可以在「设置」里导出备份，也可以一键清除。{ANALYTICS_ENABLED?'网站用不带 Cookie 的统计看有多少人来、用了哪些功能，不记录你抽到的牌和写的问题；没有广告。':'网站不放第三方统计，也没有广告。'}详细见<a href="/privacy/">隐私说明</a>。</p></section>
 <section><h2>不做什么</h2><ul>
  <li>不预测确定的结果，也不保证某件事会发生。</li>
  <li>不做改运、转运、化解，不卖任何开运物品。</li>

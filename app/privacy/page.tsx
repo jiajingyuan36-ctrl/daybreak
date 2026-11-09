@@ -1,11 +1,12 @@
 import type {Metadata} from 'next';
 import {pageMeta} from '../../src/meta';
-import {AI_ENABLED} from '../../src/site';
+import {AI_ENABLED,ANALYTICS_ENABLED} from '../../src/site';
 export const metadata:Metadata=pageMeta('/privacy/','隐私说明');
 // 按网站当前的真实做法写；推出账号、云同步或付费功能时必须同步更新。
-export default function Privacy(){return <main className="page-shell legal-page"><h1>隐私说明</h1><p className="legal-date">更新于 {AI_ENABLED?'2026 年 11 月 5 日':'2026 年 11 月 2 日'}</p>
+export default function Privacy(){return <main className="page-shell legal-page"><h1>隐私说明</h1><p className="legal-date">更新于 {ANALYTICS_ENABLED?'2026 年 11 月 9 日':AI_ENABLED?'2026 年 11 月 5 日':'2026 年 11 月 2 日'}</p>
 <section><h2>你的记录存在哪里</h2><p>目前使用晨启塔罗不需要注册。你的抽牌记录、晚间回顾、生辰、称呼和外观设置，都只保存在你自己设备的浏览器里，不会上传到我们的服务器，我们也看不到。{AI_ENABLED&&'唯一的例外是你自己点开的「问一个问题」，见下一节。'}</p></section>
 {AI_ENABLED&&<section><h2>「问一个问题」会发送什么</h2><p>只有当你点下「请这张牌回答」时，才会把这三样发出去：你写的那句问题、今天这张牌（牌名和正逆位）、你选的心情。它们先到我们自己的解读服务，再转给第三方 AI 服务 DeepSeek（深度求索）生成回答。不会发送你的称呼、生辰、位置，也不会发送其他日子的记录和回望。</p><p>我们的服务不保存你的问题和回答，只在内存里按网络地址临时记一下提问次数，用来限制每天的次数，重启后就清空。DeepSeek 和 Render 可能按各自的规则留存日志，这一点我们管不了，所以请不要在问题里写真实名字、电话、住址等隐私。回答只保存在你自己的浏览器里，和其他记录一样，可以在「设置」里导出或清除。</p><p>不点这个按钮，就不会发送任何内容。AI 的回答只是帮你换个角度想事，不是预测，也不能代替医生、律师等专业的人。</p></section>}
+{ANALYTICS_ENABLED&&<section><h2>访问统计</h2><p>为了知道网站有没有帮到人、哪里需要改进，我们用 Umami 做访问统计。它不用 Cookie，不保存你的 IP 地址，也不会把你在这里的使用和其他网站联系起来。</p><p>统计的内容是：打开了哪些页面、从哪个网站或平台来、用的是手机还是电脑、大致在哪个国家或城市、页面加载用了多久，以及「抽了一张牌」「问了一个问题」「保存了日签」这类操作发生了几次。</p><p>我们不统计你抽到哪张牌、选的心情、写的问题和得到的回答，也不统计你的生辰和晚间回顾。如果你的浏览器开启了「Do Not Track」（不让网站统计），我们不统计你的任何访问。</p></section>}
 <section><h2>为了打开更快，浏览器会缓存什么</h2><p>第一次打开后，浏览器会把网站本身的页面、牌面图片、字体和脚本缓存下来，下次打开直接读取。这些缓存只是网站的公开文件，不包含你的个人记录。</p></section>
 <section><h2>托管服务商能看到什么</h2><p>网站托管在 Render，经 Cloudflare 分发。和所有网站一样，它们会记录基本的访问日志，比如 IP 地址、浏览器类型和访问时间，用于安全和故障排查。网站用到的字体在发布前已下载到本站，打开网站时不会连接 Google。</p></section>
 <section><h2>通过微信联系我们时</h2><p>提建议和深度解读都在微信上进行，不经过本网站。你在微信里发来的内容，只用于回复你或完成这次解读，不会转给别人，也不会公开。深度解读用微信转账付款，我们只会看到你的微信昵称和转账金额，网站本身不收集任何支付信息。</p></section>

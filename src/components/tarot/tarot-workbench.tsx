@@ -2,6 +2,7 @@
 import {readConsultations,CONSULT_KEY,type Saved} from '../../lib/consultation-history';
 import {useEffect,useRef,useState} from 'react';import {cardAstro,ASTRO_SOURCE_LEAD,ASTRO_SOURCE_LINK,ASTRO_SOURCE_URL} from '../../astro';import {toPng} from 'html-to-image';import {tarotCards,visibleSpreads,findSpread} from '../../lib/tarot-catalog';import {shuffleTarotDeck} from '../../lib/tarot-engine';import {readSpread,understand,suggestSpread,DOMAIN_LABEL,domainToTopic,topicToDomain,type Domain} from '../../lib/reading-engine';import {particles} from '../../particles';import {DeepReadingNote} from '../deep-reading';import {DipperBoard} from './dipper-board';import type {DrawnCard,Topic,TarotCard} from '../../types/tarot';
 import {cardBackSprite} from '../../card-back';
+import {track} from '../../track';
 import {TarotPlate} from './tarot-plate';
 import {EditorialSection} from './editorial-section';
 import {RibbonDeck} from './ribbon-deck';
@@ -30,12 +31,12 @@ function openDetail(card:TarotCard,isReversed=false){setReversedDetail(isReverse
 function closeDetail(){const m=modal.current;if(!m||m.classList.contains('closing'))return;if(matchMedia('(prefers-reduced-motion: reduce)').matches){setSelected(null);return}m.classList.add('closing');setTimeout(()=>{m.classList.remove('closing');setSelected(null)},180)}
 function save(records:Saved[]){setHistory(records);try{localStorage.setItem(CONSULT_KEY,JSON.stringify(records))}catch{setMessage('浏览器存不下这次记录。')}}
 function choose(id:string){spreadTouched.current=true;setSpread(id);setDeck([]);setDrawn([]);setChosen([])}
-async function shuffle(){if(working.current)return;working.current=true;setBusy(true);setDrawn([]);setChosen([]);setMessage('正在洗牌…');try{const d=await shuffleTarotDeck(true);setDeck(d);setShuffleKey(k=>k+1);setMessage('')}catch(e){setMessage(e instanceof Error?e.message:'洗牌失败，请再试一次。')}finally{working.current=false;setBusy(false)}}
+async function shuffle(){if(working.current)return;track('spread-start',{spread:spreadId,again:drawn.length>0});working.current=true;setBusy(true);setDrawn([]);setChosen([]);setMessage('正在洗牌…');try{const d=await shuffleTarotDeck(true);setDeck(d);setShuffleKey(k=>k+1);setMessage('')}catch(e){setMessage(e instanceof Error?e.message:'洗牌失败，请再试一次。')}finally{working.current=false;setBusy(false)}}
 // 牌位都放满、按下「确认牌面」后才一起翻开；单张牌在落进牌位后自动翻开
 function confirm(){if(complete||chosen.length!==spread.positions.length)return;const next=chosen.map((di,k)=>({...deck[di],position:spread.positions[k]}));setDrawn(next);const record:Saved={id:Array.from(crypto.getRandomValues(new Uint32Array(4)),n=>n.toString(16).padStart(8,'0')).join(''),at:new Date().toISOString(),question,topic:domainToTopic(domain),spreadId,cards:next.map(d=>({id:d.card.id,reverse:d.isReversed}))};save([record,...history].slice(0,30))}
 function load(record:Saved){setQuestion(record.question);setDomainPick(topicToDomain(record.topic)??null);setSpread(record.spreadId);setDeck([]);setChosen([]);const s=findSpread(record.spreadId);setDrawn(record.cards.map((v,i)=>({card:tarotCards.find(c=>c.id===v.id)!,isReversed:v.reverse,position:s.positions[i]})));scrollTo({top:0,behavior:'smooth'})}
 function download(blob:Blob,name:string){const a=document.createElement('a');const url=URL.createObjectURL(blob);a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),5000)}
-async function exportPoster(){if(!poster.current)return;setBusy(true);try{await document.fonts.ready;download(await(await fetch(await toPng(poster.current,{pixelRatio:2,backgroundColor:getComputedStyle(document.body).backgroundColor}))).blob(),'DAYBREAK-spread.png');setMessage('图片已保存')}catch{setMessage('图片生成失败，可以用手机截图保存。')}finally{setBusy(false)}}
+async function exportPoster(){if(!poster.current)return;track('spread-poster',{spread:spreadId});setBusy(true);try{await document.fonts.ready;download(await(await fetch(await toPng(poster.current,{pixelRatio:2,backgroundColor:getComputedStyle(document.body).backgroundColor}))).blob(),'DAYBREAK-spread.png');setMessage('图片已保存')}catch{setMessage('图片生成失败，可以用手机截图保存。')}finally{setBusy(false)}}
 const filtered=tarotCards.filter(c=>(suit==='all'||c.suit===suit)&&(element==='all'||c.element===element)&&`${c.name_zh} ${c.name_en} ${c.upright.keywords.join(' ')} ${c.reversed.keywords.join(' ')}`.toLowerCase().includes(query.toLowerCase()));
 const locked=deck.length>0&&!complete;
 return <div className="site-wrap"><main className="page-shell tarot-workbench"><h1>{encyclopedia?'图鉴':'牌阵'}</h1>

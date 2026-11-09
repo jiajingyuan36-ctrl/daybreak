@@ -82,7 +82,7 @@ export function AlmanacDashboard({initialReading}:{initialReading:DailyGravity})
     <h1 className="almanac-keyword">{reading.keyword}</h1>
     <ol className="daily-actions verse">{reading.dos.slice(0,2).map((item,i)=><li key={item.text}><span className="action-no" aria-hidden="true">0{i+1}.</span><span className="verse-line">{item.text}。</span></li>)}</ol>
    </div>
-   {!exporting&&<div className="home-actions"><p className="home-lead">{BRAND_PROMISE}</p><a className="home-cta" href="/ritual/">{MINI_BACK}抽取今日塔罗<span aria-hidden="true">→</span></a><div className="home-minor"><button className="home-ghost" aria-expanded={showFortune} onClick={()=>showFortune?setShowFortune(false):openFortune()}>今日运势</button><span aria-hidden="true">·</span><button className="home-ghost" onClick={download} disabled={busy||reading.date!==date}>{busy?'正在生成':'保存日签'}</button></div></div>}
+   {!exporting&&<div className="home-actions"><p className="home-lead">{BRAND_PROMISE}</p><a className="home-cta" href="/ritual/" data-umami-event="home-draw">{MINI_BACK}抽取今日塔罗<span aria-hidden="true">→</span></a><div className="home-minor"><button className="home-ghost" data-umami-event="fortune-open" aria-expanded={showFortune} onClick={()=>showFortune?setShowFortune(false):openFortune()}>今日运势</button><span aria-hidden="true">·</span><button className="home-ghost" data-umami-event="daycard-save" onClick={download} disabled={busy||reading.date!==date}>{busy?'正在生成':'保存日签'}</button></div></div>}
   </div>
   <p className="export-date">{date} · {BRAND_NAME} · {SITE_HOST}</p>
  </article>:<div className="minimal-loading" role="status">正在读取日期</div>}
