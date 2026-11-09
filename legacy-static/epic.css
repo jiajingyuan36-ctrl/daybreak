@@ -1430,3 +1430,26 @@ dialog.poster-studio::backdrop{
  .result-tools .open-poster::after,dialog.poster-studio[open],dialog.poster-studio[open]::backdrop{animation:none}
  .poster-segment>div::before{transition:none}
 }
+
+/* ===== 新月前后：月面提亮成地照，外加一圈细金线和一句说明（2026-11-09）===== */
+.moon-stage.new-moon .real-moon.shown{filter:brightness(4.2) contrast(1.15) saturate(.6) drop-shadow(0 0 14px rgba(197,165,110,.12))!important}
+html:root[data-theme=light] .moon-stage.new-moon .real-moon.shown{filter:brightness(7) contrast(.85) saturate(.4)!important;opacity:.9}
+.moon-stage .earthshine{color:var(--al-gold,#C5A56E)}
+.moon-note{margin:6px 0 0;font-size:12px;letter-spacing:.24em;color:var(--al-gold,#C5A56E)}
+/* 抽牌按钮里的小牌背，轻轻呼吸 */
+.home-cta .cta-card{flex:none;width:15px;height:24px;margin:0 2px 0 -6px;color:var(--al-gold,#C5A56E);animation:cta-breathe 3.2s ease-in-out infinite}
+html:root[data-theme=light] .home-cta .cta-card rect:first-child{fill:#F4EEE2}
+@keyframes cta-breathe{0%,100%{filter:drop-shadow(0 0 0 rgba(197,165,110,0))}50%{filter:drop-shadow(0 0 5px rgba(197,165,110,.55))}}
+@media (prefers-reduced-motion:reduce){.home-cta .cta-card{animation:none}}
+/* ===== 抽牌页手机首屏：按钮之外，牌堆也要在第一屏 ===== */
+@media(max-width:520px){
+ .minimal-ritual:not(.fan-replay):not(.dipper-mode) .brand-promise{display:none}
+ .minimal-ritual .ritual-date{margin:0 0 8px}
+ .minimal-ritual h1{margin:0 0 14px}
+ .minimal-ritual:not(.fan-replay)>.primary.draw{margin-bottom:12px}
+ .minimal-ritual .ritual-hint{margin:0 0 10px;font-size:13px}
+ .minimal-ritual .mood-row{gap:6px;margin-bottom:10px}
+ .minimal-ritual .mood-chip{padding-top:5px!important;padding-bottom:5px!important}
+ .minimal-ritual .ritual-switch{margin:0 auto 4px}
+ .minimal-ritual .ritual-scene{margin-top:4px!important}
+}

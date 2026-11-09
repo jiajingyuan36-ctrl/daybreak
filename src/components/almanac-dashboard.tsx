@@ -23,6 +23,10 @@ function Reticle({angle}:{angle:number}){const ln={fill:'none',stroke:'currentCo
   <circle {...ln} r="79" strokeWidth=".5" strokeOpacity=".2" strokeDasharray="1 3"/><circle cx={nx} cy={ny} r="6" fill="url(#node-glow)"/><circle cx={nx} cy={ny} r="1.9" fill="currentColor"/></g>}
 function phasePath(light:number){const r=70,rx=Math.max(.001,Math.abs(2*light-1)*r);return `M0 -${r} A${r} ${r} 0 0 1 0 ${r} A${rx} ${r} 0 0 ${light<.5?0:1} 0 -${r}Z`}
 function move(date:string,days:number){const d=dateAtChinaNoon(date);d.setUTCDate(d.getUTCDate()+days);return chinaDateString(d)}
+/** 新月前后几天月面几乎全黑：给出一句说明，月面改画地照轮廓，不让首页看起来像没加载出来 */
+function newMoonNote(illum:number,waxing:boolean,lunarDay:number){if(lunarDay===1)return '今日新月 · 适合重新开始';if(illum>=.06)return '';return waxing?'新月刚过 · 一个新的开始':'新月将至 · 适合收尾'}
+/** 抽牌按钮里的小牌背：一眼看出这里是抽塔罗的地方 */
+const MINI_BACK=<svg className="cta-card" viewBox="0 0 30 48" aria-hidden="true"><rect x=".75" y=".75" width="28.5" height="46.5" rx="1.5" fill="#14121A" stroke="currentColor" strokeWidth="1.2"/><rect x="3.5" y="3.5" width="23" height="41" fill="none" stroke="currentColor" strokeWidth=".5" strokeOpacity=".6"/><circle cx="15" cy="24" r="6.5" fill="none" stroke="currentColor" strokeWidth=".6"/><path d="M15 18.5 L18 24 L15 29.5 L12 24Z" fill="currentColor"/></svg>;
 const PILLARS=[['year','年柱'],['month','月柱'],['day','日柱'],['time','时柱']] as const;
 function FortunePanel({f}:{f:PersonalFortune}){const c=f.chart;return <section className="personal-fortune" aria-labelledby="fortune-title"><p className="fortune-kicker">今日运势 · {f.shiShen}</p><h2 id="fortune-title">{f.title}</h2><p className="fortune-summary">{f.summary}</p>{f.branchNote&&<p className="fortune-note">{f.branchNote}</p>}<dl className="fortune-areas">{f.areas.map(a=><div key={a.name}><dt>{a.name}<span className={`fortune-level level-${a.level==='顺'?'good':a.level==='平'?'even':'care'}`}>{a.level}</span></dt><dd>{a.text}</dd></div>)}</dl><div className="fortune-dos"><p><span>适合</span>{f.doThis}</p><p><span>先别</span>{f.avoid}</p></div><p className="fortune-meta">今日 {f.dayPillar} · 喜神{f.positions.xi} · 财神{f.positions.cai}</p><details className="fortune-chart"><summary>你的八字</summary><div className="pillars">{PILLARS.map(([k,label])=><div key={k}><small>{label}</small><strong>{c.pillars[k]??'—'}</strong></div>)}</div><p>{f.why}</p><p>日主 {c.dayMaster}（{c.dayMasterElement}） · 生肖{c.shengXiao}{c.hourKnown?'':' · 未填出生时间，时柱不排'}</p><p>五行 {Object.entries(c.elements).map(([e,n])=>`${e}${n}`).join(' ')}</p></details><p className="fortune-basis">{f.basis} <a href="/settings/">修改生辰</a></p></section>}
 export function AlmanacDashboard({initialReading}:{initialReading:DailyGravity}){
@@ -63,15 +67,16 @@ export function AlmanacDashboard({initialReading}:{initialReading:DailyGravity})
  // 极简版式：左栏只有月相星盘和一行「农历 · 月相 · 节气」；右栏三层——刊头日期、每日关键词与两条晨间行动、一主两辅的操作。
  // 日期只在刊头出现一次；底部「日期 · 晨启塔罗 · 网址」只在保存日签的图片里出现。
  const lunarDay=a?a.lunar.label.split(/\s+/).pop():'';
+ const moonNote=a?newMoonNote(a.moon.illumination,a.moon.waxing,a.lunar.day):'';
  return <main className="page-shell minimal-calendar editorial-home">
  <section className="home-intro" aria-label={BRAND_NAME}>
   <p>{BRAND_PROMISE}</p>
-  <a className="home-cta" href="/ritual/"><span aria-hidden="true">✦</span>抽取今日塔罗<span aria-hidden="true">→</span></a>
+  <a className="home-cta" href="/ritual/">{MINI_BACK}抽取今日塔罗<span aria-hidden="true">→</span></a>
  </section>
  {reading&&a&&at?<article ref={sheet} className={`daily-inscription almanac-grid${exporting?' exporting':''}`}>
   <div className="almanac-sky">
-   <div className={`moon-stage${textured?' textured':''}`}><svg className="minimal-moon" viewBox="-120 -120 240 240" role="img" aria-label={`${a.moon.name}，照明${Math.round(a.moon.illuminationPercent)}%`}><Reticle angle={a.moon.angle}/><circle className="moon-phase" r="70" fill="currentColor" opacity=".12"/><path className="moon-phase" d={phasePath(a.moon.illumination)} fill="currentColor" transform={a.moon.waxing?'':'scale(-1 1)'}/></svg><RealMoon at={at} elongation={a.moon.angle} onReady={setTextured}/></div>
-   <div className="almanac-plaque" ref={fadeLeft}><p className="calendar-caption" title={`${a.solarTerms.upcoming.name}在${a.solarTerms.calendarDaysRemaining}天后`}>农历{lunarDay} · {a.moon.name} · {a.solarTerms.current.name}</p></div>
+   <div className={`moon-stage${textured?' textured':''}${moonNote?' new-moon':''}`}><svg className="minimal-moon" viewBox="-120 -120 240 240" role="img" aria-label={`${a.moon.name}，照明${Math.round(a.moon.illuminationPercent)}%`}><Reticle angle={a.moon.angle}/><circle className="moon-phase" r="70" fill="currentColor" opacity=".12"/>{moonNote&&<circle className="earthshine" r="70" fill="none" stroke="currentColor" strokeWidth=".8" strokeOpacity=".5"/>}<path className="moon-phase" d={phasePath(a.moon.illumination)} fill="currentColor" transform={a.moon.waxing?'':'scale(-1 1)'}/></svg><RealMoon at={at} elongation={a.moon.angle} onReady={setTextured}/></div>
+   <div className="almanac-plaque" ref={fadeLeft}><p className="calendar-caption" title={`${a.solarTerms.upcoming.name}在${a.solarTerms.calendarDaysRemaining}天后`}>农历{lunarDay} · {a.moon.name} · {a.solarTerms.current.name}</p>{moonNote&&<p className="moon-note">{moonNote}</p>}</div>
   </div>
   <div className="almanac-text">
    <div className="dateline-row">
