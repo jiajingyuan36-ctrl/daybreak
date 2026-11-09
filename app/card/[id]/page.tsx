@@ -1,6 +1,7 @@
 import type {Metadata} from 'next';
 import {notFound} from 'next/navigation';
 import {pageMeta} from '../../../src/meta';
+import {SITE_URL} from '../../../src/site';
 import {cards} from '../../../src/cards';
 import {knowledgeById} from '../../../src/knowledge';
 import {cardAstro,ASTRO_SOURCE_LEAD,ASTRO_SOURCE_LINK,ASTRO_SOURCE_URL} from '../../../src/astro';
@@ -16,7 +17,8 @@ const find=(id:string)=>cards.find(c=>c.id===id);
 const textGlyph=(s:string)=>s.replace(/([\u2648-\u2653])/g,'$1\uFE0E');
 const short=(s:string,n=110)=>[...s].length>n?[...s].slice(0,n-1).join('')+'…':s;
 export async function generateMetadata({params}:{params:Promise<{id:string}>}):Promise<Metadata>{const {id}=await params;const c=find(id);if(!c)return {};
- return pageMeta(`/card/${c.id}/`,`${c.nameZh}（${c.nameEn}）正位与逆位含义`,short(`${c.nameZh}：${c.plainIntro}`))}
+ // 每张牌自己的分享图由 scripts/build-card-og.mjs 生成在 public/og/cards/
+ return pageMeta(`/card/${c.id}/`,`${c.nameZh}（${c.nameEn}）正位与逆位含义`,short(`${c.nameZh}：${c.plainIntro}`),{url:`${SITE_URL}/og/cards/${c.id}.jpg`,width:1200,height:630,alt:`${c.nameZh}（${c.nameEn}）· 今天，你会抽到哪一张？`})}
 export default async function CardPage({params}:{params:Promise<{id:string}>}){const {id}=await params;const c=find(id);if(!c)notFound();
  const k=knowledgeById(c.id),astro=cardAstro(c.id),i=cards.indexOf(c),prev=cards[(i+77)%78],next=cards[(i+1)%78];
  const group=c.arcanaType==='major'?`大阿卡纳 · ${String(c.number).padStart(2,'0')}`:`小阿卡纳 · ${c.suit}`;

@@ -5,13 +5,15 @@ import {BRAND_NAME,BRAND_TITLE,BRAND_PROMISE,SITE_DESCRIPTION,SITE_SHARE_IMAGE} 
 // 每页保留自己的分享标题和链接，共用品牌封面。
 const OG_IMAGE={url:SITE_SHARE_IMAGE,width:1200,height:630,alt:`${BRAND_TITLE}。${BRAND_PROMISE}`};
 /** path 写成以 / 结尾的站内路径，如 '/zodiac/'；title 不带品牌名（模板会自动加“ · 晨启塔罗”）。 */
-export function pageMeta(path:string,title:string|null,description:string=SITE_DESCRIPTION):Metadata{
+type ShareImage={url:string;width:number;height:number;alt:string};
+/** image：这一页自己的分享预览图（比如每张牌一张）；不传就用全站统一的那张 */
+export function pageMeta(path:string,title:string|null,description:string=SITE_DESCRIPTION,image:ShareImage=OG_IMAGE):Metadata{
  const full=title?`${title} · ${BRAND_NAME}`:`${BRAND_TITLE}｜${BRAND_PROMISE}`;
  return {
   title:title??{absolute:`${BRAND_TITLE}｜每日塔罗抽牌`},
   description,
   alternates:{canonical:path},
-  openGraph:{type:'website',url:path,siteName:BRAND_TITLE,title:full,description,locale:'zh_CN',images:[OG_IMAGE]},
-  twitter:{card:'summary_large_image',title:full,description,images:[OG_IMAGE.url]},
+  openGraph:{type:'website',url:path,siteName:BRAND_TITLE,title:full,description,locale:'zh_CN',images:[image]},
+  twitter:{card:'summary_large_image',title:full,description,images:[image.url]},
  };
 }

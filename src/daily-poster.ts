@@ -14,7 +14,7 @@ const PALETTES = {
  night: {bg:'#0F0F11',ink:'#F4EFE6',muted:'#C8C4BC',gold:'#D4AF37',rule:'#C5A059',grain:.028,ticket:'rgba(212,175,55,.05)',grade:[.16,.76,1.08,.93],vignette:.58},
  plaster: {bg:'#F4EFE6',ink:'#141413',muted:'#3D3A35',gold:'#8C621E',rule:'#8C621E',grain:.032,ticket:'rgba(140,98,30,.055)',grade:[.12,.82,1.05,.98],vignette:.26},
 } as const;
-export const POSTER_DRAW_URL=`${SITE_URL}/ritual/`;
+export const POSTER_DRAW_URL=`${SITE_URL}/ritual/?from=poster`;
 export type PosterOptions = {format:keyof typeof POSTER_SIZES;theme:keyof typeof PALETTES;layout:'share'|'journal';qr:boolean;domain:boolean;reflection:boolean};
 const SCALE=3;
 const NO_START=/^[、。，？！：；）》」…\uFF0E\uFF3D\uFF5D\u3009\u300F\u3011\u3015,.!?;:%)\]}]/u;
