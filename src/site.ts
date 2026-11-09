@@ -13,7 +13,7 @@ export const AI_API='https://daybreak-ai.onrender.com';
 export const AI_ENABLED=true;
 // 访问统计（Umami Cloud 免费版，不用 Cookie）：填上网站 ID 就开启，留空就完全不加载。
 // 网站 ID 不是密钥，可以公开；在 cloud.umami.is 添加网站后，从网站设置里复制。
-export const UMAMI_WEBSITE_ID='';
+export const UMAMI_WEBSITE_ID='7a463ba2-3c1f-4157-9a74-4ff21f364f9d';
 export const ANALYTICS_ENABLED=UMAMI_WEBSITE_ID.length>0;
 /** 经营者的微信号：深度解读和提建议都用它。不要换成手机号。 */
 export const WECHAT='YJJ_080922';
