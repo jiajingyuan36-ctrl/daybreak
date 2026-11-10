@@ -1,0 +1,15 @@
+# 提问后端在 Render 免费实例上，闲置 15 分钟会休眠，第一次提问要多等十几秒。
+# 每 10 分钟访问一次 /health 让它保持醒着（公开仓库的 Actions 免费）。
+# 网页打开抽牌页时也会先唤醒一次（src/app.ts 的 warmUp），这里补上没人访问的时段。
+name: keep-ai-warm
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+permissions: {}
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - run: curl -sS --max-time 60 --retry 2 https://daybreak-ai.onrender.com/health
