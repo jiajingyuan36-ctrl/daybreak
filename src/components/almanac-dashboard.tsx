@@ -1,11 +1,14 @@
 'use client';
-import {useEffect,useRef,useState} from 'react';
+import {useEffect,useRef,useState,type FormEvent} from 'react';
 import {chinaDateString,dateAtChinaNoon} from '../lib/china-date';
 import type {DailyGravity} from '../lib/almanac-engine';
 import type {PersonalFortune} from '../lib/bazi-fortune';
 import {RealMoon} from './real-moon';
 import {saveBirth} from '../lib/birth-store';
-import {BRAND_NAME,BRAND_PROMISE,SITE_HOST} from '../site';
+import {BRAND_NAME,BRAND_PROMISE,SITE_HOST,AI_ENABLED} from '../site';
+import {checkQuestion,ASK_MAX} from '../ai-ask';
+import {setPendingAsk} from '../pending-ask';
+import {track} from '../track';
 import {validBirth} from '../fortune';
 /** 还没有生辰时，直接在日历页填写；选好日期立即保存并显示运势，之后这台设备不用再填。 */
 function BirthInline({onSaved}:{onSaved:(date:string,time:string)=>void}){const [time,setTime]=useState('');const [date,setDate]=useState('');const [hint,setHint]=useState('');
@@ -27,6 +30,10 @@ function move(date:string,days:number){const d=dateAtChinaNoon(date);d.setUTCDat
 function newMoonNote(illum:number,waxing:boolean,lunarDay:number){if(lunarDay===1)return '今日新月 · 适合重新开始';if(illum>=.06)return '';return waxing?'新月刚过 · 一个新的开始':'新月将至 · 适合收尾'}
 /** 抽牌按钮里的小牌背：一眼看出这里是抽塔罗的地方 */
 const MINI_BACK=<svg className="cta-card" viewBox="0 0 30 48" aria-hidden="true"><rect x=".75" y=".75" width="28.5" height="46.5" rx="1.5" fill="#14121A" stroke="currentColor" strokeWidth="1.2"/><rect x="3.5" y="3.5" width="23" height="41" fill="none" stroke="currentColor" strokeWidth=".5" strokeOpacity=".6"/><circle cx="15" cy="24" r="6.5" fill="none" stroke="currentColor" strokeWidth=".6"/><path d="M15 18.5 L18 24 L15 29.5 L12 24Z" fill="currentColor"/></svg>;
+/** 首页的提问入口：写下问题，去抽牌页抽一张，抽完自动请这张牌回答。问题不进网址，也不进访问统计。 */
+function AskEntry(){const [q,setQ]=useState(''),[hint,setHint]=useState('');
+ function submit(e:FormEvent){e.preventDefault();const bad=checkQuestion(q);if(bad){setHint(bad);return}setPendingAsk(q);track('home-ask');location.href='/ritual/'}
+ return <form className="home-ask" onSubmit={submit} autoComplete="off"><label htmlFor="home-ask-q">或者，带着一个问题来</label><div className="home-ask-row"><input id="home-ask-q" maxLength={ASK_MAX} value={q} onChange={e=>{setQ(e.target.value);setHint('')}} placeholder="比如：这周要不要跟他把话说开？"/><button type="submit" aria-label="抽一张牌来回答">问<span aria-hidden="true">→</span></button></div><p className="home-ask-hint" role="status">{hint||'抽一张牌，AI 从牌义出发给你一个角度。问题会发给 AI 服务（DeepSeek），别写真实名字。'}</p></form>}
 const PILLARS=[['year','年柱'],['month','月柱'],['day','日柱'],['time','时柱']] as const;
 function FortunePanel({f}:{f:PersonalFortune}){const c=f.chart;return <section className="personal-fortune" aria-labelledby="fortune-title"><p className="fortune-kicker">今日运势 · {f.shiShen}</p><h2 id="fortune-title">{f.title}</h2><p className="fortune-summary">{f.summary}</p>{f.branchNote&&<p className="fortune-note">{f.branchNote}</p>}<dl className="fortune-areas">{f.areas.map(a=><div key={a.name}><dt>{a.name}<span className={`fortune-level level-${a.level==='顺'?'good':a.level==='平'?'even':'care'}`}>{a.level}</span></dt><dd>{a.text}</dd></div>)}</dl><div className="fortune-dos"><p><span>适合</span>{f.doThis}</p><p><span>先别</span>{f.avoid}</p></div><p className="fortune-meta">今日 {f.dayPillar} · 喜神{f.positions.xi} · 财神{f.positions.cai}</p><details className="fortune-chart"><summary>你的八字</summary><div className="pillars">{PILLARS.map(([k,label])=><div key={k}><small>{label}</small><strong>{c.pillars[k]??'—'}</strong></div>)}</div><p>{f.why}</p><p>日主 {c.dayMaster}（{c.dayMasterElement}） · 生肖{c.shengXiao}{c.hourKnown?'':' · 未填出生时间，时柱不排'}</p><p>五行 {Object.entries(c.elements).map(([e,n])=>`${e}${n}`).join(' ')}</p></details><p className="fortune-basis">{f.basis} <a href="/settings/">修改生辰</a></p></section>}
 export function AlmanacDashboard({initialReading}:{initialReading:DailyGravity}){
@@ -82,7 +89,7 @@ export function AlmanacDashboard({initialReading}:{initialReading:DailyGravity})
     <h1 className="almanac-keyword">{reading.keyword}</h1>
     <ol className="daily-actions verse">{reading.dos.slice(0,2).map((item,i)=><li key={item.text}><span className="action-no" aria-hidden="true">0{i+1}.</span><span className="verse-line">{item.text}。</span></li>)}</ol>
    </div>
-   {!exporting&&<div className="home-actions"><p className="home-lead">{BRAND_PROMISE}</p><a className="home-cta" href="/ritual/" data-umami-event="home-draw">{MINI_BACK}抽取今日塔罗<span aria-hidden="true">→</span></a><div className="home-minor"><button className="home-ghost" data-umami-event="fortune-open" aria-expanded={showFortune} onClick={()=>showFortune?setShowFortune(false):openFortune()}>今日运势</button><span aria-hidden="true">·</span><button className="home-ghost" data-umami-event="daycard-save" onClick={download} disabled={busy||reading.date!==date}>{busy?'正在生成':'保存日签'}</button></div></div>}
+   {!exporting&&<div className="home-actions"><p className="home-lead">{BRAND_PROMISE}</p><a className="home-cta" href="/ritual/" data-umami-event="home-draw">{MINI_BACK}抽取今日塔罗<span aria-hidden="true">→</span></a>{AI_ENABLED&&<AskEntry/>}<div className="home-minor"><button className="home-ghost" data-umami-event="fortune-open" aria-expanded={showFortune} onClick={()=>showFortune?setShowFortune(false):openFortune()}>今日运势</button><span aria-hidden="true">·</span><button className="home-ghost" data-umami-event="daycard-save" onClick={download} disabled={busy||reading.date!==date}>{busy?'正在生成':'保存日签'}</button></div></div>}
   </div>
   <p className="export-date">{date} · {BRAND_NAME} · {SITE_HOST}</p>
  </article>:<div className="minimal-loading" role="status">正在读取日期</div>}

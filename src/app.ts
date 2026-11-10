@@ -9,7 +9,7 @@ import {monthSummary,shiftMonth} from './insights.ts';
 import {particles} from './particles.ts';
 
 import {lockStage,holdResult,exitResult,revealCard,reducedMotion,type DrawPhase} from './draw-motion.ts';import {guardCardImages} from './card-img.ts';
-import {moods} from './engine.ts';import {moodLead} from './mood-copy.ts';import {buildReminderIcs} from './reminder.ts';import {shouldRemindBackup,snooze,readBackupState,writeBackupState} from './backup-reminder.ts';import {SITE_URL,AI_ENABLED} from './site.ts';import {askCard,checkQuestion,warmUp,ASKS_PER_DAY,ASK_MAX} from './ai-ask.ts';import {pastDraws,noteExcerpt,shortDate} from './card-history.ts';
+import {moods} from './engine.ts';import {moodLead} from './mood-copy.ts';import {buildReminderIcs} from './reminder.ts';import {shouldRemindBackup,snooze,readBackupState,writeBackupState} from './backup-reminder.ts';import {SITE_URL,AI_ENABLED} from './site.ts';import {askCard,checkQuestion,warmUp,ASKS_PER_DAY,ASK_MAX} from './ai-ask.ts';import {peekPendingAsk,clearPendingAsk} from './pending-ask.ts';import {pastDraws,noteExcerpt,shortDate} from './card-history.ts';
 import type {ParticleHandle} from './particles.ts';
 import type {Day,Preferences} from './types.ts';
 import {cards,cardById,roman} from './cards.ts';import {shuffleDeck,cutDeck,randomInteger} from './random.ts';import {cardAstro,sunSign,moonSign,birthSign,resonance,ASTRO_SOURCE_LEAD,ASTRO_SOURCE_LINK,ASTRO_SOURCE_URL} from './astro.ts';import {art,cardImage,cardBack} from './art.ts';import {triggerHaptic,busyButton} from './tactile.ts';import {glassSelect} from './popover.ts';import {localDate,ensureDay,draw,dayFromCard} from './engine.ts';import {read,write,fresh,defaults,validate} from './storage.ts';import {download,shareCard,dipperShareCard} from './share.ts';import {mountDipper,SLOTS,type DipperRitual} from './dipper-ritual.ts';import {startDeck,cutForStar,pickSlot} from './lib/dipper-draw.ts';import {defaultObserver,bearingLabel,type DipperSky} from './lib/dipper.ts';
@@ -54,7 +54,7 @@ const ritualSwitch=()=>`<div class="ritual-switch" role="group" aria-label="抽�
 const moodRow=()=>`<div class="mood-row" role="group" aria-label="此刻的心情（可不选）">${moods.map(m=>`<button class="mood-chip${m===mood?' on':''}" data-mood="${m}">${m}</button>`).join('')}</div>`;
 const quickDrawButton=drawButton();
 // 北斗方式：第一眼就是星空，心情放到星空下面
-function dipperHome(replay=false){return `<section class="minimal-ritual dipper-mode"><p class="ritual-date">${today}</p><h1>今日塔罗</h1>${replay?'':PROMISE+quickDrawButton+ritualSwitch()}<div class="dipper-ritual"${replay?' data-lit="1"':''}></div>${replay?'':`<p class="ritual-hint dipper-mood-hint">点亮之前，想一想今天最在意的一件事。此刻的心情（可不选）</p>${moodRow()}`}</section>`}
+function dipperHome(replay=false){return `<section class="minimal-ritual dipper-mode"><p class="ritual-date">${today}</p><h1>今日塔罗</h1>${replay?'':(pendingAsk?pendingBanner():PROMISE)+quickDrawButton+ritualSwitch()}<div class="dipper-ritual"${replay?' data-lit="1"':''}></div>${replay?'':`<p class="ritual-hint dipper-mood-hint">点亮之前，想一想今天最在意的一件事。此刻的心情（可不选）</p>${moodRow()}`}</section>`}
 const wait=(ms:number)=>new Promise<void>(r=>setTimeout(r,ms));
 const motionOff=reducedMotion;
 /** 剩余次数的数字翻动：换一张后从旧数字翻到新数字。 */
@@ -62,7 +62,7 @@ function ticker(n:number){return tickFrom===null||tickFrom===n?`${n}`:`<span cla
 function render(){shareStudio?.closeShareStudio();syncTheme();ambient?.stop();root.innerHTML=header()+`${error?`<aside role="alert" class="error">${esc(error)}</aside>`:''}<main>${route()==='settings'?settings():route()==='history'?journal():home()}</main>`+footer();bind();guardCardImages(root);ambient=particles(root.querySelector('.minimal-result .tarot'),'ambient');}
 function home(){const day=data.days[today];if(dipperReplay)return dipperHome(true);if(fanReplay)return fanHome(true);if(!day&&ritualMode()==='dipper')return dipperHome();return day?reading(day):fanHome()}
 /** 牌扇方式；replay 为真时是“换一张”：不再选心情、不显示切换，多一个“保留原来那张” */
-function fanHome(replay=false){return `<section class="minimal-ritual${replay?' fan-replay':''}"><p class="ritual-eyebrow" aria-hidden="true"><span>MORNING RITUAL</span><i></i><span>${today}</span></p><p class="ritual-date">${today}</p><h1>${replay?'换一张':'今日塔罗'}</h1>${replay?'':PROMISE+quickDrawButton}<p class="ritual-hint">${replay?'重新洗一次牌，再从牌扇里选一张':'先深呼吸，想一想今天最在意的一件事'}</p>${replay?'':`<div class="mood-row" role="group" aria-label="此刻的心情（可不选）">${moods.map(m=>`<button class="mood-chip${m===mood?' on':''}" data-mood="${m}">${m}</button>`).join('')}</div>${ritualSwitch()}`}<div class="card-scene ritual-scene" data-stage="shuffle"><div class="ritual-aura" aria-hidden="true"><span class="ritual-glow"></span><svg class="ritual-orbit" viewBox="-100 -100 200 200"><circle r="96" stroke-dasharray="0.6 7"/><circle r="78" stroke-dasharray="14 4 0.6 4"/><circle r="60" stroke-dasharray="0.6 11"/><circle r="2" cx="0" cy="-96" class="orbit-star"/><circle r="1.4" cx="0" cy="78" class="orbit-star"/></svg></div><div class="deck-pile" role="button" tabindex="0" aria-label="按住洗牌"><svg class="shuffle-ring" viewBox="0 0 100 100" aria-hidden="true"><path class="ring-track" d="M-20 80A70 70 0 0 1 120 80"/><path class="ring-fill" d="M-20 80A70 70 0 0 1 120 80" pathLength="100"/><circle class="ring-sun" r="2.2" cx="-20" cy="80"/></svg>${Array.from({length:5},(_,j)=>`<div class="pile-card" style="--j:${j}">${cardBack()}</div>`).join('')}<span class="cut-flash" aria-hidden="true"></span></div><div class="deck-fan">${Array.from({length:13},(_,i)=>`<button class="fan-card draw-pick" style="--i:${i}" aria-label="选这一张">${cardBack()}</button>`).join('')}</div><div class="tarot face-down chosen-card" aria-hidden="true">${cardBack()}</div></div><p class="pick-hint" aria-live="polite">${STAGE_HINT.shuffle}</p>${replay?quickDrawButton+'<button type="button" class="text-button keep-card">保留原来那张</button>':''}</section>`}
+function fanHome(replay=false){return `<section class="minimal-ritual${replay?' fan-replay':''}"><p class="ritual-eyebrow" aria-hidden="true"><span>MORNING RITUAL</span><i></i><span>${today}</span></p><p class="ritual-date">${today}</p><h1>${replay?'换一张':'今日塔罗'}</h1>${replay?'':(pendingAsk?pendingBanner():PROMISE)+quickDrawButton}<p class="ritual-hint">${replay?'重新洗一次牌，再从牌扇里选一张':'先深呼吸，想一想今天最在意的一件事'}</p>${replay?'':`<div class="mood-row" role="group" aria-label="此刻的心情（可不选）">${moods.map(m=>`<button class="mood-chip${m===mood?' on':''}" data-mood="${m}">${m}</button>`).join('')}</div>${ritualSwitch()}`}<div class="card-scene ritual-scene" data-stage="shuffle"><div class="ritual-aura" aria-hidden="true"><span class="ritual-glow"></span><svg class="ritual-orbit" viewBox="-100 -100 200 200"><circle r="96" stroke-dasharray="0.6 7"/><circle r="78" stroke-dasharray="14 4 0.6 4"/><circle r="60" stroke-dasharray="0.6 11"/><circle r="2" cx="0" cy="-96" class="orbit-star"/><circle r="1.4" cx="0" cy="78" class="orbit-star"/></svg></div><div class="deck-pile" role="button" tabindex="0" aria-label="按住洗牌"><svg class="shuffle-ring" viewBox="0 0 100 100" aria-hidden="true"><path class="ring-track" d="M-20 80A70 70 0 0 1 120 80"/><path class="ring-fill" d="M-20 80A70 70 0 0 1 120 80" pathLength="100"/><circle class="ring-sun" r="2.2" cx="-20" cy="80"/></svg>${Array.from({length:5},(_,j)=>`<div class="pile-card" style="--j:${j}">${cardBack()}</div>`).join('')}<span class="cut-flash" aria-hidden="true"></span></div><div class="deck-fan">${Array.from({length:13},(_,i)=>`<button class="fan-card draw-pick" style="--i:${i}" aria-label="选这一张">${cardBack()}</button>`).join('')}</div><div class="tarot face-down chosen-card" aria-hidden="true">${cardBack()}</div></div><p class="pick-hint" aria-live="polite">${STAGE_HINT.shuffle}</p>${replay?quickDrawButton+'<button type="button" class="text-button keep-card">保留原来那张</button>':''}</section>`}
 const STAGE_HINT={shuffle:'按住牌堆，等晨光走满这道弧',cut:'轻划或点击牌堆，把牌切开',pick:'指尖划过牌扇，停在哪张就是哪张'};
 
 function editorialSection(number:number,title:string,content:string,className=''){
@@ -148,10 +148,13 @@ async function dipperDraw(deck:ReturnType<typeof startDeck<(typeof cards)[number
  render();scrollTo({top:0,behavior:'instant'});const result=root.querySelector<HTMLElement>('.minimal-result');
  if(result){holdResult(result);await revealCard(result,{backHtml:cardBack(),frontHtml:cardImage(cardById(d.cardId)),reversed:d.reversed,from,onPhase:p=>{drawPhase=p}})}
  drawPhase='idle';revealing=false}
-let asking=false;
+let asking=false,viaHome=false;
+/** 从首页带来的问题：抽牌页顶部显示，抽完（或今天已经抽过）就自动请这张牌回答 */
+let pendingAsk=AI_ENABLED?peekPendingAsk():'';
+const pendingBanner=()=>pendingAsk?`<div class="pending-ask"><p class="pending-ask-k">你的问题</p><p class="pending-ask-q">「${esc(pendingAsk)}」</p><p class="pending-ask-h">抽完会把问题和这张牌发给 AI（DeepSeek）回答你</p></div>`:'';
 /** 「问一个问题」的绑定：提交 → 等回答（可能要等免费服务器醒来）→ 存本机 → 只换这一块，不整页重画 */
 function bindAsk(){if(AI_ENABLED&&root.querySelector('.ask-card'))warmUp();
- const form=root.querySelector<HTMLFormElement>('.ask-form');if(!form)return;
+ const form=root.querySelector<HTMLFormElement>('.ask-form');if(!form){if(pendingAsk&&data.days[today]){pendingAsk='';clearPendingAsk()}return}
  const input=form.querySelector<HTMLInputElement>('input[name=q]')!,btn=form.querySelector<HTMLButtonElement>('.ask-send')!,status=root.querySelector<HTMLElement>('.ask-status')!;
  form.onsubmit=async e=>{e.preventDefault();if(asking)return;const day=data.days[today];if(!day)return;
   const q=input.value.trim(),bad=checkQuestion(q);if(bad){status.textContent=bad;return}
@@ -159,13 +162,14 @@ function bindAsk(){if(AI_ENABLED&&root.querySelector('.ask-card'))warmUp();
   const slow=setTimeout(()=>{status.textContent='还在连接，服务刚醒，再等一会儿…'},8000);
   const r=await askCard({cardId:day.cardId,reversed:day.reversed,mood:day.mood||'',question:q});
   clearTimeout(slow);asking=false;
-  track('ask',{result:r.ok?(r.crisis?'care':'answered'):'failed'});
+  track('ask',{result:r.ok?(r.crisis?'care':'answered'):'failed',via:viaHome?'home':'result'});viaHome=false;
   if(!r.ok){btn.disabled=false;input.readOnly=false;status.textContent=r.message;return}
   day.asks=[...(day.asks||[]),{q,a:r.answer,at:new Date().toISOString(),...(r.crisis?{crisis:true}:{})}].slice(-10);
   if(!save())toast(error);triggerHaptic('success');
   root.querySelector('.ask-card')!.outerHTML=askBlock(day);bindAsk();
   const items=root.querySelectorAll<HTMLElement>('.ask-item');
-  if(!motionOff())items[items.length-1]?.animate([{opacity:0,transform:'translateY(8px)',filter:'blur(2px)'},{opacity:1,transform:'none',filter:'blur(0)'}],{duration:420,easing:'cubic-bezier(.22,1,.36,1)'})}}
+  if(!motionOff())items[items.length-1]?.animate([{opacity:0,transform:'translateY(8px)',filter:'blur(2px)'},{opacity:1,transform:'none',filter:'blur(0)'}],{duration:420,easing:'cubic-bezier(.22,1,.36,1)'})}
+ if(pendingAsk&&data.days[today]){input.value=pendingAsk;pendingAsk='';clearPendingAsk();viaHome=true;form.requestSubmit();setTimeout(()=>root.querySelector('.ask-card')?.scrollIntoView({behavior:motionOff()?'auto':'smooth',block:'start'}),motionOff()?0:1400)}}
 function bind(){bindDipper();bindAsk();const tm=root.querySelector<HTMLSelectElement>('#theme-mode');if(tm)tm.onchange=()=>{data.preferences.themeMode=tm.value as 'auto'|'dark'|'light';save();window.dispatchEvent(new CustomEvent('daybreak-theme',{detail:tm.value}));render()};root.querySelectorAll<HTMLAnchorElement>('a[href="/ritual/"],a[href="/history"],a[href="/settings"]').forEach(a=>a.onclick=e=>{e.preventDefault();go(a.pathname)});
 // 抽牌仪式：选中的牌升到中间，细碎的金属光尘随呼吸绕着它收拢，再揭开；揭开后光尘从牌边慢慢散去。
 // 先洗好完整的 78 张牌；牌扇展示顶端 13 张，选中的位置对应真实牌位。
