@@ -10,7 +10,7 @@ type ShareImage={url:string;width:number;height:number;alt:string};
 export function pageMeta(path:string,title:string|null,description:string=SITE_DESCRIPTION,image:ShareImage=OG_IMAGE):Metadata{
  const full=title?`${title} · ${BRAND_NAME}`:`${BRAND_TITLE}｜${BRAND_PROMISE}`;
  return {
-  title:title??{absolute:`${BRAND_TITLE}｜每日塔罗抽牌`},
+  title:title??{absolute:`${BRAND_TITLE}｜免费塔罗抽牌 · AI 解读你的问题`},
   description,
   alternates:{canonical:path},
   openGraph:{type:'website',url:path,siteName:BRAND_TITLE,title:full,description,locale:'zh_CN',images:[image]},

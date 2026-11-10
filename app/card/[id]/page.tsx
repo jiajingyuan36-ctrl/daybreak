@@ -18,7 +18,8 @@ const textGlyph=(s:string)=>s.replace(/([\u2648-\u2653])/g,'$1\uFE0E');
 const short=(s:string,n=110)=>[...s].length>n?[...s].slice(0,n-1).join('')+'…':s;
 export async function generateMetadata({params}:{params:Promise<{id:string}>}):Promise<Metadata>{const {id}=await params;const c=find(id);if(!c)return {};
  // 每张牌自己的分享图由 scripts/build-card-og.mjs 生成在 public/og/cards/
- return pageMeta(`/card/${c.id}/`,`${c.nameZh}（${c.nameEn}）正位与逆位含义`,short(`${c.nameZh}：${c.plainIntro}`),{url:`${SITE_URL}/og/cards/${c.id}.jpg`,width:1200,height:630,alt:`${c.nameZh}（${c.nameEn}）· 今天，你会抽到哪一张？`})}
+ // 标题按大家实际会搜的写法：「恋人牌含义」「恋人牌逆位 爱情」
+ return pageMeta(`/card/${c.id}/`,`${c.nameZh}牌含义：正位逆位、爱情与事业解读（${c.nameEn}）`,short(`${c.nameZh}牌正位：${c.keywordsUpright.join('、')}；逆位：${c.keywordsReversed.join('、')}。${c.plainIntro}`,140),{url:`${SITE_URL}/og/cards/${c.id}.jpg`,width:1200,height:630,alt:`${c.nameZh}（${c.nameEn}）· 今天，你会抽到哪一张？`})}
 export default async function CardPage({params}:{params:Promise<{id:string}>}){const {id}=await params;const c=find(id);if(!c)notFound();
  const k=knowledgeById(c.id),astro=cardAstro(c.id),i=cards.indexOf(c),prev=cards[(i+77)%78],next=cards[(i+1)%78];
  const group=c.arcanaType==='major'?`大阿卡纳 · ${String(c.number).padStart(2,'0')}`:`小阿卡纳 · ${c.suit}`;

@@ -17,7 +17,7 @@ const prose=Cormorant_Garamond({subsets:['latin'],weight:['400','500','600'],sty
 export const metadata:Metadata={
  ...pageMeta('/',null),
  metadataBase:new URL(SITE_URL),
- title:{default:`${BRAND_TITLE}｜每日塔罗抽牌`,template:`%s · ${BRAND_NAME}`},
+ title:{default:`${BRAND_TITLE}｜免费塔罗抽牌 · AI 解读你的问题`,template:`%s · ${BRAND_NAME}`},
  icons:{icon:'/icon.svg',apple:'/icon-180.png'},
  manifest:'/manifest.webmanifest',
  appleWebApp:{capable:true,title:BRAND_NAME,statusBarStyle:'black-translucent'},

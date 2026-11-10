@@ -34,4 +34,4 @@ export const DEEP_READING={
  ],
  refund:['付款后、开始解读前，可以全额退款。','解读交付后不退款。','如果因为我的原因超过约定时间没有交付，全额退款。'],
 };
-export const SITE_DESCRIPTION=`${BRAND_TITLE}。${BRAND_PROMISE} 白话牌义、真实月相和今日运势。免费，无需注册。`;
+export const SITE_DESCRIPTION=`${BRAND_TITLE}。心里有个问题？写下来，抽一张牌，AI 从牌义出发给你一个看问题的角度。${BRAND_PROMISE} 78 张牌白话牌义、真实月相和今日运势。免费，无需注册。`;
