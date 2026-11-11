@@ -11,11 +11,14 @@ export const CLICHES=[
 ];
 /** 「不是……而是……」的翻转句：一段话里用一次可以，用两次以上就是套路 */
 const FLIP=/不是[^。！？\n]{1,24}?而是/g;
+/** 繁体常用字：出现 3 个以上就当成用了繁体（模型偶尔会切成繁体） */
+const TRAD=/[說這們裡與為過後會還點時對讓嗎實麼開關個於來覺]/g;
 /** 返回命中的套话（去重），没有就是空数组。dash：破折号也算（AI 回答里算；网页牌面描述里少量保留） */
 export function cliches(text,{dash=true}={}){
  if(typeof text!=='string')return [];
  const hit=CLICHES.filter(w=>text.includes(w));
  if((text.match(FLIP)||[]).length>=2)hit.push('不是……而是……（用了两次以上）');
+ if((text.match(TRAD)||[]).length>=3)hit.push('繁体字（要用简体中文）');
  if(dash&&/——/.test(text))hit.push('破折号（——）');
  return [...new Set(hit)];
 }

@@ -4,6 +4,8 @@
 //   DEEPSEEK_MODEL（默认 deepseek-chat）、DEEPSEEK_BASE_URL、ALLOWED_ORIGINS（逗号分隔）、ALLOW_LOCAL=1（本机调试）
 // 隐私：不记录用户的问题和回答，日志里只有牌的 ID、耗时和状态码。
 import http from 'node:http';
+/** 后端版本：每次改提示词或检查规则时改一下，方便确认线上已更新（GET /health 能看到） */
+const VERSION='2026-11-11-tone';
 import {validateInput,isCrisis,CRISIS_REPLY,buildMessages,checkAnswer,callModel,createLimiter,cliches,rewriteMessages} from './ask.mjs';
 
 const KEY=process.env.DEEPSEEK_API_KEY||'';
@@ -26,7 +28,7 @@ export const server=http.createServer(async(req,res)=>{
  const cors=allowed?{'access-control-allow-origin':origin,vary:'Origin'}:{vary:'Origin'};
  const url=new URL(req.url||'/','http://x');
  if(req.method==='OPTIONS'){res.writeHead(allowed?204:403,{...cors,'access-control-allow-methods':'POST, GET, OPTIONS','access-control-allow-headers':'content-type','access-control-max-age':'600'});return res.end()}
- if(req.method==='GET'&&url.pathname==='/health')return send(res,200,{ok:true,ai:!!KEY},cors);
+ if(req.method==='GET'&&url.pathname==='/health')return send(res,200,{ok:true,ai:!!KEY,v:VERSION},cors);
  if(req.method!=='POST'||url.pathname!=='/api/ask')return err(res,404,'not_found','没有这个地址。',cors);
  if(origin&&!allowed)return err(res,403,'forbidden','这个来源不被允许。');
  if(!KEY)return err(res,503,'disabled','提问功能暂时没有开通。',cors);

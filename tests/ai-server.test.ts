@@ -67,7 +67,7 @@ const post=(c:any,body:any,headers:any={})=>c.call('/api/ask',{method:'POST',bod
 test('http: happy path, key only goes upstream, CORS, health, bad input, foreign origin',async()=>{
  const s=await boot(()=>OK);const logs:string[]=[];const orig=console.log;console.log=(...a)=>{logs.push(a.join(' '))};
  try{
-  const h=await (await s.call('/health')).json();assert.deepEqual(h,{ok:true,ai:true});
+  const h=await (await s.call('/health')).json();assert.equal(h.ok,true);assert.equal(h.ai,true);assert.equal(typeof h.v,'string');
   const r=await post(s,{cardId:'cups-5',reversed:true,mood:'焦虑',question:'这周要不要跟他说清楚？'});
   assert.equal(r.status,200);assert.equal(r.headers.get('access-control-allow-origin'),ORIGIN);
   const j:any=await r.json();assert.equal(j.answer,GOOD);assert.equal(j.remaining,2);
@@ -152,4 +152,8 @@ test('http: an answer with stock phrases is rewritten once; the cleaner version 
   const body:any=await r.json();assert.equal(body.answer,GOOD);assert.equal(n,2);
   assert.equal(s.seen[1].body.messages.at(-1).content.includes('别慌'),true);
  }finally{s.close()}
+});
+test('cliches: traditional Chinese output triggers a rewrite to simplified',()=>{
+ assert.ok(ask.cliches('聖杯五逆位講的不是馬上不難過，這說明你們還會…').some((x:string)=>x.includes('繁体')));
+ assert.deepEqual(ask.cliches('这张牌说明你还会慢慢好起来的。').filter((x:string)=>x.includes('繁体')),[]);
 });
