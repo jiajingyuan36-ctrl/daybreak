@@ -3,7 +3,8 @@ import type {Day} from './types.ts';import {cardById} from './cards.ts';import {
 export type ShareLayout='classic'|'space'|'night';
 export function download(blob:Blob,name:string){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),10000)}
 /** 分享图用的精简解析：取今日解析的第一句，太短就带上第二句。 */
-export function briefReading(text:string){const parts=text.match(/[^。！？]+[。！？]?/g)??[text];const first=parts[0];return [...first].length<24&&parts[1]?first+parts[1]:first}
+/** 分享图用的短解读：从头取整句，凑够 24 字为止（新文案句子短，一句常常不够） */
+export function briefReading(text:string){const parts=text.match(/[^。！？]+[。！？]?/g)??[text];let out='';for(const p of parts){if(out&&[...out+p].length>75)break;out+=p;if([...out].length>=24)break}return out}
 function lines(x:CanvasRenderingContext2D,text:string,width:number){const result:string[]=[];let line='';for(const ch of text){if(ch==='\n'||x.measureText(line+ch).width>width){result.push(line);line=ch==='\n'?'':ch}else line+=ch}if(line)result.push(line);return result}
 export async function createShareImage(day:Day,tall=false,layout:ShareLayout='classic'):Promise<Blob>{
  await document.fonts.ready;

@@ -5,7 +5,7 @@
 // 隐私：不记录用户的问题和回答，日志里只有牌的 ID、耗时和状态码。
 import http from 'node:http';
 /** 后端版本：每次改提示词或检查规则时改一下，方便确认线上已更新（GET /health 能看到） */
-const VERSION='2026-11-11-tone';
+const VERSION='2026-11-11-reader';
 import {validateInput,isCrisis,CRISIS_REPLY,buildMessages,checkAnswer,callModel,createLimiter,cliches,rewriteMessages} from './ask.mjs';
 
 const KEY=process.env.DEEPSEEK_API_KEY||'';

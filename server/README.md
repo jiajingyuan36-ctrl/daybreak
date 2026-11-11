@@ -3,7 +3,7 @@
 「抽牌后问一个问题」的后端。零依赖，Node 22+。网页只认识它，不认识 DeepSeek 密钥。
 
 ## 做什么
-- `POST /api/ask`：收 `{cardId, reversed, mood, question}`，用站内牌义拼好提示词，请 DeepSeek 写一段回答（180–260 字，三小段），过检查后返回。
+- `POST /api/ask`：收 `{cardId, reversed, mood, question}`，用站内牌义拼好提示词，请 DeepSeek 用占卜师的口吻写一段回答（100–180 字，三小段：判断、关键、今天要做的事），过检查后返回。
 - `GET /health`：`{ok:true, ai:<是否配了密钥>}`，网页打开结果页时用它悄悄叫醒免费服务器。
 - 抽哪张牌由网页里的随机数决定，这里不参与。
 
