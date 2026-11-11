@@ -4,7 +4,7 @@
 //   DEEPSEEK_MODEL（默认 deepseek-chat）、DEEPSEEK_BASE_URL、ALLOWED_ORIGINS（逗号分隔）、ALLOW_LOCAL=1（本机调试）
 // 隐私：不记录用户的问题和回答，日志里只有牌的 ID、耗时和状态码。
 import http from 'node:http';
-import {validateInput,isCrisis,CRISIS_REPLY,buildMessages,checkAnswer,callModel,createLimiter} from './ask.mjs';
+import {validateInput,isCrisis,CRISIS_REPLY,buildMessages,checkAnswer,callModel,createLimiter,cliches,rewriteMessages} from './ask.mjs';
 
 const KEY=process.env.DEEPSEEK_API_KEY||'';
 const MODEL=process.env.DEEPSEEK_MODEL||'deepseek-chat',BASE=process.env.DEEPSEEK_BASE_URL||'https://api.deepseek.com';
@@ -43,10 +43,15 @@ export const server=http.createServer(async(req,res)=>{
    if(gate.reason==='day')return err(res,429,'rate_limited','今天的提问次数用完了，明天再来。',cors);
    return err(res,429,'rate_limited','问得有点快，歇一会儿再问。',{...cors,'retry-after':String(gate.retryAfter)});
   }
-  let raw;
-  try{raw=await callModel({messages:buildMessages({card,reversed,mood,question}),key:KEY,base:BASE,model:MODEL})}
+  let raw;const messages=buildMessages({card,reversed,mood,question});
+  try{raw=await callModel({messages,key:KEY,base:BASE,model:MODEL})}
   catch(e){console.log(`ask upstream_error card=${card.id} status=${e.status||e.name} ms=${Date.now()-t0}`);return err(res,502,'upstream','这会儿没能连上解读服务，稍后再试。',cors)}
-  const remaining=limiter.hit(key),answer=checkAnswer(raw);
+  const remaining=limiter.hit(key);let answer=checkAnswer(raw);
+  // 有「别慌」这类套话：重写一次；重写后更干净才换
+  const hits=answer?cliches(answer):[];
+  if(hits.length){try{const again=checkAnswer(await callModel({messages:rewriteMessages(messages,answer,hits),key:KEY,base:BASE,model:MODEL}));if(again&&cliches(again).length<hits.length)answer=again}catch{}
+   console.log(`ask rewrite card=${card.id} hits=${hits.length} left=${cliches(answer).length}`)}
+  if(answer)answer=answer.replace(/——/g,'，');
   if(!answer){console.log(`ask filtered card=${card.id} ms=${Date.now()-t0}`);return err(res,422,'filtered','这次的回答不太合适，没有显示。换个问法再试一次，或者先看看牌面的解读。',cors)}
   console.log(`ask ok card=${card.id} ms=${Date.now()-t0}`);
   return send(res,200,{answer,remaining},cors);

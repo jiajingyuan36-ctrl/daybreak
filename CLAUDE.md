@@ -39,6 +39,7 @@ npm run build
 - src/components/almanac-dashboard.tsx：日历与日签导出。
 - legacy-static/epic.css：当前极简主题；app/layout.tsx：字体与共享框架。
 
+- server/tone.mjs：「AI 味」套话清单（别慌、你值得、比想象中更、破折号……），网页文案（tests/plain.test.ts）和 AI 回答共用。AI 回答命中时自动重写一次。新写文案或改提示词前先看这份清单；用户反馈出现新的套话就加进去。
 - server/ask.mjs、server/index.mjs、src/ai-ask.ts：提问后端与网页端。AI 只解读已抽出的牌，不参与抽牌；牌义用站内文案；不记录问题与回答；轻生相关问题不调用模型。tests/ai-server.test.ts 覆盖。
 
 ## 接下来做

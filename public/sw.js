@@ -1,4 +1,4 @@
-const CACHE='daybreak-v68';
+const CACHE='daybreak-v69';
 const STABLE=/^\/(?:_next\/static\/|js\/|fonts\/|rws\/|moon\/|(?:epic|style)\.css$)|\.(?:woff2|png|svg|webp|webmanifest)$/;
 const ASSET=/(?:href|src)="(\/(?:_next\/static\/|js\/|fonts\/|(?:epic|style)\.css)[^"]*)"/g;
 const ENTRY_PATHS=['/','/ritual/'];

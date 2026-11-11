@@ -35,3 +35,15 @@ test('card history: earlier draws of the same card, newest first, notes trimmed'
  assert.equal(pastDraws(d.days,'wands-3','2026-09-10').length,0);
  assert.equal(noteExcerpt('一'.repeat(50)),'一'.repeat(40)+'…');assert.equal(noteExcerpt(' 短 句 '),'短 句');
  assert.equal(shortDate('2026-09-03','2026-11-04'),'9 月 3 日');assert.equal(shortDate('2025-12-31','2026-11-04'),'2025 年 12 月 31 日')});
+
+// 「AI 味」套话：网页文案一句都不能有（清单在 server/tone.mjs，和 AI 回答共用）
+import {cliches} from '../server/tone.mjs';
+import {MOOD_LEAD as MOODS} from '../src/mood-copy.ts';
+import {DIPPER_SPREAD as DIPPER} from '../src/dipper-copy.ts';
+test('no AI-style stock phrases (别慌、你值得、比想象中更…) in any site copy',()=>{
+ const texts:[string,string][]=[];
+ for(const id of plainIds())for(const [k,v] of Object.entries(fields(id)))texts.push([`${id}.${k}`,v]);
+ for(const [m,g] of Object.entries(MOODS))for(const [k,v] of Object.entries(g as Record<string,string>))texts.push([`mood.${m}.${k}`,v]);
+ for(const [t,v] of DIPPER.positions)texts.push([`dipper.${t}`,v]);
+ for(const [where,t] of texts){const hit=cliches(t,{dash:false});assert.deepEqual(hit,[],`${where}：${hit.join('、')}`)}
+});

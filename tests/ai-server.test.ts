@@ -134,3 +134,22 @@ test('storage: saved questions load back; malformed ones are rejected',async()=>
  // 没有提问的旧记录照常能读
  const old=fresh();old.days['2026-11-04']=draw('2026-11-04',old.preferences,'','',()=>0);assert.ok(validate(JSON.parse(JSON.stringify(old))));
 });
+
+// ---------- AI 味套话 ----------
+test('cliches: catches 别慌-style stock phrases, repeated 不是…而是, and dashes; the prompt bans them too',()=>{
+ assert.deepEqual(ask.cliches(GOOD),[]);
+ assert.ok(ask.cliches('别慌，这张牌在提醒你。').includes('别慌'));
+ assert.ok(ask.cliches('你值得被好好对待。').includes('你值得'));
+ assert.equal(ask.cliches('不是A而是B，不是C而是D。').length,1);
+ assert.ok(ask.cliches('牌面上——一个人。').length===1);
+ const sys=ask.buildMessages({card:{nameZh:'愚人',nameEn:'The Fool',plainIntro:'x',meaningUpright:'x',meaningReversed:'x',keywordsUpright:['a'],keywordsReversed:['b'],action:'x'},reversed:false,mood:'',question:'q'})[0].content;
+ for(const w of ['别慌','你值得','比想象中更','破折号','第一句就给态度'])assert.ok(sys.includes(w),w);
+});
+test('http: an answer with stock phrases is rewritten once; the cleaner version is returned; dashes are removed',async()=>{
+ let n=0;const s=await boot(()=>{n++;return {status:200,body:{choices:[{message:{content:n===1?'别慌——'+GOOD:GOOD}}]}}});
+ try{
+  const r=await post(s,{cardId:'m0',reversed:false,question:'要不要换工作？'},{'x-forwarded-for':'8.8.8.8'});assert.equal(r.status,200);
+  const body:any=await r.json();assert.equal(body.answer,GOOD);assert.equal(n,2);
+  assert.equal(s.seen[1].body.messages.at(-1).content.includes('别慌'),true);
+ }finally{s.close()}
+});
