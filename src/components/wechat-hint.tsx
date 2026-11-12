@@ -27,7 +27,7 @@ export function WeChatHint(){
  return <aside className="wechat-hint" aria-label="微信浏览器提示">
   <svg className="wechat-hint-arrow" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M5 35C23 35 32 24 32 7M21 16 32 5 38 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
   <div className="wechat-hint-content">
-   <p>微信里部分功能受限，点右上角 <span aria-label="更多">···</span> 选择「在浏览器打开」</p>
+   <p>点右上角 <span aria-label="更多">···</span> 选「在浏览器打开」，功能更完整</p>
    <button type="button" className="wechat-hint-close" aria-label="关闭提示" onClick={dismiss}>×</button>
   </div>
  </aside>;
