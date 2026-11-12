@@ -48,3 +48,9 @@ test('no AI-style stock phrases (别慌、你值得、比想象中更…) in any
  for(const [t,v] of DIPPER.positions)texts.push([`dipper.${t}`,v]);
  for(const [where,t] of texts){const hit=cliches(t,{dash:false});assert.deepEqual(hit,[],`${where}：${hit.join('、')}`)}
 });
+
+// 占卜师语气的底线（2026-11-12 逐张审校后加）：全部文案不用含糊词、破折号、弯引号
+test('reader voice: no hedging words, dashes or curly quotes in any card copy',()=>{
+ const hedge=/可能|或许|也许|不妨|说不定|试试看|——|[“”]/;
+ for(const id of plainIds())for(const [k,v] of Object.entries(fields(id)))assert.doesNotMatch(v,hedge,`${id}.${k}`);
+});
