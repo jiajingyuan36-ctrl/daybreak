@@ -1608,3 +1608,6 @@ body .wechat-hint-content{gap:8px!important;padding-right:30px}
 body .wechat-hint p{font-size:12px!important;line-height:1.6!important;letter-spacing:.02em!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 body .wechat-hint-arrow{top:2px!important;right:max(6px,env(safe-area-inset-right))!important;width:18px!important;height:18px!important}
 body .wechat-hint .wechat-hint-close{width:28px!important;height:28px!important;min-height:28px!important;font-size:16px!important}
+
+/* 全站数字统一用等高数字（Cormorant 默认是高低错落的老式数字，和中文放在一起像排版出错）；星座等符号按文字显示，不变成彩色 emoji */
+html body,html body *{font-variant-numeric:lining-nums!important;font-variant-emoji:text}

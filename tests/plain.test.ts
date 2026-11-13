@@ -54,3 +54,9 @@ test('reader voice: no hedging words, dashes or curly quotes in any card copy',(
  const hedge=/可能|或许|也许|不妨|说不定|试试看|——|[“”]/;
  for(const id of plainIds())for(const [k,v] of Object.entries(fields(id)))assert.doesNotMatch(v,hedge,`${id}.${k}`);
 });
+
+import {textGlyph} from '../src/astro.ts';
+test('zodiac and planet glyphs get the text-style selector (no color emoji on phones)',()=>{
+ assert.equal(textGlyph('金牛座 ♉'),'金牛座 ♉︎');assert.equal(textGlyph('金星 ♀'),'金星 ♀︎');
+ assert.equal(textGlyph('♉︎'),'♉︎');assert.equal(textGlyph('土元素 · 国王'),'土元素 · 国王');
+});

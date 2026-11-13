@@ -84,3 +84,6 @@ export function resonance(a:CardAstro,mine:Sign|null,moon:Sign):string[]{const o
  else if(mine&&a.element===mine.element)out.push(`这张牌和你的星座${mine.zh}同属${mine.element}元素。`);
  if(a.kind!=='planet'&&a.signs.some(s=>s.id===moon.id))out.push(`今天月亮正走在${moon.zh}，和这张牌对应的星座相同。`);
  return out}
+
+/** 星座与行星符号（♈–♓、☉☽☿♀♂♃♄）在很多手机上默认显示成彩色 emoji，加 U+FE0E 让它按文字显示，跟黑金配色一致 */
+export const textGlyph=(s:string)=>s.replace(/([\u2609\u263D\u263F-\u2644\u2646\u2647\u2648-\u2653])(?!\uFE0E)/g,'$1\uFE0E');

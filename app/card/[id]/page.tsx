@@ -4,7 +4,7 @@ import {pageMeta} from '../../../src/meta';
 import {SITE_URL} from '../../../src/site';
 import {cards} from '../../../src/cards';
 import {knowledgeById} from '../../../src/knowledge';
-import {cardAstro,ASTRO_SOURCE_LEAD,ASTRO_SOURCE_LINK,ASTRO_SOURCE_URL} from '../../../src/astro';
+import {cardAstro,textGlyph,ASTRO_SOURCE_LEAD,ASTRO_SOURCE_LINK,ASTRO_SOURCE_URL} from '../../../src/astro';
 import {TarotPlate} from '../../../src/components/tarot/tarot-plate';
 import {EditorialSection} from '../../../src/components/tarot/editorial-section';
 import {cardImageUrl} from '../../../src/art';
@@ -13,8 +13,6 @@ import {cardImageUrl} from '../../../src/art';
 export const dynamicParams=false;
 export function generateStaticParams(){return cards.map(c=>({id:c.id}))}
 const find=(id:string)=>cards.find(c=>c.id===id);
-// 星座符号（♈–♓）在很多手机上默认显示成彩色 emoji，加 U+FE0E 让它按文字显示
-const textGlyph=(s:string)=>s.replace(/([\u2648-\u2653])/g,'$1\uFE0E');
 const short=(s:string,n=110)=>[...s].length>n?[...s].slice(0,n-1).join('')+'…':s;
 export async function generateMetadata({params}:{params:Promise<{id:string}>}):Promise<Metadata>{const {id}=await params;const c=find(id);if(!c)return {};
  // 每张牌自己的分享图由 scripts/build-card-og.mjs 生成在 public/og/cards/
