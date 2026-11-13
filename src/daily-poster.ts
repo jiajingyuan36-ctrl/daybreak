@@ -11,7 +11,7 @@ export const POSTER_SIZES = {
  portrait: {width:600,height:800,artTop:117,artHeight:237,quote:431,reading:504,ticket:595,footer:681},
 } as const;
 const PALETTES = {
- night: {bg:'#0F0F11',ink:'#F4EFE6',muted:'#C8C4BC',gold:'#D4AF37',rule:'#C5A059',grain:.028,ticket:'rgba(212,175,55,.05)',grade:[.16,.76,1.08,.93],vignette:.58},
+ night: {bg:'#0F0F11',ink:'#F4EFE6',muted:'#C8C4BC',gold:'#C5A56E',rule:'#C5A56E',grain:.028,ticket:'rgba(197,165,110,.05)',grade:[.16,.76,1.08,.93],vignette:.58},
  plaster: {bg:'#F4EFE6',ink:'#141413',muted:'#3D3A35',gold:'#8C621E',rule:'#8C621E',grain:.032,ticket:'rgba(140,98,30,.055)',grade:[.12,.82,1.05,.98],vignette:.26},
 } as const;
 export const POSTER_DRAW_URL=`${SITE_URL}/ritual/?from=poster`;
@@ -295,14 +295,14 @@ export async function renderPoster(data:PosterData,options:PosterOptions):Promis
   ctx.fillRect(0,0,w,h);
   if(night){
    const dawn=ctx.createRadialGradient(cx,h*.18,0,cx,h*.18,w*.65);
-   dawn.addColorStop(0,'rgba(212,175,55,.10)');
+   dawn.addColorStop(0,'rgba(197,165,110,.10)');
    dawn.addColorStop(1,'transparent');
    ctx.fillStyle=dawn;
    ctx.fillRect(0,0,w,h*.65);
   }
   grain(ctx,deterministicHash(data.day.date),palette.grain);
   const foil=ctx.createLinearGradient(36,36,w-36,h-36);
-  (night?['#7A5C29','#C5A059','#FFF2CC','#D4AF37','#7A5C29']:['#8C621E','#C5A059','#8C621E'])
+  (night?['#7A5C29','#C5A56E','#FFF2CC','#C5A56E','#7A5C29']:['#8C621E','#C5A56E','#8C621E'])
    .forEach((c,i,stops)=>foil.addColorStop(i/(stops.length-1),c));
   ctx.fillStyle=ctx.strokeStyle=foil;
   frame(ctx,w,h);
