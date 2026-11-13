@@ -1611,3 +1611,47 @@ body .wechat-hint .wechat-hint-close{width:28px!important;height:28px!important;
 
 /* 全站数字统一用等高数字（Cormorant 默认是高低错落的老式数字，和中文放在一起像排版出错）；星座等符号按文字显示，不变成彩色 emoji */
 html body,html body *{font-variant-numeric:lining-nums!important;font-variant-emoji:text}
+
+/* =====================================================================
+   按钮系统（2026-11-14）：全站只留三种按钮 + 一种选中态。
+   主按钮：金色细线胶囊，每个区块最多一个（抽牌、提问、生成海报）。
+   次要按钮：很淡的细线胶囊（换一张、保存、导出、添加）。
+   文字链接：金色文字，无边框（今日运势、保留原来那张、其他图片格式）。
+   选中态：金色细线 + 一点金色底（心情、牌扇 / 北斗）。
+   金色只用 #C5A56E 一种，深浅靠透明度。
+   ===================================================================== */
+:root{--btn-gold:197,165,110;--btn-ink:241,234,219}
+html:root[data-theme=light]{--btn-gold:138,106,46;--btn-ink:42,37,32}
+/* 主按钮 */
+html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-card .ask-send,.result-tools .open-poster){display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:12px!important;height:50px!important;min-height:50px!important;width:auto!important;min-width:0!important;padding:0 30px!important;border:1px solid rgba(var(--btn-gold),.55)!important;border-radius:999px!important;background:linear-gradient(180deg,rgba(var(--btn-gold),.10),rgba(var(--btn-gold),.03))!important;color:rgb(var(--btn-ink))!important;font-family:var(--font-reading)!important;font-size:16px!important;font-weight:400!important;letter-spacing:.16em!important;line-height:1!important;box-shadow:none!important;text-decoration:none!important;cursor:pointer;transition:border-color .3s ease,background-color .3s ease,transform .2s ease!important}
+@media (hover:hover){html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-card .ask-send,.result-tools .open-poster):hover:not(:disabled){border-color:rgba(var(--btn-gold),.9)!important;background:linear-gradient(180deg,rgba(var(--btn-gold),.16),rgba(var(--btn-gold),.06))!important}}
+html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-card .ask-send,.result-tools .open-poster):active:not(:disabled){transform:scale(.97)}
+html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-card .ask-send,.result-tools .open-poster):disabled{opacity:.45}
+/* 抽牌按钮：去掉方框分格和英文小字，只留「✦ 替我选一张 →」 */
+html body .minimal-ritual .primary.draw{grid-template-columns:none!important}
+html body .minimal-ritual .primary.draw>span{display:inline-flex!important;padding:0!important;border:0!important}
+html body .minimal-ritual .primary.draw .draw-main{flex-direction:row!important;font-size:16px!important;color:rgb(var(--btn-ink))!important}
+html body .minimal-ritual .primary.draw .draw-main small{display:none!important}
+html body .minimal-ritual .primary.draw .draw-star{font-size:12px!important;color:rgb(var(--btn-gold))!important;text-shadow:none!important}
+html body .minimal-ritual .primary.draw .draw-arrow svg{width:22px!important;height:8px!important;stroke:rgba(var(--btn-gold),.85)!important}
+html body .home-cta>span:last-child{color:rgba(var(--btn-gold),.85)!important}
+/* 次要按钮 */
+html body :is(.result-tools .redraw,.review-save,.setting-row button,.export-data,.legacy-share-options button,.export-dipper){display:inline-flex!important;align-items:center!important;justify-content:center!important;height:40px!important;min-height:40px!important;width:auto!important;min-width:0!important;padding:0 20px!important;border:1px solid rgba(var(--btn-ink),.16)!important;border-radius:999px!important;background:transparent!important;color:rgba(var(--btn-ink),.78)!important;font-family:var(--font-reading)!important;font-size:14px!important;font-weight:400!important;letter-spacing:.1em!important;line-height:1!important;box-shadow:none!important;cursor:pointer;transition:border-color .3s ease,color .3s ease!important}
+@media (hover:hover){html body :is(.result-tools .redraw,.review-save,.setting-row button,.export-data,.legacy-share-options button,.export-dipper):hover:not(:disabled){border-color:rgba(var(--btn-gold),.6)!important;color:rgb(var(--btn-ink))!important}}
+html body .review-save.is-saved{border-color:rgba(var(--btn-gold),.45)!important;color:rgb(var(--btn-gold))!important}
+/* 文字链接 */
+html body :is(.text-button,.legacy-share>summary,.home-minor .home-ghost){border:0!important;background:none!important;box-shadow:none!important;padding:6px 2px!important;min-height:0!important;color:rgba(var(--btn-gold),.9)!important;font-size:14px!important;letter-spacing:.12em!important;text-decoration:none!important;cursor:pointer}
+html body .home-minor .home-ghost{color:rgba(var(--btn-ink),.6)!important}
+@media (hover:hover){html body :is(.text-button,.legacy-share>summary,.home-minor .home-ghost):hover{color:rgb(var(--btn-ink))!important}}
+/* 选中态：心情和牌扇/北斗 */
+html body .mood-chip{border-color:rgba(var(--btn-ink),.14)!important;color:rgba(var(--btn-ink),.75)!important;background:transparent!important;box-shadow:none!important}
+html body .mood-chip.on,html body .ritual-switch button[aria-pressed=true]{border:1px solid rgba(var(--btn-gold),.75)!important;background:rgba(var(--btn-gold),.12)!important;color:rgb(var(--btn-ink))!important;box-shadow:none!important}
+html body .ritual-switch{border-color:rgba(var(--btn-ink),.14)!important;box-shadow:none!important}
+html body .ritual-switch button[aria-pressed=false]{border-color:transparent!important;background:transparent!important;color:rgba(var(--btn-ink),.55)!important}
+/* 输入框：统一成金色细下划线（和首页提问框一致） */
+html body :is(.ask-form input,.single-review input){height:46px!important;padding:0 2px!important;border:0!important;border-bottom:1px solid rgba(var(--btn-gold),.4)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:rgb(var(--btn-ink))!important;font-size:16px!important;outline:none!important}
+html body :is(.ask-form input,.single-review input):focus{border-bottom-color:rgba(var(--btn-gold),.9)!important}
+html body .ask-form{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:18px!important}
+html body .ask-form input{width:100%!important;flex:none!important}
+html body .single-review{display:flex!important;align-items:center!important;gap:14px!important}
+html body .single-review input{flex:1!important;min-width:0!important}
