@@ -1729,7 +1729,7 @@ html body .ask-row .ask-a.is-care{color:var(--fg)!important}
  html body main.home-v2 .moon-note{font-size:14px!important}
  html body main.home-v2 .home-lead{font-size:15px!important}
  html body main.home-v2 .home-actions{gap:18px!important;margin-top:44px!important}
- html body .home-cta{height:56px!important;min-height:56px!important;padding:0 36px!important;font-size:17px!important}
+ html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster){height:56px!important;min-height:56px!important;padding:0 36px!important;font-size:17px!important}
  html body main.home-v2 .home-ask{width:min(100%,460px)!important}
  html body main.home-v2 .home-ask label{font-size:14px!important}
  html body main.home-v2 .home-ask input{font-size:17px!important;height:46px!important}
@@ -1738,7 +1738,6 @@ html body .ask-row .ask-a.is-care{color:var(--fg)!important}
  /* 抽牌页 */
  html body .minimal-ritual:not(.dipper-mode)>h1{font-size:clamp(3rem,4.6vw,4.4rem)!important}
  html body .minimal-ritual:not(.dipper-mode)>.brand-promise{font-size:16px!important}
- html body .minimal-ritual .primary.draw{height:56px!important;min-height:56px!important;padding:0 36px!important;font-size:17px!important}
  html body .minimal-ritual .primary.draw .draw-main{font-size:17px!important}
  html body .minimal-ritual:not(.dipper-mode)>.ritual-hint{font-size:16px!important}
  html body .minimal-ritual .mood-chip{height:42px!important;min-height:42px!important;padding:0 18px!important;font-size:15px!important}
@@ -1748,6 +1747,7 @@ html body .ask-row .ask-a.is-care{color:var(--fg)!important}
  /* 结果页：阅读栏放宽，正文和标题大一点 */
  html body .minimal-result>.daily-reading,html body .minimal-result>.review-block{max-width:620px!important}
  html body .minimal-result>.tarot{width:340px!important}
+ html body .minimal-result .editorial-copy{max-width:none!important}
  html body .minimal-result .editorial-copy h2{font-size:19px!important}
  html body .minimal-result .editorial-copy p{font-size:19px!important;line-height:1.95}
  html body .minimal-result .result-tools{font-size:15px!important}
