@@ -1623,10 +1623,10 @@ html body,html body *{font-variant-numeric:lining-nums!important;font-variant-em
 :root{--btn-gold:197,165,110;--btn-ink:241,234,219}
 html:root[data-theme=light]{--btn-gold:138,106,46;--btn-ink:42,37,32}
 /* 主按钮 */
-html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-card .ask-send,.result-tools .open-poster){display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:12px!important;height:50px!important;min-height:50px!important;width:auto!important;min-width:0!important;padding:0 30px!important;border:1px solid rgba(var(--btn-gold),.55)!important;border-radius:999px!important;background:linear-gradient(180deg,rgba(var(--btn-gold),.10),rgba(var(--btn-gold),.03))!important;color:rgb(var(--btn-ink))!important;font-family:var(--font-reading)!important;font-size:16px!important;font-weight:400!important;letter-spacing:.16em!important;line-height:1!important;box-shadow:none!important;text-decoration:none!important;cursor:pointer;transition:border-color .3s ease,background-color .3s ease,transform .2s ease!important}
-@media (hover:hover){html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-card .ask-send,.result-tools .open-poster):hover:not(:disabled){border-color:rgba(var(--btn-gold),.9)!important;background:linear-gradient(180deg,rgba(var(--btn-gold),.16),rgba(var(--btn-gold),.06))!important}}
-html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-card .ask-send,.result-tools .open-poster):active:not(:disabled){transform:scale(.97)}
-html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-card .ask-send,.result-tools .open-poster):disabled{opacity:.45}
+html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster){display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:12px!important;height:50px!important;min-height:50px!important;width:auto!important;min-width:0!important;padding:0 30px!important;border:1px solid rgba(var(--btn-gold),.55)!important;border-radius:999px!important;background:linear-gradient(180deg,rgba(var(--btn-gold),.10),rgba(var(--btn-gold),.03))!important;color:rgb(var(--btn-ink))!important;font-family:var(--font-reading)!important;font-size:16px!important;font-weight:400!important;letter-spacing:.16em!important;line-height:1!important;box-shadow:none!important;text-decoration:none!important;cursor:pointer;transition:border-color .3s ease,background-color .3s ease,transform .2s ease!important}
+@media (hover:hover){html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster):hover:not(:disabled){border-color:rgba(var(--btn-gold),.9)!important;background:linear-gradient(180deg,rgba(var(--btn-gold),.16),rgba(var(--btn-gold),.06))!important}}
+html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster):active:not(:disabled){transform:scale(.97)}
+html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster):disabled{opacity:.45}
 /* 抽牌按钮：去掉方框分格和英文小字，只留「✦ 替我选一张 →」 */
 html body .minimal-ritual .primary.draw{grid-template-columns:none!important}
 html body .minimal-ritual .primary.draw>span{display:inline-flex!important;padding:0!important;border:0!important}
@@ -1662,3 +1662,16 @@ html body .ritual-check input[type=checkbox]:checked{background:rgb(var(--btn-go
 html body .ritual-check input[type=checkbox]:checked::after{transform:translateY(-1px) rotate(-45deg) scale(1)}
 html:root[data-theme=light] body .ritual-check input[type=checkbox]::after{border-color:#FBF8F2}
 html body .ritual-check{gap:8px!important;align-items:center!important}
+
+/* 结果页「问这张牌」：和解读同一套版式（2026-11-14），不再是灰底方框 */
+html body .ask-row .ask-hint{margin:0 0 6px!important;font-size:15px!important;line-height:1.9!important;color:var(--muted)!important;letter-spacing:.04em!important}
+html body .ask-row .ask-form{margin:6px 0 0!important;gap:20px!important}
+html body .ask-row .ask-status{min-height:1.4em;margin:12px 0 0!important;font-size:13px!important;color:rgba(var(--btn-gold),.9)!important}
+html body .ask-row .ask-status:empty{min-height:0;margin:0!important}
+html body .ask-row .ask-privacy{margin:14px 0 0!important;font-size:12px!important;line-height:1.8!important;color:var(--muted)!important;opacity:.7}
+html body .ask-row .ask-item{margin:4px 0 26px!important;padding:0!important;border:0!important}
+html body .ask-row .ask-item+.ask-item{padding-top:22px!important;border-top:1px solid rgba(var(--btn-gold),.14)!important}
+html body .ask-row .ask-q{margin:0 0 10px!important;font-size:14px!important;letter-spacing:.08em!important;color:rgb(var(--btn-gold))!important}
+html body .ask-row .ask-q::before{content:'问　';opacity:.6}
+html body .ask-row .ask-a{margin:0 0 1rem!important;color:var(--fg)!important}
+html body .ask-row .ask-a.is-care{color:var(--fg)!important}
