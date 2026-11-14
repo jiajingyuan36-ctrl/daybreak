@@ -1711,3 +1711,59 @@ html body .ask-row .ask-a.is-care{color:var(--fg)!important}
  html body .shared-header .theme-toggle{width:32px!important;height:32px!important}
  html body .more-sheet{right:-44px}
 }
+
+/* =====================================================================
+   电脑版放大（2026-11-14）：说明文字不小于 15px，主按钮和标题更有分量，
+   阅读栏从 412px 放宽到 600px 左右；1440 以上再整体大一档。
+   ===================================================================== */
+@media (min-width:1024px){
+ /* 顶部 */
+ html body .shared-header .nav-full{gap:34px!important}
+ html body .shared-header .nav-full a{font-size:15px!important;letter-spacing:.16em!important}
+ html body .shared-brand .brand-main{font-size:24px!important}
+ /* 首页 */
+ html body main.home-v2 .almanac-grid:not(.exporting) .almanac-keyword{font-size:clamp(84px,7vw,108px)!important}
+ html body main.home-v2 .almanac-grid:not(.exporting) .verse-line{font-size:19px!important;line-height:1.85}
+ html body main.home-v2 .almanac-grid:not(.exporting) .calendar-caption{font-size:15px!important}
+ html body main.home-v2 .dateline-num{font-size:14px!important}
+ html body main.home-v2 .moon-note{font-size:14px!important}
+ html body main.home-v2 .home-lead{font-size:15px!important}
+ html body main.home-v2 .home-actions{gap:18px!important;margin-top:44px!important}
+ html body .home-cta{height:56px!important;min-height:56px!important;padding:0 36px!important;font-size:17px!important}
+ html body main.home-v2 .home-ask{width:min(100%,460px)!important}
+ html body main.home-v2 .home-ask label{font-size:14px!important}
+ html body main.home-v2 .home-ask input{font-size:17px!important;height:46px!important}
+ html body main.home-v2 .home-ask-hint{font-size:14px!important}
+ html body main.home-v2 .home-minor .home-ghost{font-size:15px!important}
+ /* 抽牌页 */
+ html body .minimal-ritual:not(.dipper-mode)>h1{font-size:clamp(3rem,4.6vw,4.4rem)!important}
+ html body .minimal-ritual:not(.dipper-mode)>.brand-promise{font-size:16px!important}
+ html body .minimal-ritual .primary.draw{height:56px!important;min-height:56px!important;padding:0 36px!important;font-size:17px!important}
+ html body .minimal-ritual .primary.draw .draw-main{font-size:17px!important}
+ html body .minimal-ritual:not(.dipper-mode)>.ritual-hint{font-size:16px!important}
+ html body .minimal-ritual .mood-chip{height:42px!important;min-height:42px!important;padding:0 18px!important;font-size:15px!important}
+ html body .minimal-ritual .ritual-switch button{font-size:15px!important;padding:0 16px!important;height:36px!important}
+ html body .minimal-ritual .pick-hint{font-size:15px!important}
+ html body .minimal-ritual .ritual-eyebrow{font-size:12px!important}
+ /* 结果页：阅读栏放宽，正文和标题大一点 */
+ html body .minimal-result>.daily-reading,html body .minimal-result>.review-block{max-width:620px!important}
+ html body .minimal-result>.tarot{width:340px!important}
+ html body .minimal-result .editorial-copy h2{font-size:19px!important}
+ html body .minimal-result .editorial-copy p{font-size:19px!important;line-height:1.95}
+ html body .minimal-result .result-tools{font-size:15px!important}
+ html body .ask-row .ask-hint{font-size:16px!important}
+ html body .ask-row .ask-privacy{font-size:13px!important}
+ /* 单张牌页 */
+ html body .card-page{max-width:900px!important}
+ html body .card-page .card-head{grid-template-columns:300px 1fr!important;gap:56px!important}
+ html body .card-page .card-head>.tarot-plate{width:300px!important;max-width:300px!important}
+ html body .card-page .editorial-copy{max-width:640px!important}
+ html body .card-page :is(.card-intro,p){font-size:18px!important;line-height:1.95}
+ html body .card-page .card-keys li{font-size:14px!important}
+}
+@media (min-width:1440px){
+ html body main.home-v2 .almanac-grid:not(.exporting) .verse-line{font-size:20px!important}
+ html body .minimal-result .editorial-copy p{font-size:20px!important}
+ html body .minimal-result>.daily-reading,html body .minimal-result>.review-block{max-width:660px!important}
+ html body .card-page{max-width:980px!important}
+}
