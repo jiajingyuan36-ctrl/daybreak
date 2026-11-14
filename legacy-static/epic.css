@@ -1767,3 +1767,13 @@ html body .ask-row .ask-a.is-care{color:var(--fg)!important}
  html body .minimal-result>.daily-reading,html body .minimal-result>.review-block{max-width:660px!important}
  html body .card-page{max-width:980px!important}
 }
+
+/* 结果页末尾「明天早上，来抽下一张」：同一套解读版式，没有边框和底色，只是一行字 + 金色下划线时间 + 文字链接 */
+html body .remind-row .editorial-index{visibility:hidden}
+html body .remind-row .remind-text{margin:0 0 10px!important;font-size:16px!important;line-height:1.8!important;color:var(--text-primary)!important;letter-spacing:.06em!important}
+html body .remind-row .remind-text .text-button{margin-left:10px;font-size:14px!important;padding:0!important}
+html body .remind-row .remind-form{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+html body .remind-row .remind-time{width:auto!important;height:38px!important;padding:0 2px!important;border:0!important;border-bottom:1px solid rgba(var(--btn-gold),.4)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:rgb(var(--btn-ink))!important;font-size:16px!important;font-family:var(--font-reading)!important;letter-spacing:.06em;color-scheme:dark;outline:none}
+html:root[data-theme=light] body .remind-row .remind-time{color-scheme:light}
+html body .remind-row .remind-time:focus{border-bottom-color:rgba(var(--btn-gold),.9)!important}
+@media (min-width:1024px){html body .remind-row .remind-text{font-size:18px!important}}
