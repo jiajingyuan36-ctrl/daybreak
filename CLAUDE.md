@@ -53,6 +53,9 @@ npm run build
 
 打包时文件清单与原包一致：git ls-files 去掉 .gitignore、.gitattributes、.github/、content-kit/、CLAUDE.md、README.md 和 legacy-static/fonts/SourceHanSansCN.woff2（unpack.mjs 部署时另行下载），再加上 prebuild 生成的 src/data/*.json，全部放在 app/ 下。改了前端文件要把 public/sw.js 的缓存版本号加一。**打包时不要用 tar --mtime 把文件时间固定成同一个值**：Render 会保留上一次的构建缓存，构建工具按文件修改时间判断有没有改动，时间不变就会沿用旧页面（sw.js 照样更新，看起来像发布成功）。2026-11-09 因此有三次发布的页面没有更新。验证上线要看页面内容本身，不能只看 sw.js 版本号。CDN 会缓存约 5 分钟；app.js 是模块脚本，浏览器请求带 Origin 头，CDN 单独缓存一份，验证线上时要等它也刷新。
 
+## 线上测试不要算进访问统计
+用浏览器（Playwright 等）打开线上网站做验证之前，先让 Umami 不统计这次访问：在页面加载前设置 localStorage 的 `umami.disabled` 为 `1`（Playwright：`context.addInitScript(()=>localStorage.setItem('umami.disabled','1'))`）。模拟 iPhone 的测试会被 Umami 当成真实手机用户；2026-11-14 的数据（「美国 18 位、抽牌 9 次」）有一大部分是这样来的测试访问。
+
 ## 样式注意
 epic.css 开头有 `body *{border-radius:0!important;box-shadow:none!important;backdrop-filter:none!important}`，要投影、圆角或毛玻璃必须用更具体的选择器并加 !important；关键帧动画改不动 box-shadow。按压手感统一由 src/tactile.ts（initTactile 挂在 site-chrome，给控件加 .is-pressed/.is-releasing；triggerHaptic 微震；busyButton 菊花→✓）处理；下拉统一用毛玻璃浮层（旧版页面用 src/popover.ts 的 glassSelect 包原生 select，React 头部是 ThemePicker）。抽牌到揭晓（以及换一张）的动画在 src/draw-motion.ts，用 Web Animations API 驱动（全站 CSS 的 !important 规则会吃掉普通 CSS 动画和投影），app.ts 里 drawPhase 不在 idle 时拒绝新的抽牌。视图过渡是“先出后入”（旧 180ms 淡出，新延迟 180ms 淡入），不要改回交叉淡化，否则换一张和换页会叠影。epic.css 给所有 [role=button] 等控件设了 touch-action:manipulation，需要拖动/划动的手势区（牌堆、牌扇、北斗星空）必须用更具体的选择器加 !important 锁回 none，否则一划就被浏览器当成滚动、手势失效。旧版页面还会加载 legacy-static/style.css，其中 .primary 有 min-width 等规则。tests/font.test.ts 会检查源码（含注释）里的每个汉字都在精简字体中，新加汉字前先确认或重新抽字。
 
