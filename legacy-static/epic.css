@@ -1675,3 +1675,39 @@ html body .ask-row .ask-q{margin:0 0 10px!important;font-size:14px!important;let
 html body .ask-row .ask-q::before{content:'问　';opacity:.6}
 html body .ask-row .ask-a{margin:0 0 1rem!important;color:var(--fg)!important}
 html body .ask-row .ask-a.is-care{color:var(--fg)!important}
+
+/* =====================================================================
+   手机导航（2026-11-14）：一行到底，品牌在左，右边「日历 · 塔罗 · 更多」+ 外观按钮。
+   其余五个入口收进「更多」浮层；电脑上仍是七个链接一行。
+   ===================================================================== */
+.nav-compact,.more-sheet{display:none}
+@media (max-width:650px){
+ html body .shared-header{z-index:130!important;flex-wrap:nowrap!important;min-height:0!important;padding:14px 0!important;gap:14px!important;align-items:center!important}
+ html body .shared-header .nav-full{display:none!important}
+ html body .shared-header .nav-compact{display:block!important;position:relative;margin-left:auto!important;order:2}
+ html body .shared-header .nav-compact nav{display:flex!important;align-items:center;gap:20px!important;width:auto!important;margin:0!important;order:0}
+ html body .shared-header .nav-compact nav :is(a,.nav-more){position:relative;display:inline-flex!important;align-items:center;gap:4px;height:36px;min-height:0!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;font-family:var(--font-reading)!important;font-size:15px!important;letter-spacing:.12em!important;color:var(--text-muted)!important;text-decoration:none!important;cursor:pointer}
+ html body .shared-header .nav-compact nav :is(a[aria-current=page],.nav-more.is-here,.nav-more[aria-expanded=true]){color:var(--text-primary)!important}
+ html body .shared-header .nav-compact .nav-mark{bottom:4px}
+ html body .nav-more svg{width:9px;height:6px;fill:none;stroke:currentColor;stroke-width:1.2;margin-left:2px;transition:transform .25s ease}
+ html body .nav-more[aria-expanded=true] svg{transform:rotate(180deg)}
+ html body .shared-header .theme-toggle{order:3;margin-left:0!important;flex:none}
+ html body .more-sheet{display:block!important;position:absolute;top:calc(100% + 10px);right:-52px;z-index:120;width:min(280px,calc(100vw - 32px));padding:8px!important;border:1px solid rgba(197,165,110,.32)!important;border-radius:16px!important;background:rgba(14,13,19,.97)!important;box-shadow:0 24px 60px rgba(0,0,0,.6)!important}
+ html body .shared-header .more-sheet a{display:flex!important;width:100%!important;flex-direction:column;gap:3px;padding:12px 14px!important;border-radius:10px!important;text-decoration:none!important;color:var(--text-primary)!important}
+ html body .more-sheet a+a{border-top:1px solid rgba(197,165,110,.1)!important;border-radius:0 0 10px 10px!important}
+ html body .more-sheet a b{font-weight:400;font-size:16px;letter-spacing:.14em}
+ html body .more-sheet a small{font-size:12px;letter-spacing:.06em;color:var(--text-muted)}
+ html body .more-sheet a[aria-current=page] b{color:#C5A56E}
+ @media (hover:hover){html body .more-sheet a:hover{background:rgba(197,165,110,.07)!important}}
+ html:root[data-theme=light] body .more-sheet{background:rgba(251,248,242,.98)!important;border-color:rgba(138,106,46,.3)!important;box-shadow:0 20px 50px rgba(60,45,20,.18)!important}
+ html:root[data-theme=light] body .more-sheet a[aria-current=page] b{color:#8A6D3B}
+}
+@media (max-width:370px){
+ html body .shared-header{gap:10px!important}
+ html body .shared-header .nav-compact nav{gap:13px!important;flex-wrap:nowrap!important}
+ html body .shared-header .nav-compact nav :is(a,.nav-more){font-size:14px!important;letter-spacing:.06em!important;white-space:nowrap}
+ html body .shared-brand .brand-main{font-size:17px!important;letter-spacing:.06em!important}
+ html body .shared-brand .brand-sub{font-size:8px!important;letter-spacing:.16em!important}
+ html body .shared-header .theme-toggle{width:32px!important;height:32px!important}
+ html body .more-sheet{right:-44px}
+}
