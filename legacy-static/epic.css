@@ -1623,10 +1623,10 @@ html body,html body *{font-variant-numeric:lining-nums!important;font-variant-em
 :root{--btn-gold:197,165,110;--btn-ink:241,234,219}
 html:root[data-theme=light]{--btn-gold:138,106,46;--btn-ink:42,37,32}
 /* 主按钮 */
-html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster){display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:12px!important;height:50px!important;min-height:50px!important;width:auto!important;min-width:0!important;padding:0 30px!important;border:1px solid rgba(var(--btn-gold),.55)!important;border-radius:999px!important;background:linear-gradient(180deg,rgba(var(--btn-gold),.10),rgba(var(--btn-gold),.03))!important;color:rgb(var(--btn-ink))!important;font-family:var(--font-reading)!important;font-size:16px!important;font-weight:400!important;letter-spacing:.16em!important;line-height:1!important;box-shadow:none!important;text-decoration:none!important;cursor:pointer;transition:border-color .3s ease,background-color .3s ease,transform .2s ease!important}
-@media (hover:hover){html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster):hover:not(:disabled){border-color:rgba(var(--btn-gold),.9)!important;background:linear-gradient(180deg,rgba(var(--btn-gold),.16),rgba(var(--btn-gold),.06))!important}}
-html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster):active:not(:disabled){transform:scale(.97)}
-html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster):disabled{opacity:.45}
+html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster,.quiz-primary){display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:12px!important;height:50px!important;min-height:50px!important;width:auto!important;min-width:0!important;padding:0 30px!important;border:1px solid rgba(var(--btn-gold),.55)!important;border-radius:999px!important;background:linear-gradient(180deg,rgba(var(--btn-gold),.10),rgba(var(--btn-gold),.03))!important;color:rgb(var(--btn-ink))!important;font-family:var(--font-reading)!important;font-size:16px!important;font-weight:400!important;letter-spacing:.16em!important;line-height:1!important;box-shadow:none!important;text-decoration:none!important;cursor:pointer;transition:border-color .3s ease,background-color .3s ease,transform .2s ease!important}
+@media (hover:hover){html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster,.quiz-primary):hover:not(:disabled){border-color:rgba(var(--btn-gold),.9)!important;background:linear-gradient(180deg,rgba(var(--btn-gold),.16),rgba(var(--btn-gold),.06))!important}}
+html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster,.quiz-primary):active:not(:disabled){transform:scale(.97)}
+html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster,.quiz-primary):disabled{opacity:.45}
 /* 抽牌按钮：去掉方框分格和英文小字，只留「✦ 替我选一张 →」 */
 html body .minimal-ritual .primary.draw{grid-template-columns:none!important}
 html body .minimal-ritual .primary.draw>span{display:inline-flex!important;padding:0!important;border:0!important}
@@ -1636,8 +1636,8 @@ html body .minimal-ritual .primary.draw .draw-star{font-size:12px!important;colo
 html body .minimal-ritual .primary.draw .draw-arrow svg{width:22px!important;height:8px!important;stroke:rgba(var(--btn-gold),.85)!important}
 html body .home-cta>span:last-child{color:rgba(var(--btn-gold),.85)!important}
 /* 次要按钮 */
-html body :is(.result-tools .redraw,.review-save,.setting-row button,.export-data,.legacy-share-options button,.export-dipper){display:inline-flex!important;align-items:center!important;justify-content:center!important;height:40px!important;min-height:40px!important;width:auto!important;min-width:0!important;padding:0 20px!important;border:1px solid rgba(var(--btn-ink),.16)!important;border-radius:999px!important;background:transparent!important;color:rgba(var(--btn-ink),.78)!important;font-family:var(--font-reading)!important;font-size:14px!important;font-weight:400!important;letter-spacing:.1em!important;line-height:1!important;box-shadow:none!important;cursor:pointer;transition:border-color .3s ease,color .3s ease!important}
-@media (hover:hover){html body :is(.result-tools .redraw,.review-save,.setting-row button,.export-data,.legacy-share-options button,.export-dipper):hover:not(:disabled){border-color:rgba(var(--btn-gold),.6)!important;color:rgb(var(--btn-ink))!important}}
+html body :is(.result-tools .redraw,.review-save,.setting-row button,.export-data,.legacy-share-options button,.export-dipper,.quiz-secondary){display:inline-flex!important;align-items:center!important;justify-content:center!important;height:40px!important;min-height:40px!important;width:auto!important;min-width:0!important;padding:0 20px!important;border:1px solid rgba(var(--btn-ink),.16)!important;border-radius:999px!important;background:transparent!important;color:rgba(var(--btn-ink),.78)!important;font-family:var(--font-reading)!important;font-size:14px!important;font-weight:400!important;letter-spacing:.1em!important;line-height:1!important;box-shadow:none!important;cursor:pointer;transition:border-color .3s ease,color .3s ease!important}
+@media (hover:hover){html body :is(.result-tools .redraw,.review-save,.setting-row button,.export-data,.legacy-share-options button,.export-dipper,.quiz-secondary):hover:not(:disabled){border-color:rgba(var(--btn-gold),.6)!important;color:rgb(var(--btn-ink))!important}}
 html body .review-save.is-saved{border-color:rgba(var(--btn-gold),.45)!important;color:rgb(var(--btn-gold))!important}
 /* 文字链接 */
 html body :is(.text-button,.legacy-share>summary,.home-minor .home-ghost){border:0!important;background:none!important;box-shadow:none!important;padding:6px 2px!important;min-height:0!important;color:rgba(var(--btn-gold),.9)!important;font-size:14px!important;letter-spacing:.12em!important;text-decoration:none!important;cursor:pointer}
@@ -1729,7 +1729,7 @@ html body .ask-row .ask-a.is-care{color:var(--fg)!important}
  html body main.home-v2 .moon-note{font-size:14px!important}
  html body main.home-v2 .home-lead{font-size:15px!important}
  html body main.home-v2 .home-actions{gap:18px!important;margin-top:44px!important}
- html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster){height:56px!important;min-height:56px!important;padding:0 36px!important;font-size:17px!important}
+ html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster,.quiz-primary){height:56px!important;min-height:56px!important;padding:0 36px!important;font-size:17px!important}
  html body main.home-v2 .home-ask{width:min(100%,460px)!important}
  html body main.home-v2 .home-ask label{font-size:14px!important}
  html body main.home-v2 .home-ask input{font-size:17px!important;height:46px!important}
@@ -1777,3 +1777,72 @@ html body .remind-row .remind-time{width:auto!important;height:38px!important;pa
 html:root[data-theme=light] body .remind-row .remind-time{color-scheme:light}
 html body .remind-row .remind-time:focus{border-bottom-color:rgba(var(--btn-gold),.9)!important}
 @media (min-width:1024px){html body .remind-row .remind-text{font-size:18px!important}}
+
+/* =====================================================================
+   性格测试「你是哪张塔罗牌」（2026-11-16）：沿用全站的按钮、金色和罗马数字版式。
+   ===================================================================== */
+html body .quiz-page{max-width:600px!important;margin:0 auto!important;padding-top:8px!important}
+html body .quiz-stage{max-width:560px;margin:0 auto;text-align:center}
+html body .quiz-eyebrow{margin:0 0 14px!important;font-size:13px!important;letter-spacing:.38em!important;padding-left:.38em;color:rgb(var(--btn-gold))!important}
+html body .quiz-intro{padding:8px 0 24px}
+html body .quiz-intro h1,html body .quiz-result h1{margin:0 0 14px!important;font-size:clamp(34px,8vw,52px)!important;font-weight:300!important;letter-spacing:.12em!important;padding-left:.12em;line-height:1.25!important;text-align:center!important}
+html body .quiz-sub{margin:0 0 30px!important;font-size:16px!important;line-height:1.95!important;color:var(--text-muted)!important;letter-spacing:.06em}
+html body .quiz-note{margin:16px 0 0!important;font-size:12px!important;line-height:1.8!important;color:var(--text-muted)!important;opacity:.75;letter-spacing:.04em}
+html body .quiz-last{display:block;margin:18px auto 0!important}
+/* 开场的五张牌背，扇形摊开 */
+html body .quiz-fan{position:relative;height:212px;margin:6px auto 26px;width:100%}
+html body .quiz-fan-card{position:absolute;left:50%;bottom:8px;width:104px;height:173px;margin-left:-52px;transform-origin:50% 100%;transform:translateX(calc(var(--i) * 34px)) rotate(calc(var(--i) * 9deg));border-radius:7px!important;overflow:hidden;box-shadow:0 0 0 1px rgba(197,165,110,.5),0 16px 34px rgba(0,0,0,.55)!important}
+html body .quiz-fan-card svg{display:block;width:100%;height:100%}
+html body .quiz-fan::before{content:'';position:absolute;left:50%;top:50%;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%!important;background:radial-gradient(circle,rgba(197,165,110,.16),rgba(197,165,110,0) 65%)}
+html body .quiz-primary>span,html body .quiz-secondary>span{color:rgba(var(--btn-gold),.85);margin-left:2px}
+/* 答题 */
+html body .quiz-q{text-align:left;padding:4px 0 24px}
+html body .quiz-progress{display:flex;align-items:center;gap:14px;margin:0 0 26px}
+html body .quiz-count{flex:none;font-family:var(--font-display)!important;font-size:13px!important;letter-spacing:.2em;color:rgb(var(--btn-gold))}
+html body .quiz-count i{font-style:normal;opacity:.5;margin:0 2px}
+html body .quiz-bar{flex:1;height:1px;background:rgba(var(--btn-ink),.12);position:relative;overflow:hidden}
+html body .quiz-bar span{position:absolute;left:0;top:0;bottom:0;background:rgb(var(--btn-gold));transition:width .45s cubic-bezier(.22,1,.36,1)}
+html body .quiz-q h2{margin:0 0 24px!important;font-size:clamp(22px,5.6vw,30px)!important;font-weight:400!important;line-height:1.6!important;letter-spacing:.06em!important;color:var(--text-primary)!important;text-align:left!important}
+html body .quiz-options{display:grid;gap:12px}
+html body .quiz-option{display:flex!important;align-items:center;gap:14px;width:100%!important;min-height:58px!important;padding:14px 18px!important;border:1px solid rgba(var(--btn-ink),.14)!important;border-radius:14px!important;background:rgba(var(--btn-ink),.015)!important;box-shadow:none!important;color:var(--text-primary)!important;font-family:var(--font-reading)!important;font-size:16px!important;line-height:1.6!important;letter-spacing:.04em;text-align:left!important;cursor:pointer;transition:border-color .25s ease,background-color .25s ease,opacity .25s ease}
+html body .quiz-option .quiz-letter{flex:none;width:26px;font-family:var(--font-display)!important;font-size:13px;letter-spacing:.1em;color:rgba(var(--btn-gold),.75)}
+@media (hover:hover){html body .quiz-option:hover:not(:disabled){border-color:rgba(var(--btn-gold),.55)!important}}
+html body .quiz-option.was-picked{border-color:rgba(var(--btn-gold),.4)!important}
+html body .quiz-option.is-picked{border-color:rgba(var(--btn-gold),.85)!important;background:rgba(var(--btn-gold),.12)!important}
+html body .quiz-option:disabled{opacity:.4}
+html body .quiz-back{margin:22px 0 0!important}
+/* 结果 */
+html body .quiz-result{padding:4px 0 30px}
+html body .quiz-plate{width:min(220px,58vw);margin:0 auto 26px;transform-origin:50% 50%}
+html body .quiz-plate .tarot-plate{display:block;width:100%}
+html body .quiz-line{margin:0 0 30px!important;font-size:20px!important;letter-spacing:.12em!important;color:rgb(var(--btn-gold))!important}
+html body .quiz-reading{text-align:left;margin:0 0 30px;border-top:1px solid rgba(var(--btn-gold),.18)}
+html body .quiz-actions{display:flex;flex-direction:column;align-items:center;gap:14px}
+html body .quiz-status{margin:0!important;min-height:1.2em;font-size:13px!important;line-height:1.8;color:var(--text-muted)!important;word-break:break-all}
+html body .quiz-status:empty{display:none}
+html body .quiz-next{margin:36px 0 0;padding:28px 0 0;border-top:1px solid rgba(var(--btn-gold),.18)}
+html body .quiz-next p{margin:0 0 16px!important;font-size:15px!important;line-height:1.9;color:var(--text-muted)!important}
+/* 结果图浮层 */
+html body .quiz-sheet{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(5,5,8,.84)}
+html body .quiz-sheet-box{width:min(400px,100%);max-height:100%;overflow:auto;padding:16px!important;border:1px solid rgba(197,165,110,.32)!important;border-radius:18px!important;background:#121116!important;box-shadow:0 30px 80px rgba(0,0,0,.6)!important;text-align:center}
+html body .quiz-sheet-box img{display:block;width:100%;height:auto;border-radius:8px!important}
+html body .quiz-clean{display:flex;align-items:center;justify-content:center;gap:8px;margin:12px 0 0;font-size:13px;color:var(--text-muted);cursor:pointer}
+html body .quiz-clean input{-webkit-appearance:none!important;appearance:none!important;flex:none;width:16px!important;height:16px!important;margin:0!important;border:1px solid rgba(var(--btn-gold),.6)!important;border-radius:3px!important;background:transparent!important}
+html body .quiz-clean input:checked{background:rgb(var(--btn-gold))!important}
+html body .quiz-sheet-actions{display:flex;justify-content:center;gap:12px;margin:16px 0 4px}
+html:root[data-theme=light] body .quiz-sheet{background:rgba(40,32,20,.5)}
+html:root[data-theme=light] body .quiz-sheet-box{background:#FBF8F2!important;border-color:rgba(138,106,46,.3)!important}
+@media (min-width:1024px){
+ html body .quiz-page{max-width:680px!important;padding-top:4vh!important}
+ html body .quiz-stage{max-width:620px}
+ html body .quiz-plate{width:260px}
+ html body .quiz-option{font-size:17px!important;min-height:62px!important}
+ html body .quiz-sub{font-size:17px!important}
+ html body .quiz-line{font-size:22px!important}
+ html body .quiz-reading .editorial-copy p{font-size:19px!important}
+}
+/* 结果图浮层：内容比屏幕高时从顶部开始、整体可滚动（居中会把图片顶出屏幕） */
+html body .quiz-sheet{align-items:flex-start!important;overflow-y:auto}
+html body .quiz-sheet-box{margin:auto 0;max-height:none!important;overflow:visible}
+html body .quiz-sheet-box img{max-height:68vh;width:auto!important;max-width:100%;margin:0 auto}
+html body .quiz-fan-card{width:96px!important;height:160px!important;margin-left:-48px!important;transform:translateX(calc(var(--i) * 30px)) rotate(calc(var(--i) * 9deg))!important}
