@@ -1846,3 +1846,18 @@ html body .quiz-sheet{align-items:flex-start!important;overflow-y:auto}
 html body .quiz-sheet-box{margin:auto 0;max-height:none!important;overflow:visible}
 html body .quiz-sheet-box img{max-height:68vh;width:auto!important;max-width:100%;margin:0 auto}
 html body .quiz-fan-card{width:96px!important;height:160px!important;margin-left:-48px!important;transform:translateX(calc(var(--i) * 30px)) rotate(calc(var(--i) * 9deg))!important}
+
+/* 单张牌页的长内容（2026-11-16）：感情、事业、是否、误读、常见问题。沿用「放到生活里」的排版，不加框 */
+html body .card-page .card-pair{display:grid;gap:14px;margin:0}
+html body .card-page .card-pair>div{display:grid;grid-template-columns:3em minmax(0,1fr);gap:12px;align-items:baseline}
+html body .card-page .card-pair dt{font-size:14px;letter-spacing:.2em;color:rgb(var(--btn-gold))}
+html body .card-page .card-pair dd{margin:0;line-height:1.95}
+html body .card-page .card-yes p{display:flex;gap:14px;align-items:baseline;margin:0}
+html body .card-page .yes-mark{flex:none;font-weight:400;font-size:20px;letter-spacing:.12em;color:rgb(var(--btn-gold))}
+html body .card-page .card-misread{list-style:none;margin:0;padding:0;display:grid;gap:18px}
+html body .card-page .card-misread li{padding-left:14px;border-left:1px solid rgba(var(--btn-gold),.4)}
+html body .card-page .card-misread p{margin:0}
+html body .card-page .card-misread .mis-a{margin:0 0 4px;color:var(--text-muted);text-decoration:line-through;text-decoration-color:rgba(var(--btn-gold),.6)}
+html body .card-page .card-faq .faq-item{margin:0 0 18px}
+html body .card-page .card-faq h3{margin:0 0 6px!important;font-size:16px!important;font-weight:400;letter-spacing:.06em;color:var(--text-primary)}
+html body .card-page .card-faq .faq-item p{margin:0;color:var(--text-muted)}
