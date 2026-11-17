@@ -29,7 +29,7 @@ async function run(mode,rate){
  const ctx=await browser.newContext({...devices['iPhone 13'],colorScheme:'dark'});
  await ctx.addInitScript(()=>{try{localStorage.setItem('umami.disabled','1')}catch{}});
  const page=await ctx.newPage();const cdp=await ctx.newCDPSession(page);
- await page.goto(base+'/ritual/',{waitUntil:'networkidle'});await page.waitForTimeout(800);
+ await page.goto(base+'/ritual/',{waitUntil:'load'});await page.waitForTimeout(1500);
  if(mode==='fan'){
   // 牌扇：长按牌堆洗牌 → 再按一次切牌 → 等牌扇展开
   await page.focus('.deck-pile');await page.keyboard.down('Enter');await page.waitForTimeout(2300);await page.keyboard.up('Enter');
