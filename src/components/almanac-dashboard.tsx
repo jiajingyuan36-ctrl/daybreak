@@ -1,5 +1,5 @@
 'use client';
-import {useEffect,useRef,useState,type FormEvent} from 'react';
+import {useEffect,useRef,useState,type FormEvent,type ReactNode} from 'react';
 import {chinaDateString,dateAtChinaNoon} from '../lib/china-date';
 import type {DailyGravity} from '../lib/almanac-engine';
 import type {PersonalFortune} from '../lib/bazi-fortune';
@@ -36,7 +36,7 @@ function AskEntry(){const [q,setQ]=useState(''),[hint,setHint]=useState('');
  return <form className="home-ask" onSubmit={submit} autoComplete="off"><label htmlFor="home-ask-q">或者，带着一个问题来</label><div className="home-ask-row"><input id="home-ask-q" maxLength={ASK_MAX} value={q} onChange={e=>{setQ(e.target.value);setHint('')}} placeholder="心里有个问题？比如：要不要跟他说开"/><button type="submit" aria-label="抽一张牌来回答">问<span aria-hidden="true">→</span></button></div><p className="home-ask-hint" role="status">{hint||(q?'问题会发给 AI 服务（DeepSeek），别写真实名字。':'抽一张牌，AI 从牌义出发给你一个看问题的角度')}</p></form>}
 const PILLARS=[['year','年柱'],['month','月柱'],['day','日柱'],['time','时柱']] as const;
 function FortunePanel({f}:{f:PersonalFortune}){const c=f.chart;return <section className="personal-fortune" aria-labelledby="fortune-title"><p className="fortune-kicker">今日运势 · {f.shiShen}</p><h2 id="fortune-title">{f.title}</h2><p className="fortune-summary">{f.summary}</p>{f.branchNote&&<p className="fortune-note">{f.branchNote}</p>}<dl className="fortune-areas">{f.areas.map(a=><div key={a.name}><dt>{a.name}<span className={`fortune-level level-${a.level==='顺'?'good':a.level==='平'?'even':'care'}`}>{a.level}</span></dt><dd>{a.text}</dd></div>)}</dl><div className="fortune-dos"><p><span>适合</span>{f.doThis}</p><p><span>先别</span>{f.avoid}</p></div><p className="fortune-meta">今日 {f.dayPillar} · 喜神{f.positions.xi} · 财神{f.positions.cai}</p><details className="fortune-chart"><summary>你的八字</summary><div className="pillars">{PILLARS.map(([k,label])=><div key={k}><small>{label}</small><strong>{c.pillars[k]??'—'}</strong></div>)}</div><p>{f.why}</p><p>日主 {c.dayMaster}（{c.dayMasterElement}） · 生肖{c.shengXiao}{c.hourKnown?'':' · 未填出生时间，时柱不排'}</p><p>五行 {Object.entries(c.elements).map(([e,n])=>`${e}${n}`).join(' ')}</p></details><p className="fortune-basis">{f.basis} <a href="/settings/">修改生辰</a></p></section>}
-export function AlmanacDashboard({initialReading}:{initialReading:DailyGravity}){
+export function AlmanacDashboard({initialReading,children}:{initialReading:DailyGravity;children?:ReactNode}){
  const [date,setDate]=useState(initialReading.date),[birth,setBirth]=useState(''),[birthTime,setBirthTime]=useState(''),[fortune,setFortune]=useState<PersonalFortune|null|false>(null),[textured,setTextured]=useState(false),[reading,setReading]=useState(initialReading),[status,setStatus]=useState(''),[busy,setBusy]=useState(false),[follow,setFollow]=useState(true);const sheet=useRef<HTMLElement>(null),fadeLeft=useRef<HTMLDivElement>(null),fadeRight=useRef<HTMLDivElement>(null),[exporting,setExporting]=useState(false),shown=useRef(''),[showFortune,setShowFortune]=useState(false);
  // 「今日运势」：点开才展开在日签下方（没填生辰时展开的是填生辰），并滚过去
  function openFortune(){setShowFortune(true);requestAnimationFrame(()=>document.getElementById('today-fortune')?.scrollIntoView({behavior:'smooth',block:'start'}))}
@@ -94,5 +94,5 @@ export function AlmanacDashboard({initialReading}:{initialReading:DailyGravity})
   <p className="export-date">{date} · {BRAND_NAME} · {SITE_HOST}</p>
  </article>:<div className="minimal-loading" role="status">正在读取日期</div>}
  {showFortune&&<div id="today-fortune">{fortune?<FortunePanel f={fortune}/>:fortune===false?<p role="status">无法读取日期，请重试。</p>:birth&&birth<=date?<div className="minimal-loading" role="status">正在读取日期</div>:<BirthInline onSaved={(d,t)=>{setBirthTime(t);setBirth(d)}}/>}</div>}
- <p className="status-message" role="status">{status}</p></main>
+ <p className="status-message" role="status">{status}</p>{!exporting&&children}</main>
 }
