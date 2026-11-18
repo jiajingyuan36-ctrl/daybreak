@@ -116,3 +116,40 @@ html body .card-head .card-en::before,html body .card-head .card-en::after{conte
 
 /* ---------- 其余的胶囊形控件一律改成直角细框（圆形的主题按钮、关闭按钮保留） ---------- */
 html body :is(.copy-contact,.mood-chip,.result-tools button,.review-save,.glass-trigger,.date-pill,.date-line input,.install-hint button,.codex-segs,.codex-segs button,.codex-search,.codex-mode,.codex-mode button,.codex-badge,.insp-bar,.insp-bar button,.insp-astro,.insp-chips span,.ritual-switch,.ritual-switch button,.minimal-ritual .dipper-all,.almanac-grid .calendar-season,.tarot-workbench .ribbon-btn,.deep-pills li,.deep-card .copy-contact,.install-setting .install-now,.dateline .today-reset,.sky-pill,.home-cta,.card-keys li,.card-draw,.home-v2 .home-ask button,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster,.quiz-primary,.quiz-secondary,.quiz-option,.setting-row button,.export-data){border-radius:0!important}
+
+/* ======== 细节打磨（2026-11-18 第二轮） ======== */
+
+/* 「今天可做」：去掉旧的金色竖条和灰底，换成四角带扇形光芒的双线题签 */
+html body .ritual-ticket .editorial-copy{position:relative;border:1px solid rgba(var(--orn),.34)!important;border-inline-start-width:1px!important;background:radial-gradient(ellipse at 50% 0,rgba(var(--orn),.05),transparent 70%)!important;border-radius:0!important;padding:20px clamp(18px,4vw,26px)!important;outline:1px solid rgba(var(--orn),.12);outline-offset:4px}
+html body .ritual-ticket .editorial-copy::after{content:'';position:absolute;inset:-5px;pointer-events:none;background:rgb(var(--orn));opacity:.75;
+ -webkit-mask:var(--orn-fan) top left/26px no-repeat,var(--orn-fan-tr) top right/26px no-repeat,var(--orn-fan-bl) bottom left/26px no-repeat,var(--orn-fan-br) bottom right/26px no-repeat;
+ mask:var(--orn-fan) top left/26px no-repeat,var(--orn-fan-tr) top right/26px no-repeat,var(--orn-fan-bl) bottom left/26px no-repeat,var(--orn-fan-br) bottom right/26px no-repeat}
+html body .ritual-ticket .editorial-copy>:is(h2,h3){color:rgb(var(--gold-hi-rgb))}
+html body :is(.ritual-check,.ritual-done){border-radius:0!important}
+
+/* 结果页的「正位 / 逆位」：两侧小四芒星，字距加宽 */
+html body .minimal-result .orientation{letter-spacing:.42em!important;color:rgba(var(--orn),.78)!important}
+html body .minimal-result .orientation::before,html body .minimal-result .orientation::after{content:'';display:inline-block;width:8px;height:8px;margin:0 .9em;vertical-align:.1em;background:currentColor;opacity:.7;-webkit-mask:var(--orn-star) center/contain no-repeat;mask:var(--orn-star) center/contain no-repeat}
+
+/* 「明天早上，来抽下一张」上面一道星形分隔线，把阅读区和下一天隔开 */
+html body .minimal-result .remind-row{border-top:0!important;padding-top:2.4rem!important;position:relative}
+html body .minimal-result .remind-row::before{content:'';position:absolute;left:50%;top:0;width:min(220px,60%);height:15px;transform:translateX(-50%);background:rgb(var(--orn));opacity:.6;-webkit-mask:var(--orn-divider) center/contain no-repeat;mask:var(--orn-divider) center/contain no-repeat}
+
+/* 顶栏当前页：下划线换成正下方一颗小四芒星 */
+html body .shared-header nav a[aria-current=page]::after{left:50%;right:auto;width:9px;height:9px;bottom:-12px;margin-left:-4.5px;transform:none!important;background:currentColor;opacity:.85;-webkit-mask:var(--orn-star) center/contain no-repeat;mask:var(--orn-star) center/contain no-repeat}
+
+/* 单张牌页的小节标题：前面一颗小星 */
+html body .card-page h2:not(.editorial-copy h2){position:relative;padding-left:20px;letter-spacing:.12em}
+html body .card-page h2:not(.editorial-copy h2)::before{content:'';position:absolute;left:0;top:50%;width:11px;height:11px;margin-top:-6px;background:rgb(var(--orn));opacity:.75;-webkit-mask:var(--orn-star) center/contain no-repeat;mask:var(--orn-star) center/contain no-repeat}
+
+/* 测试题：A B C D 用 Cinzel，选项悬停时框线变亮 */
+html body .quiz-letter{font-family:var(--font-cinzel),Georgia,serif!important;letter-spacing:.06em;color:rgba(var(--orn),.6)!important}
+@media (hover:hover){html body .quiz-option:hover:not(:disabled){border-color:rgba(var(--orn),.6)!important;background:rgba(var(--orn),.04)!important}}
+html body .quiz-option.is-picked{border-color:rgba(var(--orn),.85)!important;box-shadow:inset 0 0 0 3px var(--bg),inset 0 0 0 4px rgba(var(--orn),.3)!important}
+
+/* 图鉴小牌：外面一道细线，像装裱 */
+html body .codex-face{outline:1px solid rgba(var(--orn),.12);outline-offset:3px}
+html body .codex-card:hover .codex-face{outline-color:rgba(var(--orn),.35)}
+
+/* 文字链接：下划线细一点、离字远一点 */
+html body main a:not([class]){text-decoration-thickness:.5px;text-underline-offset:.32em;text-decoration-color:rgba(var(--orn),.45)}
