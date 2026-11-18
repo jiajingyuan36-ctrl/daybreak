@@ -14,5 +14,5 @@ function collect(file){
 }
 collect(entry);
 await writeFile('public/js/startup.json',JSON.stringify([...startup].map(file=>file.replace(/^public/,''))));
-for(const name of ['style.css','epic.css','fonts','icon.svg','icon-180.png','icon-192.png','icon-512.png','ASTRONOMY-LICENSE.txt','manifest.webmanifest'])await cp('legacy-static/'+name,'public/'+name,{recursive:true});
+for(const name of ['style.css','epic.css','ornaments.css','engraved.css','fonts','icon.svg','icon-180.png','icon-192.png','icon-512.png','ASTRONOMY-LICENSE.txt','manifest.webmanifest'])await cp('legacy-static/'+name,'public/'+name,{recursive:true});
 await copyFile('node_modules/lunar-javascript/LICENSE','public/LUNAR-LICENSE.txt');

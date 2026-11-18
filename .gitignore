@@ -9,6 +9,8 @@ next-env.d.ts
 public/js/
 public/style.css
 public/epic.css
+public/ornaments.css
+public/engraved.css
 public/fonts/
 public/icon*.svg
 public/icon-*.png

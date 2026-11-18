@@ -3,6 +3,8 @@ import {preload} from 'react-dom';
 import serifFont from '../legacy-static/fonts/serif-sc.json';
 import './globals.css';
 import '../legacy-static/epic.css';
+import '../legacy-static/ornaments.css';
+import '../legacy-static/engraved.css';
 import '../legacy-static/fonts/serif-sc.css';
 import {SiteChrome} from '../src/components/site-chrome';
 import type {Metadata} from 'next';

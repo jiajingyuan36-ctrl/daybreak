@@ -1,6 +1,6 @@
-const CACHE='daybreak-v86';
-const STABLE=/^\/(?:_next\/static\/|js\/|fonts\/|rws\/|moon\/|(?:epic|style)\.css$)|\.(?:woff2|png|svg|webp|webmanifest)$/;
-const ASSET=/(?:href|src)="(\/(?:_next\/static\/|js\/|fonts\/|(?:epic|style)\.css)[^"]*)"/g;
+const CACHE='daybreak-v87';
+const STABLE=/^\/(?:_next\/static\/|js\/|fonts\/|rws\/|moon\/|(?:epic|style|ornaments|engraved)\.css$)|\.(?:woff2|png|svg|webp|webmanifest)$/;
+const ASSET=/(?:href|src)="(\/(?:_next\/static\/|js\/|fonts\/|(?:epic|style|ornaments|engraved)\.css)[^"]*)"/g;
 const ENTRY_PATHS=['/','/ritual/'];
 const refreshes=new Map();
 

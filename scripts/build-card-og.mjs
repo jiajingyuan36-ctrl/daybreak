@@ -20,25 +20,25 @@ const page=c=>`<!doctype html><html><head><meta charset="utf-8"><base href="${BA
 *{margin:0;box-sizing:border-box}
 html,body{width:1200px;height:630px;overflow:hidden}
 body{position:relative;background:radial-gradient(760px 520px at 24% 50%,#1d1b20 0%,#121214 60%,#0e0e10 100%);color:#EDE6D8;font-family:DaybreakSerif,serif}
-.frame{position:absolute;inset:30px;border:1px solid rgba(197,165,110,.42)}
-.ring{position:absolute;left:228px;top:315px;width:340px;height:340px;margin:-170px 0 0 -170px;border:1px solid rgba(197,165,110,.16);border-radius:50%}
-.ring.b{width:300px;height:300px;margin:-150px 0 0 -150px;border-style:dashed;border-color:rgba(197,165,110,.12)}
-.card{position:absolute;left:108px;top:108px;width:240px;height:412px;padding:7px;background:#F1E9D8;border-radius:5px;box-shadow:0 18px 40px rgba(0,0,0,.55),0 0 0 1px rgba(197,165,110,.55)}
+.frame{position:absolute;inset:30px;border:1px solid rgba(216,207,186,.42)}
+.ring{position:absolute;left:228px;top:315px;width:340px;height:340px;margin:-170px 0 0 -170px;border:1px solid rgba(216,207,186,.16);border-radius:50%}
+.ring.b{width:300px;height:300px;margin:-150px 0 0 -150px;border-style:dashed;border-color:rgba(216,207,186,.12)}
+.card{position:absolute;left:108px;top:108px;width:240px;height:412px;padding:7px;background:#F1E9D8;border-radius:5px;box-shadow:0 18px 40px rgba(0,0,0,.55),0 0 0 1px rgba(216,207,186,.55)}
 .card img{display:block;width:100%;height:100%;object-fit:cover;border-radius:2px}
-.meteor{position:absolute;right:120px;top:74px;width:86px;height:1px;background:linear-gradient(90deg,rgba(197,165,110,0),rgba(197,165,110,.8));transform:rotate(-28deg);transform-origin:right}
-.meteor::after{content:'';position:absolute;right:-3px;top:-3px;width:7px;height:7px;background:#C5A56E;transform:rotate(45deg);border-radius:1px}
+.meteor{position:absolute;right:120px;top:74px;width:86px;height:1px;background:linear-gradient(90deg,rgba(216,207,186,0),rgba(216,207,186,.8));transform:rotate(-28deg);transform-origin:right}
+.meteor::after{content:'';position:absolute;right:-3px;top:-3px;width:7px;height:7px;background:#D8CFBA;transform:rotate(45deg);border-radius:1px}
 .text{position:absolute;left:436px;top:118px;right:80px}
-.brand{font-size:24px;letter-spacing:.06em;color:#C5A56E}
+.brand{font-size:24px;letter-spacing:.06em;color:#D8CFBA}
 .brand span{font-size:17px;letter-spacing:.22em;margin-left:8px}
 .group{margin-top:26px;font-size:20px;letter-spacing:.24em;color:rgba(237,230,216,.62)}
 h1{margin-top:6px;font-size:100px;font-weight:400;line-height:1.12;letter-spacing:.06em;color:#F3EDE1;white-space:nowrap}
 h1.long{font-size:84px}
 .en{margin-top:2px;font-size:24px;font-style:italic;letter-spacing:.06em;color:rgba(237,230,216,.6)}
 .keys{margin-top:20px;font-size:25px;letter-spacing:.14em;color:#E2D7C1}
-.keys i{font-style:normal;color:#C5A56E;margin:0 .5em}
-.cta{position:absolute;left:436px;right:80px;bottom:74px;display:flex;align-items:baseline;justify-content:space-between;padding-top:18px;border-top:1px solid rgba(197,165,110,.3)}
+.keys i{font-style:normal;color:#D8CFBA;margin:0 .5em}
+.cta{position:absolute;left:436px;right:80px;bottom:74px;display:flex;align-items:baseline;justify-content:space-between;padding-top:18px;border-top:1px solid rgba(216,207,186,.3)}
 .cta b{font-weight:400;font-size:27px;letter-spacing:.08em;color:#F3EDE1}
-.cta span{font-size:20px;letter-spacing:.06em;color:#C5A56E}
+.cta span{font-size:20px;letter-spacing:.06em;color:#D8CFBA}
 </style></head><body>
 <div class="frame"></div><div class="ring"></div><div class="ring b"></div><div class="meteor"></div>
 <div class="card"><img src="/rws/${c.id}.webp" alt=""></div>

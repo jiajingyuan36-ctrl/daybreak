@@ -11,7 +11,7 @@ const ritualLoading=`<main aria-busy="true"><section class="minimal-ritual"><p c
 export function LegacyScreen({ritual=false}:{ritual?:boolean}){
  const [entry,...imports]=JSON.parse(readFileSync(join(process.cwd(),'public/js/startup.json'),'utf8')) as string[];
  return <>
-  <link rel="stylesheet" href="/style.css"/><link rel="stylesheet" href="/epic.css"/>
+  <link rel="stylesheet" href="/style.css"/><link rel="stylesheet" href="/epic.css"/><link rel="stylesheet" href="/ornaments.css"/><link rel="stylesheet" href="/engraved.css"/>
   {[entry,...imports].map(src=><link key={src} rel="modulepreload" href={src}/>)}
   <div id="app" suppressHydrationWarning dangerouslySetInnerHTML={{__html:ritual?ritualLoading:loading}}/>
   <dialog id="dialog" aria-label="晨启设置与说明" suppressHydrationWarning dangerouslySetInnerHTML={{__html:''}}/>

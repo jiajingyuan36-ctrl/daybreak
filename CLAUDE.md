@@ -26,7 +26,7 @@ npm run build
 - scripts/seed-tarot-data.ts：构建前把上述数据转成 src/data/tarot_cards_78.json，只做格式转换，不生成文字。
 - tests/plain.test.ts：文案字数、禁用词、重复句与旧历史兼容检查。
 - public/rws/：78 张 1909 年 Rider–Waite–Smith 原版牌面（公有领域，来自维基共享资源 Wikimedia Commons），彩色 WebP，600×1029；thumb/ 为 320 宽小图。src/art.ts 的 cardImage() 生成标签，几何 art() 只用于后备。
-- src/card-back.ts：全站牌背「星盘月相 · 双向对称」（viewBox 240×400）。上半部分画一次、下半部分旋转 180° 复用，牌倒过来完全一样；颜色读 epic.css 里的 --cb-* 变量（深色黑金、浅色羊皮暗金）。每日抽牌用 cardBack()，牌阵页 78 张用 cardBackSprite() + cardBackUse()。
+- src/card-back.ts：全站牌背「夜空版画」（viewBox 240×400；2026-11-18 前是星盘月相 · 古铜金）。上半部分画一次、下半部分旋转 180° 复用，牌倒过来完全一样；颜色读 engraved.css 里的 --cb-* 变量（深色墨黑底象牙白线、浅色羊皮纸底墨线）。每日抽牌用 cardBack()，牌阵页 78 张用 cardBackSprite() + cardBackUse()。
 - src/lib/dipper.ts：北斗七星、辅、北极星与 128 颗背景星（BSC5，背景星由 scripts/build-star-catalog.mjs 生成 src/lib/dipper-stars.ts）；dipperSky(date,lat,lon) 算此刻此地的星空。src/lib/dipper-draw.ts 是仪式里的洗牌/切牌/选位，只用 crypto 随机数，**不得读取任何天文数据**（同一时刻同城的人抽到的牌必须互不相干）。src/dipper-ritual.ts 是北斗仪式的画面与交互；北斗牌阵文案在 src/dipper-copy.ts（也走 plain.test.ts 的检查）；scripts/check-dipper-layout.mjs 检查牌阵四种宽度不重叠。
 - src/lib/bazi-fortune.ts：按生辰的今日运势（lunar-javascript 排盘）；src/components/real-moon.tsx：真实月面（three.js 贴图 + Astronomy Engine）。
 - prepare-legacy.mjs 用 esbuild 把 src/app.ts 打包成 public/js/app.js。
@@ -37,7 +37,8 @@ npm run build
 - src/lib/tarot-consultation.ts：牌阵解释组合。
 - src/share.ts：Canvas 分享图。
 - src/components/almanac-dashboard.tsx：日历与日签导出。
-- legacy-static/epic.css：当前极简主题；app/layout.tsx：字体与共享框架。
+- legacy-static/epic.css：极简主题的基础样式；app/layout.tsx：字体与共享框架。
+- legacy-static/engraved.css：「夜空版画」界面（2026-11-18 起，参考黑底细线版画塔罗）：星空底、标题下的星形分隔线、大牌的双线框和四角扇形光芒、直角双线按钮、页脚远山水面。牌面仍是彩色原版扫描，只换界面。全站的金色统一走 --gold-rgb / --gold-hi-rgb 两个变量（在这里定义），不要再在 epic.css 里写死颜色。装饰图形在 legacy-static/ornaments.css，由 scripts/build-ornaments.mjs 生成（mask-image 取形状，颜色跟主题走）。旧版页面（src/components/legacy-screen.tsx）会再加载一次 /epic.css，所以 /ornaments.css 和 /engraved.css 也要跟在它后面，prepare-legacy.mjs 负责拷到 public/。
 
 - src/card-deep.ts：单张牌页的长内容（感情、学业事业的正逆位，是还是否，常见误读，常见问题；常见问题同时写成 FAQPage 结构化数据）。分批写：大阿卡纳和权杖已完成，圣杯、宝剑、星币按花色补；tests/card-deep.test.ts 检查字数、套话、含糊词和重复句。字体缺字时不要绕开常用词：用 Adobe 思源宋体 2.003 的 SubsetOTF/CN/SourceHanSerifCN-Regular.otf，按 serif-sc-core.txt 加新字重新抽字（保留原有 GSUB/GPOS 特性、名字改成 DaybreakSerif），再运行 node scripts/font-css.mjs。
 - src/quiz.ts、src/components/quiz-app.tsx、app/quiz/：性格测试「你是哪张塔罗牌」（/quiz/，结果分享页 /quiz/m0/ … /quiz/m21/）。题目、计分、22 种结果都在 src/quiz.ts（文案走 tests/quiz.test.ts 的套话与字数检查，并模拟随机答题检查 22 种结果分布均匀）；结果图在 src/quiz-poster.ts（牌面人物没穿衣服的 6 张牌改画牌背）；链接预览图由 scripts/build-quiz-og.mjs 生成在 public/og/quiz/。content-kit/quiz/ 里的草稿只是初稿，以 src/quiz.ts 为准。

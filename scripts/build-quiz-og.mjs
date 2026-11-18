@@ -13,20 +13,20 @@ const {QUIZ_RESULTS,QUIZ_COVERED}=await import('../src/quiz.ts');
 const {cardById,roman}=await import('../src/cards.ts');
 const {cardBack}=await import('../src/card-back.ts');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const VARS='--cb-bg-a:#17151E;--cb-bg-b:#0B0A0F;--cb-glow:#C5A059;--cb-f0:#7A5C29;--cb-f1:#C5A059;--cb-f2:#FFF2CC;--cb-f3:#D4AF37;--cb-f4:#6B4F22;--cb-hl:#FFF2CC';
+const VARS='--cb-bg-a:#121115;--cb-bg-b:#0a0a0c;--cb-glow:#EFE8D6;--cb-f0:#7d766a;--cb-f1:#cbc2ad;--cb-f2:#f1ebdc;--cb-f3:#ece4d1;--cb-f4:#6d675c;--cb-hl:#f6f1e6';
 const css=`*{margin:0;box-sizing:border-box}html,body{width:1200px;height:630px;overflow:hidden}
 body{position:relative;background:radial-gradient(760px 520px at 24% 50%,#1d1b20 0%,#121214 60%,#0e0e10 100%);color:#EDE6D8;font-family:DaybreakSerif,serif;${VARS}}
-.frame{position:absolute;inset:30px;border:1px solid rgba(197,165,110,.42)}
-.ring{position:absolute;left:228px;top:315px;width:340px;height:340px;margin:-170px 0 0 -170px;border:1px solid rgba(197,165,110,.16);border-radius:50%}
-.card{position:absolute;left:108px;top:108px;width:240px;height:412px;padding:7px;background:#F1E9D8;border-radius:5px;box-shadow:0 18px 40px rgba(0,0,0,.55),0 0 0 1px rgba(197,165,110,.55)}
+.frame{position:absolute;inset:30px;border:1px solid rgba(216,207,186,.42)}
+.ring{position:absolute;left:228px;top:315px;width:340px;height:340px;margin:-170px 0 0 -170px;border:1px solid rgba(216,207,186,.16);border-radius:50%}
+.card{position:absolute;left:108px;top:108px;width:240px;height:412px;padding:7px;background:#F1E9D8;border-radius:5px;box-shadow:0 18px 40px rgba(0,0,0,.55),0 0 0 1px rgba(216,207,186,.55)}
 .card.back{padding:0;background:#0B0A0F}.card img,.card svg{display:block;width:100%;height:100%;object-fit:cover;border-radius:2px}
 .text{position:absolute;left:436px;top:110px;right:80px}
-.brand{font-size:22px;letter-spacing:.08em;color:#C5A56E}.brand span{font-size:16px;letter-spacing:.22em;margin-left:8px}
+.brand{font-size:22px;letter-spacing:.08em;color:#D8CFBA}.brand span{font-size:16px;letter-spacing:.22em;margin-left:8px}
 .kicker{margin-top:28px;font-size:22px;letter-spacing:.3em;color:rgba(237,230,216,.62)}
 h1{margin-top:6px;font-size:84px;font-weight:400;line-height:1.15;letter-spacing:.08em;color:#F3EDE1;white-space:nowrap}
-.line{margin-top:10px;font-size:32px;letter-spacing:.1em;color:#C5A56E}
-.cta{position:absolute;left:436px;right:80px;bottom:74px;display:flex;align-items:baseline;justify-content:space-between;padding-top:18px;border-top:1px solid rgba(197,165,110,.3)}
-.cta b{font-weight:400;font-size:28px;letter-spacing:.1em;color:#F3EDE1}.cta span{font-size:20px;letter-spacing:.06em;color:#C5A56E}
+.line{margin-top:10px;font-size:32px;letter-spacing:.1em;color:#D8CFBA}
+.cta{position:absolute;left:436px;right:80px;bottom:74px;display:flex;align-items:baseline;justify-content:space-between;padding-top:18px;border-top:1px solid rgba(216,207,186,.3)}
+.cta b{font-weight:400;font-size:28px;letter-spacing:.1em;color:#F3EDE1}.cta span{font-size:20px;letter-spacing:.06em;color:#D8CFBA}
 .fan{position:absolute;left:226px;top:318px}.fan .card{left:-84px;top:-150px;width:168px;height:288px;transform-origin:50% 100%}`;
 const shell=(body)=>`<!doctype html><html><head><meta charset="utf-8"><base href="${BASE}/"><link rel="stylesheet" href="/fonts/serif-sc.css"><style>${css}</style></head><body><div class="frame"></div><div class="ring"></div>${body}</body></html>`;
 const resultPage=id=>{const c=cardById(id),r=QUIZ_RESULTS[id];const art=QUIZ_COVERED.has(id)?`<div class="card back">${cardBack()}</div>`:`<div class="card"><img src="/rws/${id}.webp" alt=""></div>`;

@@ -9,8 +9,8 @@ import {QUIZ_COVERED,QUIZ_RESULTS} from './quiz.ts';
 import {SITE_HOST,SITE_URL} from './site.ts';
 import {wrapPosterText} from './daily-poster.ts';
 
-const W=1080,H=1440,GOLD='#C5A56E',INK='#F1EADB',MUTED='rgba(237,230,216,.62)';
-const BACK_VARS='--cb-bg-a:#17151E;--cb-bg-b:#0B0A0F;--cb-glow:#C5A059;--cb-f0:#7A5C29;--cb-f1:#C5A059;--cb-f2:#FFF2CC;--cb-f3:#D4AF37;--cb-f4:#6B4F22;--cb-hl:#FFF2CC';
+const W=1080,H=1440,GOLD='#D8CFBA',INK='#F1EADB',MUTED='rgba(237,230,216,.62)';
+const BACK_VARS='--cb-bg-a:#121115;--cb-bg-b:#0a0a0c;--cb-glow:#EFE8D6;--cb-f0:#7d766a;--cb-f1:#cbc2ad;--cb-f2:#f1ebdc;--cb-f3:#ece4d1;--cb-f4:#6d675c;--cb-hl:#f6f1e6';
 export const quizShareUrl=(id:string,from='quiz')=>`${SITE_URL}/quiz/${id}/?from=${from}`;
 
 function loadImage(src:string){return new Promise<HTMLImageElement>((resolve,reject)=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>resolve(i);i.onerror=()=>reject(Error('图片加载失败，请重试。'));i.src=src})}
@@ -26,20 +26,20 @@ export async function renderQuizPoster(id:string,{clean=false}:{clean?:boolean}=
  const cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d')!;
  // 底色和细金框
  const g=x.createRadialGradient(W/2,H*.36,40,W/2,H*.5,H*.78);g.addColorStop(0,'#1C1A22');g.addColorStop(.6,'#121116');g.addColorStop(1,'#0B0A0F');x.fillStyle=g;x.fillRect(0,0,W,H);
- x.strokeStyle='rgba(197,165,110,.42)';x.lineWidth=1.5;x.strokeRect(40,40,W-80,H-80);x.strokeStyle='rgba(197,165,110,.16)';x.lineWidth=1;x.strokeRect(52,52,W-104,H-104);
+ x.strokeStyle='rgba(216,207,186,.42)';x.lineWidth=1.5;x.strokeRect(40,40,W-80,H-80);x.strokeStyle='rgba(216,207,186,.16)';x.lineWidth=1;x.strokeRect(52,52,W-104,H-104);
  const text=(s:string,px:number,y:number,color:string,{spacing=0,align='center' as CanvasTextAlign,xPos=W/2}={})=>{x.font=`${px}px ${family}`;x.fillStyle=color;x.textAlign=align;x.textBaseline='alphabetic';(x as CanvasRenderingContext2D&{letterSpacing:string}).letterSpacing=`${spacing}px`;x.fillText(s,xPos,y)};
  text('晨启塔罗 · DAYBREAK',24,124,GOLD,{spacing:6});
  text('你是哪张塔罗牌？',26,170,MUTED,{spacing:4});
  // 牌面：浅色卡纸边框 + 投影
  const cw=360,ch=Math.round(cw*1029/600),cx=(W-cw)/2,cy=214;
  x.save();x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=40;x.shadowOffsetY=18;x.fillStyle=QUIZ_COVERED.has(id)?'#0B0A0F':'#F1E9D8';x.fillRect(cx-8,cy-8,cw+16,ch+16);x.restore();
- x.drawImage(art,cx,cy,cw,ch);x.strokeStyle='rgba(197,165,110,.6)';x.lineWidth=1.5;x.strokeRect(cx-8,cy-8,cw+16,ch+16);
+ x.drawImage(art,cx,cy,cw,ch);x.strokeStyle='rgba(216,207,186,.6)';x.lineWidth=1.5;x.strokeRect(cx-8,cy-8,cw+16,ch+16);
  // 牌名和一句话
  let y=cy+ch+92;
  text('我是',26,y,MUTED,{spacing:8});y+=78;
  text(`${roman(c.number)} · ${c.nameZh}`,66,y,INK,{spacing:10});y+=64;
  text(r.line,34,y,GOLD,{spacing:3});y+=36;
- x.strokeStyle='rgba(197,165,110,.35)';x.beginPath();x.moveTo(W/2-120,y);x.lineTo(W/2+120,y);x.stroke();y+=52;
+ x.strokeStyle='rgba(216,207,186,.35)';x.beginPath();x.moveTo(W/2-120,y);x.lineTo(W/2+120,y);x.stroke();y+=52;
  x.font=`27px ${family}`;(x as CanvasRenderingContext2D&{letterSpacing:string}).letterSpacing='2px';
  for(const row of wrapPosterText(r.look,760,s=>x.measureText(s).width).slice(0,3)){text(row,27,y,MUTED,{spacing:2});y+=44}
  // 底部：测一测 + 网址 + 二维码（clean 时只留一句）

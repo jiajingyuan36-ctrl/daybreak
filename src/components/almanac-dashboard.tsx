@@ -21,7 +21,7 @@ function Reticle({angle}:{angle:number}){const ln={fill:'none',stroke:'currentCo
  // 外环和度盘放进 orbit-ring，以 120 秒一圈极慢地转；盈亏角的游标不动，位置始终准确
  const n=angle*Math.PI/180,nx=Math.sin(n)*79,ny=-Math.cos(n)*79;
  // 样式全写成属性：保存日签时截图库不一定带上 SVG 子元素的 CSS
- return <g className="reticle" color="#C5A56E" aria-hidden="true"><defs><radialGradient id="node-glow"><stop offset="0" stopColor="currentColor" stopOpacity=".55"/><stop offset="1" stopColor="currentColor" stopOpacity="0"/></radialGradient></defs>
+ return <g className="reticle" color="#D8CFBA" aria-hidden="true"><defs><radialGradient id="node-glow"><stop offset="0" stopColor="currentColor" stopOpacity=".55"/><stop offset="1" stopColor="currentColor" stopOpacity="0"/></radialGradient></defs>
   <g className="orbit-ring"><circle {...ln} r="104" strokeWidth=".5" strokeOpacity=".32"/>{[0,90,180,270].map(d=><g key={d} transform={`rotate(${d})`}><line {...ln} strokeWidth=".6" strokeOpacity=".6" x1="0" y1="-104" x2="0" y2="-112"/><path d="M0 -118.6 L1.1 -116.5 L0 -114.4 L-1.1 -116.5Z" fill="currentColor" fillOpacity=".85"/></g>)}{ticks}</g>
   <circle {...ln} r="79" strokeWidth=".5" strokeOpacity=".2" strokeDasharray="1 3"/><circle cx={nx} cy={ny} r="6" fill="url(#node-glow)"/><circle cx={nx} cy={ny} r="1.9" fill="currentColor"/></g>}
 function phasePath(light:number){const r=70,rx=Math.max(.001,Math.abs(2*light-1)*r);return `M0 -${r} A${r} ${r} 0 0 1 0 ${r} A${rx} ${r} 0 0 ${light<.5?0:1} 0 -${r}Z`}

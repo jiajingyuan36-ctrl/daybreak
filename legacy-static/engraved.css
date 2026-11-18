@@ -1,0 +1,118 @@
+/* 「夜空版画」界面（2026-11-18）
+   参考：黑底象牙白细线的版画塔罗：双线框、四角扇形光芒、四芒星、月落点线、空格大写的「· XVIII · THE MOON ·」、远山水面。
+   牌面仍是 1909 年原版彩色扫描，只换界面。装饰图形在 ornaments.css（scripts/build-ornaments.mjs 生成），
+   全部用 mask-image 取形状、背景色取颜色，深浅两套主题共用。
+   原来散落在 epic.css 里的金色都改成了两个变量：--gold-rgb（主线色）和 --gold-hi-rgb（高光），在这里定义。
+   epic.css 开头有 body * 去圆角、去投影的 !important 规则，这里要投影或圆角的地方都用 html body 开头的选择器加 !important。 */
+
+/* ---------- 颜色 ---------- */
+html:root,html:root[data-theme=dark]{
+ --gold-rgb:214,205,184;--gold-hi-rgb:240,234,220;--orn:226,218,200;
+ --bg-primary:#09090b;--bg-surface:#09090b;--text-primary:#e9e3d5;--text-secondary:#8f897d;
+ --cb-bg-a:#121115;--cb-bg-b:#0a0a0c;--cb-glow:#EFE8D6;--cb-f0:#7d766a;--cb-f1:#cbc2ad;--cb-f2:#f1ebdc;--cb-f3:#ece4d1;--cb-f4:#6d675c;--cb-hl:#f6f1e6;
+ --accent:rgb(var(--gold-rgb));
+}
+html:root[data-theme=light]{
+ --gold-rgb:88,72,48;--gold-hi-rgb:52,42,28;--orn:58,48,32;
+ --bg-primary:#efe7d6;--bg-surface:#efe7d6;--text-primary:#1d1914;--text-secondary:#6c6355;
+ --cb-bg-a:#f4eddf;--cb-bg-b:#ebe2cf;--cb-glow:#2c251b;--cb-f0:#5b4c34;--cb-f1:#3b3123;--cb-f2:#6b5a3e;--cb-f3:#2c251b;--cb-f4:#5b4c34;--cb-hl:#fffaf0;
+ --accent:rgb(var(--gold-rgb));
+}
+.reticle{color:rgb(var(--gold-rgb))}
+
+/* ---------- 星空底 ---------- */
+:root{background:radial-gradient(ellipse 70% 45% at 50% -6%,rgba(var(--orn),.07),transparent 70%),var(--bg)!important}
+html body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;background:rgb(var(--orn));opacity:.42;
+ -webkit-mask:var(--orn-sky) 0 0/420px 420px repeat;mask:var(--orn-sky) 0 0/420px 420px repeat}
+html:root[data-theme=light] body::before{opacity:.2}
+
+/* ---------- 共用：装饰元件 ---------- */
+.engr-star,.engr-divider,.engr-drop{display:block;background:rgb(var(--orn));-webkit-mask:var(--m) center/contain no-repeat;mask:var(--m) center/contain no-repeat}
+.engr-star{--m:var(--orn-star);width:14px;height:14px}
+.engr-divider{--m:var(--orn-divider);width:min(220px,62%);height:16px;margin:0 auto;opacity:.75}
+.engr-drop{--m:var(--orn-drop);width:14px;height:68px;margin:0 auto;opacity:.8}
+
+/* ---------- 顶栏 ---------- */
+html body .shared-header{border-bottom:0!important;position:relative}
+html body .shared-header::after{content:'';position:absolute;left:0;right:0;bottom:0;height:4px;border-top:1px solid rgba(var(--orn),.28);border-bottom:1px solid rgba(var(--orn),.12);pointer-events:none}
+html body .shared-brand{position:relative}
+html body .shared-brand .brand-sub{letter-spacing:.42em!important}
+html body .shared-brand::before{content:'';position:absolute;left:-18px;top:50%;width:11px;height:11px;margin-top:-12px;background:rgb(var(--orn));opacity:.85;-webkit-mask:var(--orn-star) center/contain no-repeat;mask:var(--orn-star) center/contain no-repeat}
+@media (max-width:650px){html body .shared-brand::before{display:none}}
+
+/* ---------- 页面大标题：下面一道星形分隔线 ---------- */
+html body main :is(.minimal-ritual>h1,.minimal-result h1,.card-head h1,.legal-page>h1,.quiz-intro h1,.quiz-result h1,.page-heading h1,.tarot-workbench>h1,.zodiac-page h1,.compendium h1)::after{
+ content:'';display:block;width:min(200px,58%);height:15px;margin:16px auto 0;background:rgb(var(--orn));opacity:.7;
+ -webkit-mask:var(--orn-divider) center/contain no-repeat;mask:var(--orn-divider) center/contain no-repeat}
+html body main h1{letter-spacing:.14em}
+/* 小字眉题：两侧各一颗小四芒星，空格加宽 */
+html body :is(.quiz-eyebrow,.primer-eyebrow,.card-group,.ritual-date,.fortune-kicker,.legal-date){letter-spacing:.32em!important}
+html body :is(.quiz-eyebrow,.primer-eyebrow,.card-group)::before,html body :is(.quiz-eyebrow,.primer-eyebrow,.card-group)::after{
+ content:'';display:inline-block;width:9px;height:9px;margin:0 .9em;vertical-align:.08em;background:currentColor;opacity:.8;
+ -webkit-mask:var(--orn-star) center/contain no-repeat;mask:var(--orn-star) center/contain no-repeat}
+
+/* ---------- 大牌的画框：外圈细线 + 四角扇形光芒 + 牌下空格大写的拉丁牌名 ---------- */
+html body :is(.minimal-result .tarot,.card-head .tarot-plate,.quiz-plate .tarot-plate,.insp-face.insp-front){position:relative;overflow:visible!important}
+html body :is(.minimal-result .tarot,.card-head .tarot-plate,.quiz-plate .tarot-plate)::after{
+ content:'';position:absolute;inset:-14px;pointer-events:none;z-index:2;
+ border:1px solid rgba(var(--orn),.38)!important;
+ background:rgb(var(--orn));opacity:.9;
+ -webkit-mask:var(--orn-fan) top left/50px no-repeat,var(--orn-fan-tr) top right/50px no-repeat,var(--orn-fan-bl) bottom left/50px no-repeat,var(--orn-fan-br) bottom right/50px no-repeat;
+ mask:var(--orn-fan) top left/50px no-repeat,var(--orn-fan-tr) top right/50px no-repeat,var(--orn-fan-bl) bottom left/50px no-repeat,var(--orn-fan-br) bottom right/50px no-repeat}
+/* 遮罩会把边框一起遮掉，所以细框单独再画一层 */
+html body :is(.minimal-result .tarot,.card-head .tarot-plate,.quiz-plate .tarot-plate)::before{
+ content:'';position:absolute;inset:-9px;pointer-events:none;z-index:1;border:1px solid rgba(var(--orn),.32)!important;outline:1px solid rgba(var(--orn),.14);outline-offset:4px}
+html body .minimal-result .tarot.is-reversed::before,html body .minimal-result .tarot.is-reversed::after{transform:none}
+html body :is(.minimal-result .tarot,.card-head .tarot-plate,.quiz-plate .tarot-plate) img{box-shadow:0 26px 60px -28px rgba(0,0,0,.9)!important}
+.engr-cap{margin:30px 0 0;font-family:var(--font-cinzel),Georgia,serif!important;font-size:12px;letter-spacing:.42em;color:rgba(var(--orn),.72);text-transform:uppercase;text-align:center}
+.engr-cap i{font-style:normal;margin:0 .5em;opacity:.6}
+
+/* 图鉴的小牌：细框 + 浮起时框线变亮 */
+html body .codex-face{border-color:rgba(var(--orn),.22)!important}
+html body .codex-card:hover .codex-face{border-color:rgba(var(--orn),.6)!important}
+
+/* ---------- 按钮：直角的双线框，像版画里的题签 ---------- */
+html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster,.quiz-primary){
+ border-radius:0!important;border:1px solid rgba(var(--orn),.62)!important;background:transparent!important;
+ box-shadow:inset 0 0 0 3px var(--bg),inset 0 0 0 4px rgba(var(--orn),.26)!important;letter-spacing:.24em!important;color:rgb(var(--gold-hi-rgb))!important}
+@media (hover:hover){html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster,.quiz-primary):hover:not(:disabled){
+ background:rgba(var(--orn),.06)!important;border-color:rgba(var(--orn),.95)!important;box-shadow:inset 0 0 0 3px var(--bg),inset 0 0 0 4px rgba(var(--orn),.5),0 0 28px -8px rgba(var(--orn),.35)!important}}
+html body :is(.result-tools .redraw,.review-save,.setting-row button,.export-data,.legacy-share-options button,.export-dipper,.quiz-secondary){border-radius:0!important;letter-spacing:.18em!important;border-color:rgba(var(--orn),.3)!important}
+/* 小圆角的选项改成细线直角框 */
+html body :is(.mood-chip,.ritual-switch,.ritual-switch button,.quiz-option,.copy-contact,.home-ask-row,.segment button,.codex-filter button,.codex-search){border-radius:0!important}
+html body .mood-chip.on{border-color:rgba(var(--orn),.75)!important;color:rgb(var(--gold-hi-rgb))!important;background:rgba(var(--orn),.06)!important}
+
+/* ---------- 编号段落：罗马数字竖线顶端一颗小星 ---------- */
+html body .editorial-index{color:rgba(var(--orn),.55)!important;font-family:var(--font-cinzel),Georgia,serif!important;font-style:normal!important;font-size:clamp(1.1rem,2vw,1.5rem)!important;letter-spacing:.06em}
+html body .editorial-index::before{content:'';position:absolute;right:-4.5px;top:-3px;width:9px;height:9px;background:rgb(var(--orn));opacity:.7;-webkit-mask:var(--orn-star) center/contain no-repeat;mask:var(--orn-star) center/contain no-repeat}
+html body .editorial-row{border-top:1px solid rgba(var(--orn),.13)!important}
+
+/* ---------- 首页：月亮四周几颗四芒星，月下一列月落点线 ---------- */
+html body .moon-stage::before,html body .moon-stage::after{content:'';position:absolute;pointer-events:none;background:rgb(var(--orn));-webkit-mask:var(--orn-star) center/contain no-repeat;mask:var(--orn-star) center/contain no-repeat}
+html body .moon-stage::before{width:18px;height:18px;left:-14%;top:12%;opacity:.8}
+html body .moon-stage::after{width:11px;height:11px;right:-10%;top:62%;opacity:.6}
+html body .almanac-plaque::before{content:'';display:block;width:12px;height:52px;margin:6px auto 10px;background:rgb(var(--orn));opacity:.7;-webkit-mask:var(--orn-drop) center/contain no-repeat;mask:var(--orn-drop) center/contain no-repeat}
+html body .almanac-keyword{letter-spacing:.2em!important}
+
+/* ---------- 页脚：远山、水面和月光倒影 ---------- */
+html body .shared-footer{position:relative;padding-top:clamp(96px,16vw,170px)!important;border-top:0!important}
+html body .shared-footer::before{content:'';position:absolute;left:50%;top:0;width:min(1100px,100vw);height:clamp(80px,14vw,150px);transform:translateX(-50%);pointer-events:none;
+ background:rgb(var(--orn));opacity:.5;-webkit-mask:var(--orn-horizon) center bottom/100% 100% no-repeat;mask:var(--orn-horizon) center bottom/100% 100% no-repeat}
+html body .shared-footer>span{font-family:var(--font-cinzel),var(--font-chinese),serif!important;letter-spacing:.32em}
+
+/* ---------- 首页入门区 ---------- */
+html body .home-primer .primer-suits img{border-radius:0!important;border-color:rgba(var(--orn),.4)!important;outline:1px solid rgba(var(--orn),.14);outline-offset:3px}
+html body .home-primer .primer-actions{border-top:0!important}
+html body .home-primer .primer-actions::before{content:'';display:block;width:min(240px,64%);height:16px;margin:0 auto 10px;background:rgb(var(--orn));opacity:.7;-webkit-mask:var(--orn-divider) center/contain no-repeat;mask:var(--orn-divider) center/contain no-repeat}
+html body .home-primer h2#primer-title::after{content:'';display:block;width:12px;height:56px;margin:22px auto 0;background:rgb(var(--orn));opacity:.7;-webkit-mask:var(--orn-drop) center/contain no-repeat;mask:var(--orn-drop) center/contain no-repeat}
+
+@media (prefers-reduced-transparency:reduce){html body::before{display:none}}
+/* 揭晓时画框跟着牌一起淡入（浮层上没有画框，撤掉浮层的一瞬间不突然冒出来） */
+html body .minimal-result .tarot::before,html body .minimal-result .tarot::after{transition:opacity .7s cubic-bezier(.22,1,.36,1) .05s}
+html body .minimal-result.card-pending .tarot::before,html body .minimal-result.card-pending .tarot::after{opacity:0;transition:none}
+/* 单张牌页的英文牌名：和结果页同一种空格大写 */
+html body .card-head .card-en{font-family:var(--font-cinzel),Georgia,serif!important;font-size:12px!important;letter-spacing:.42em!important;text-transform:uppercase;color:rgba(var(--orn),.72)!important}
+html body .card-head .card-en::before,html body .card-head .card-en::after{content:'·';margin:0 .7em;opacity:.6}
+
+/* ---------- 其余的胶囊形控件一律改成直角细框（圆形的主题按钮、关闭按钮保留） ---------- */
+html body :is(.copy-contact,.mood-chip,.result-tools button,.review-save,.glass-trigger,.date-pill,.date-line input,.install-hint button,.codex-segs,.codex-segs button,.codex-search,.codex-mode,.codex-mode button,.codex-badge,.insp-bar,.insp-bar button,.insp-astro,.insp-chips span,.ritual-switch,.ritual-switch button,.minimal-ritual .dipper-all,.almanac-grid .calendar-season,.tarot-workbench .ribbon-btn,.deep-pills li,.deep-card .copy-contact,.install-setting .install-now,.dateline .today-reset,.sky-pill,.home-cta,.card-keys li,.card-draw,.home-v2 .home-ask button,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster,.quiz-primary,.quiz-secondary,.quiz-option,.setting-row button,.export-data){border-radius:0!important}
