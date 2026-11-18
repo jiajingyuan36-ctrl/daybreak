@@ -30,11 +30,11 @@ function art(id:string){
 <radialGradient id="${id}-moon" cx=".5" cy=".5" r=".5"><stop offset="0" style="stop-color:var(--cb-glow,#EDE5D2);stop-opacity:.16"/><stop offset=".85" style="stop-color:var(--cb-glow,#EDE5D2);stop-opacity:.04"/><stop offset="1" style="stop-color:var(--cb-glow,#EDE5D2);stop-opacity:0"/></radialGradient>
 </defs>
 <rect width="${W}" height="${H}" fill="url(#${id}-bg)"/>
-<rect x="10" y="10" width="220" height="380" ${line(.9)}/><rect x="15" y="15" width="210" height="370" ${line(.5,subtle)}/>
+<rect x="10" y="10" width="220" height="380" ${line(.65)}/><rect x="15" y="15" width="210" height="370" ${line(.5,subtle)}/>
 <path d="M28 ${CY}H${CX-80}M${CX+80} ${CY}H${W-28}" ${line(.5,subtle)}/>
 <circle cx="${CX}" cy="${CY}" r="46" fill="url(#${id}-moon)"/>
-<path d="${rays}" ${line(.45,subtle)}/>
-<circle cx="${CX}" cy="${CY}" r="46" ${line(.85)}/><circle cx="${CX}" cy="${CY}" r="41" ${line(.5,subtle)}/><circle cx="${CX}" cy="${CY}" r="80" ${line(.4,subtle,'stroke-dasharray="1 4" ')}/>
+<path d="${rays}" ${line(.35,subtle)}/>
+<circle cx="${CX}" cy="${CY}" r="46" ${line(.6)}/><circle cx="${CX}" cy="${CY}" r="41" ${line(.5,subtle)}/><circle cx="${CX}" cy="${CY}" r="80" ${line(.4,subtle,'stroke-dasharray="1 4" ')}/>
 <path d="${star(CX,CY,22,1.4)}" style="fill:var(--cb-glow,#EDE5D2)" fill-opacity=".92"/><circle cx="${CX}" cy="${CY}" r="1.8" style="fill:var(--cb-glow,#EDE5D2)"/>
 ${top}<use href="#${id}-top" transform="rotate(180 ${CX} ${CY})"/>`}
 

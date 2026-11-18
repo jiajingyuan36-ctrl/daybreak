@@ -15,16 +15,17 @@ function starPath(cx,cy,r,w=r*.07,diag=.42){
  const p=[];for(let i=0;i<8;i++){const a=rad(i*45-90),L=i%2?r*diag:r,b1=rad(i*45-90-90),b2=rad(i*45-90+90),ww=i%2?w*.7:w;
   p.push(`M${f(cx+Math.cos(b1)*ww)} ${f(cy+Math.sin(b1)*ww)}L${f(cx+Math.cos(a)*L)} ${f(cy+Math.sin(a)*L)}L${f(cx+Math.cos(b2)*ww)} ${f(cy+Math.sin(b2)*ww)}Z`)}
  return p.join('')}
-const star=svg('0 0 40 40',`<path fill='#fff' d='${starPath(20,20,20,1.5)}'/><circle cx='20' cy='20' r='1.6' fill='#fff'/>`);
+const star=svg('0 0 40 40',`<path fill='#fff' d='${starPath(20,20,20,1.05)}'/><circle cx='20' cy='20' r='1.2' fill='#fff'/>`);
 
-/** 左上角的扇形光芒：两道直角框线 + 从角上放射的细线 + 两道弧 */
+/** 左上角的扇形光芒（框线由 CSS 画，这里不画，免得两套线错位）：角上一枚小半日、放射细线、两道弧和一圈珠点（铜版画常见的角花） */
 function fan(){
- const rays=[];for(let i=0;i<=16;i++){const a=rad(3+i*84/16),L=i%2?20:30;rays.push(`M${f(4+Math.cos(a)*7)} ${f(4+Math.sin(a)*7)}L${f(4+Math.cos(a)*L)} ${f(4+Math.sin(a)*L)}`)}
- const arc=r=>`M${4+r} 4A${r} ${r} 0 0 1 4 ${4+r}`;
- return svg('0 0 64 64',`<g fill='none' stroke='#fff' stroke-linecap='round'><path stroke-width='.7' d='${rays.join('')}'/><path stroke-width='.9' d='${arc(33)}${arc(36)}'/><path stroke-width='1' d='M1 1H62M1 1V62'/><path stroke-width='.6' d='M5 5H40M5 5V40'/></g><circle cx='4' cy='4' r='2' fill='#fff'/>`)}
+ const C=3,rays=[];for(let i=0;i<=20;i++){const a=rad(2+i*86/20),L=i%4===0?31:i%2?21:26;rays.push(`M${f(C+Math.cos(a)*7.5)} ${f(C+Math.sin(a)*7.5)}L${f(C+Math.cos(a)*L)} ${f(C+Math.sin(a)*L)}`)}
+ const arc=r=>`M${C+r} ${C}A${r} ${r} 0 0 1 ${C} ${C+r}`;
+ const beads=Array.from({length:15},(_,i)=>{const a=rad(3+i*84/14);return `<circle cx='${f(C+Math.cos(a)*38.5)}' cy='${f(C+Math.sin(a)*38.5)}' r='.55'/>`}).join('');
+ return svg('0 0 64 64',`<g fill='none' stroke='#fff' stroke-linecap='round'><path stroke-width='.42' d='${rays.join('')}'/><path stroke-width='.55' d='${arc(33)}'/><path stroke-width='.32' d='${arc(35.5)}'/><path stroke-width='.5' d='M${C+4.6} ${C}A4.6 4.6 0 0 1 ${C} ${C+4.6}'/></g><g fill='#fff'>${beads}<circle cx='${C}' cy='${C}' r='1.5'/></g>`)}
 
 /** 分隔线：两端尖细的横线，中间一颗四芒星，两侧各一粒点 */
-const divider=svg('0 0 240 20',`<g fill='#fff'><path d='M2 10L98 9.4L98 10.6Z'/><path d='M238 10L142 9.4L142 10.6Z'/><circle cx='106' cy='10' r='1.3'/><circle cx='134' cy='10' r='1.3'/><path d='${starPath(120,10,10,.9)}'/></g>`);
+const divider=svg('0 0 240 20',`<g fill='#fff'><path d='M2 10L97 9.62L97 10.38Z'/><path d='M238 10L143 9.62L143 10.38Z'/><circle cx='104' cy='10' r='.9'/><circle cx='136' cy='10' r='.9'/><circle cx='99.5' cy='10' r='.5'/><circle cx='140.5' cy='10' r='.5'/><path d='${starPath(120,10,10,.62)}'/></g>`);
 
 /** 月落点线：一列由大到小的点落到一弯新月（参考图里满月下面那条） */
 function drop(){
@@ -44,7 +45,7 @@ function horizon(){
  // 细叶草：一根弯茎，两侧交替的小叶
  const sprig=(x,h,lean)=>{const pts=[];let d=`M${x} 158Q${f(x+lean*.4)} ${f(158-h*.55)} ${f(x+lean)} ${f(158-h)}`;
   for(let j=1;j<=7;j++){const t=j/8,px=x+lean*t*t,py=158-h*t,side=j%2?1:-1,ll=9*(1-t*.5);d+=`M${f(px)} ${f(py)}q${f(side*ll*.6)} ${f(-ll*.3)} ${f(side*ll)} ${f(-ll*.9)}`}return d};
- return svg(`0 0 ${W} ${H}`,`<g fill='none' stroke='#fff' stroke-linecap='round'><path stroke-width='1' d='${ridge(70,24,1.3)}'/><path stroke-width='.6' d='${ridge(86,12,4.1)}'/><path stroke-width='.8' d='M0 92H${W}'/><path stroke-width='.55' stroke-opacity='.75' d='${water}'/><path stroke-width='.9' d='${glint}'/><path stroke-width='.75' d='${sprig(34,62,12)}${sprig(58,40,-6)}${sprig(766,66,-12)}${sprig(742,42,7)}'/></g>`)}
+ return svg(`0 0 ${W} ${H}`,`<g fill='none' stroke='#fff' stroke-linecap='round'><path stroke-width='.7' d='${ridge(70,24,1.3)}'/><path stroke-width='.42' d='${ridge(86,12,4.1)}'/><path stroke-width='.55' d='M0 92H${W}'/><path stroke-width='.4' stroke-opacity='.75' d='${water}'/><path stroke-width='.62' d='${glint}'/><path stroke-width='.55' d='${sprig(34,62,12)}${sprig(58,40,-6)}${sprig(766,66,-12)}${sprig(742,42,7)}'/></g>`)}
 
 /** 星空平铺：小点为主，少量四芒星 */
 function sky(){

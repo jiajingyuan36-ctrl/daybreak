@@ -20,6 +20,10 @@ html:root[data-theme=light]{
 }
 .reticle{color:rgb(var(--gold-rgb))}
 
+/* ---------- 发丝线：高清屏（手机都是）上所有框线、分隔线用 0.5px ---------- */
+:root{--hair:1px}
+@media (min-resolution:2dppx){:root{--hair:.5px}}
+
 /* ---------- 星空底 ---------- */
 :root{background:radial-gradient(ellipse 70% 45% at 50% -6%,rgba(var(--orn),.07),transparent 70%),var(--bg)!important}
 html body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;background:rgb(var(--orn));opacity:.42;
@@ -34,7 +38,7 @@ html:root[data-theme=light] body::before{opacity:.2}
 
 /* ---------- 顶栏 ---------- */
 html body .shared-header{border-bottom:0!important;position:relative}
-html body .shared-header::after{content:'';position:absolute;left:0;right:0;bottom:0;height:4px;border-top:1px solid rgba(var(--orn),.28);border-bottom:1px solid rgba(var(--orn),.12);pointer-events:none}
+html body .shared-header::after{content:'';position:absolute;left:0;right:0;bottom:0;height:4px;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(var(--orn),.34) 12%,rgba(var(--orn),.34) 88%,transparent) top/100% var(--hair) no-repeat,linear-gradient(90deg,transparent,rgba(var(--orn),.14) 22%,rgba(var(--orn),.14) 78%,transparent) bottom/100% var(--hair) no-repeat}
 html body .shared-brand{position:relative}
 html body .shared-brand .brand-sub{letter-spacing:.42em!important}
 html body .shared-brand::before{content:'';position:absolute;left:-18px;top:50%;width:11px;height:11px;margin-top:-12px;background:rgb(var(--orn));opacity:.85;-webkit-mask:var(--orn-star) center/contain no-repeat;mask:var(--orn-star) center/contain no-repeat}
@@ -54,14 +58,13 @@ html body :is(.quiz-eyebrow,.primer-eyebrow,.card-group)::before,html body :is(.
 /* ---------- 大牌的画框：外圈细线 + 四角扇形光芒 + 牌下空格大写的拉丁牌名 ---------- */
 html body :is(.minimal-result .tarot,.card-head .tarot-plate,.quiz-plate .tarot-plate,.insp-face.insp-front){position:relative;overflow:visible!important}
 html body :is(.minimal-result .tarot,.card-head .tarot-plate,.quiz-plate .tarot-plate)::after{
- content:'';position:absolute;inset:-14px;pointer-events:none;z-index:2;
- border:1px solid rgba(var(--orn),.38)!important;
+ content:'';position:absolute;inset:-13px;pointer-events:none;z-index:2;
  background:rgb(var(--orn));opacity:.9;
- -webkit-mask:var(--orn-fan) top left/50px no-repeat,var(--orn-fan-tr) top right/50px no-repeat,var(--orn-fan-bl) bottom left/50px no-repeat,var(--orn-fan-br) bottom right/50px no-repeat;
- mask:var(--orn-fan) top left/50px no-repeat,var(--orn-fan-tr) top right/50px no-repeat,var(--orn-fan-bl) bottom left/50px no-repeat,var(--orn-fan-br) bottom right/50px no-repeat}
+ -webkit-mask:var(--orn-fan) top left/56px no-repeat,var(--orn-fan-tr) top right/56px no-repeat,var(--orn-fan-bl) bottom left/56px no-repeat,var(--orn-fan-br) bottom right/56px no-repeat;
+ mask:var(--orn-fan) top left/56px no-repeat,var(--orn-fan-tr) top right/56px no-repeat,var(--orn-fan-bl) bottom left/56px no-repeat,var(--orn-fan-br) bottom right/56px no-repeat}
 /* 遮罩会把边框一起遮掉，所以细框单独再画一层 */
 html body :is(.minimal-result .tarot,.card-head .tarot-plate,.quiz-plate .tarot-plate)::before{
- content:'';position:absolute;inset:-9px;pointer-events:none;z-index:1;border:1px solid rgba(var(--orn),.32)!important;outline:1px solid rgba(var(--orn),.14);outline-offset:4px}
+ content:'';position:absolute;inset:-9px;pointer-events:none;z-index:1;border:var(--hair) solid rgba(var(--orn),.32)!important;outline:var(--hair) solid rgba(var(--orn),.14);outline-offset:4px}
 html body .minimal-result .tarot.is-reversed::before,html body .minimal-result .tarot.is-reversed::after{transform:none}
 html body :is(.minimal-result .tarot,.card-head .tarot-plate,.quiz-plate .tarot-plate) img{box-shadow:0 26px 60px -28px rgba(0,0,0,.9)!important}
 .engr-cap{margin:30px 0 0;font-family:var(--font-cinzel),Georgia,serif!important;font-size:12px;letter-spacing:.42em;color:rgba(var(--orn),.72);text-transform:uppercase;text-align:center}
@@ -73,10 +76,10 @@ html body .codex-card:hover .codex-face{border-color:rgba(var(--orn),.6)!importa
 
 /* ---------- 按钮：直角的双线框，像版画里的题签 ---------- */
 html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster,.quiz-primary){
- border-radius:0!important;border:1px solid rgba(var(--orn),.62)!important;background:transparent!important;
- box-shadow:inset 0 0 0 3px var(--bg),inset 0 0 0 4px rgba(var(--orn),.26)!important;letter-spacing:.24em!important;color:rgb(var(--gold-hi-rgb))!important}
+ border-radius:0!important;border:var(--hair) solid rgba(var(--orn),.62)!important;background:transparent!important;
+ box-shadow:inset 0 0 0 3px var(--bg),inset 0 0 0 calc(3px + var(--hair)) rgba(var(--orn),.26)!important;letter-spacing:.24em!important;color:rgb(var(--gold-hi-rgb))!important}
 @media (hover:hover){html body :is(.home-cta,.minimal-ritual .primary.draw,.ask-row .ask-send,.result-tools .open-poster,.quiz-primary):hover:not(:disabled){
- background:rgba(var(--orn),.06)!important;border-color:rgba(var(--orn),.95)!important;box-shadow:inset 0 0 0 3px var(--bg),inset 0 0 0 4px rgba(var(--orn),.5),0 0 28px -8px rgba(var(--orn),.35)!important}}
+ background:rgba(var(--orn),.06)!important;border-color:rgba(var(--orn),.95)!important;box-shadow:inset 0 0 0 3px var(--bg),inset 0 0 0 calc(3px + var(--hair)) rgba(var(--orn),.5),0 0 28px -8px rgba(var(--orn),.35)!important}}
 html body :is(.result-tools .redraw,.review-save,.setting-row button,.export-data,.legacy-share-options button,.export-dipper,.quiz-secondary){border-radius:0!important;letter-spacing:.18em!important;border-color:rgba(var(--orn),.3)!important}
 /* 小圆角的选项改成细线直角框 */
 html body :is(.mood-chip,.ritual-switch,.ritual-switch button,.quiz-option,.copy-contact,.home-ask-row,.segment button,.codex-filter button,.codex-search){border-radius:0!important}
@@ -85,7 +88,7 @@ html body .mood-chip.on{border-color:rgba(var(--orn),.75)!important;color:rgb(va
 /* ---------- 编号段落：罗马数字竖线顶端一颗小星 ---------- */
 html body .editorial-index{color:rgba(var(--orn),.55)!important;font-family:var(--font-cinzel),Georgia,serif!important;font-style:normal!important;font-size:clamp(1.1rem,2vw,1.5rem)!important;letter-spacing:.06em}
 html body .editorial-index::before{content:'';position:absolute;right:-4.5px;top:-3px;width:9px;height:9px;background:rgb(var(--orn));opacity:.7;-webkit-mask:var(--orn-star) center/contain no-repeat;mask:var(--orn-star) center/contain no-repeat}
-html body .editorial-row{border-top:1px solid rgba(var(--orn),.13)!important}
+html body .editorial-row{border-top:0!important;background:linear-gradient(90deg,rgba(var(--orn),.2),rgba(var(--orn),.1) 60%,transparent) top left/100% var(--hair) no-repeat!important}
 
 /* ---------- 首页：月亮四周几颗四芒星，月下一列月落点线 ---------- */
 html body .moon-stage::before,html body .moon-stage::after{content:'';position:absolute;pointer-events:none;background:rgb(var(--orn));-webkit-mask:var(--orn-star) center/contain no-repeat;mask:var(--orn-star) center/contain no-repeat}
@@ -101,7 +104,7 @@ html body .shared-footer::before{content:'';position:absolute;left:50%;top:0;wid
 html body .shared-footer>span{font-family:var(--font-cinzel),var(--font-chinese),serif!important;letter-spacing:.32em}
 
 /* ---------- 首页入门区 ---------- */
-html body .home-primer .primer-suits img{border-radius:0!important;border-color:rgba(var(--orn),.4)!important;outline:1px solid rgba(var(--orn),.14);outline-offset:3px}
+html body .home-primer .primer-suits img{border-radius:0!important;border-color:rgba(var(--orn),.4)!important;outline:var(--hair) solid rgba(var(--orn),.14);outline-offset:3px}
 html body .home-primer .primer-actions{border-top:0!important}
 html body .home-primer .primer-actions::before{content:'';display:block;width:min(240px,64%);height:16px;margin:0 auto 10px;background:rgb(var(--orn));opacity:.7;-webkit-mask:var(--orn-divider) center/contain no-repeat;mask:var(--orn-divider) center/contain no-repeat}
 html body .home-primer h2#primer-title::after{content:'';display:block;width:12px;height:56px;margin:22px auto 0;background:rgb(var(--orn));opacity:.7;-webkit-mask:var(--orn-drop) center/contain no-repeat;mask:var(--orn-drop) center/contain no-repeat}
@@ -120,8 +123,8 @@ html body :is(.copy-contact,.mood-chip,.result-tools button,.review-save,.glass-
 /* ======== 细节打磨（2026-11-18 第二轮） ======== */
 
 /* 「今天可做」：去掉旧的金色竖条和灰底，换成四角带扇形光芒的双线题签 */
-html body .ritual-ticket .editorial-copy{position:relative;border:1px solid rgba(var(--orn),.34)!important;border-inline-start-width:1px!important;background:radial-gradient(ellipse at 50% 0,rgba(var(--orn),.05),transparent 70%)!important;border-radius:0!important;padding:20px clamp(18px,4vw,26px)!important;outline:1px solid rgba(var(--orn),.12);outline-offset:4px}
-html body .ritual-ticket .editorial-copy::after{content:'';position:absolute;inset:-5px;pointer-events:none;background:rgb(var(--orn));opacity:.75;
+html body .ritual-ticket .editorial-copy{position:relative;border:var(--hair) solid rgba(var(--orn),.34)!important;border-inline-start-width:1px!important;background:radial-gradient(ellipse at 50% 0,rgba(var(--orn),.05),transparent 70%)!important;border-radius:0!important;padding:20px clamp(18px,4vw,26px)!important;outline:var(--hair) solid rgba(var(--orn),.12);outline-offset:4px}
+html body .ritual-ticket .editorial-copy::after{content:'';position:absolute;inset:-4px;pointer-events:none;background:rgb(var(--orn));opacity:.75;
  -webkit-mask:var(--orn-fan) top left/26px no-repeat,var(--orn-fan-tr) top right/26px no-repeat,var(--orn-fan-bl) bottom left/26px no-repeat,var(--orn-fan-br) bottom right/26px no-repeat;
  mask:var(--orn-fan) top left/26px no-repeat,var(--orn-fan-tr) top right/26px no-repeat,var(--orn-fan-bl) bottom left/26px no-repeat,var(--orn-fan-br) bottom right/26px no-repeat}
 html body .ritual-ticket .editorial-copy>:is(h2,h3){color:rgb(var(--gold-hi-rgb))}
@@ -145,11 +148,17 @@ html body .card-page h2:not(.editorial-copy h2)::before{content:'';position:abso
 /* 测试题：A B C D 用 Cinzel，选项悬停时框线变亮 */
 html body .quiz-letter{font-family:var(--font-cinzel),Georgia,serif!important;letter-spacing:.06em;color:rgba(var(--orn),.6)!important}
 @media (hover:hover){html body .quiz-option:hover:not(:disabled){border-color:rgba(var(--orn),.6)!important;background:rgba(var(--orn),.04)!important}}
-html body .quiz-option.is-picked{border-color:rgba(var(--orn),.85)!important;box-shadow:inset 0 0 0 3px var(--bg),inset 0 0 0 4px rgba(var(--orn),.3)!important}
+html body .quiz-option.is-picked{border-color:rgba(var(--orn),.85)!important;box-shadow:inset 0 0 0 3px var(--bg),inset 0 0 0 calc(3px + var(--hair)) rgba(var(--orn),.3)!important}
 
 /* 图鉴小牌：外面一道细线，像装裱 */
-html body .codex-face{outline:1px solid rgba(var(--orn),.12);outline-offset:3px}
+html body .codex-face{outline:var(--hair) solid rgba(var(--orn),.12);outline-offset:3px}
 html body .codex-card:hover .codex-face{outline-color:rgba(var(--orn),.35)}
 
 /* 文字链接：下划线细一点、离字远一点 */
 html body main a:not([class]){text-decoration-thickness:.5px;text-underline-offset:.32em;text-decoration-color:rgba(var(--orn),.45)}
+
+/* 其余控件的边框在高清屏上也用发丝线，和装饰线条粗细一致 */
+@media (min-resolution:2dppx){
+ html body :is(.mood-chip,.ritual-switch,.quiz-option,.codex-search,.codex-segs,.codex-mode,.result-tools button,.review-save,.setting-row button,.export-data,.quiz-secondary,.home-v2 .home-ask button,.ask-row .ask-send,.copy-contact,.card-keys li,.deep-pills li,.insp-bar,.ritual-check,.legal-page input,.legal-page textarea,.consultation-form textarea,.tarot-workbench .spread-choice button,.tarot-workbench .q-examples button){border-width:.5px!important}
+ html body :is(.ask-form input,.single-review input,.home-ask-row,.review-block textarea){border-bottom-width:.5px!important}
+}
