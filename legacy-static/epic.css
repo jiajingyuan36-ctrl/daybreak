@@ -393,7 +393,7 @@ html body #toast.show{opacity:1;transform:translate(-50%,0) scale(1);animation:n
    只在动画期间存在：锁定交互、待揭晓时把结果页的大牌和文字暂时设为透明（布局不变，不会跳动）、飞行中的双面牌浮层。 */
 .minimal-ritual.draw-locked .ritual-scene,.minimal-ritual.draw-locked button{pointer-events:none}
 .fan-card.is-drawn,.pile-card.is-drawn{z-index:4;border-color:rgba(var(--gold-rgb),.6)!important;box-shadow:0 24px 48px rgba(0,0,0,.8),0 0 20px rgba(var(--gold-rgb),.25)!important;transition:box-shadow .32s var(--spring-release),border-color .32s!important}
-.minimal-result.reveal-pending>:not(.tarot),.minimal-result.card-pending>.tarot{opacity:0}
+.minimal-result.reveal-pending>:not(.tarot),.minimal-result>.tarot.is-pending{opacity:0}
 .minimal-result.reveal-pending .tick-col{animation-play-state:paused}
 .draw-flight{position:fixed;z-index:70;pointer-events:none;perspective:1200px;transform-origin:50% 50%;will-change:transform,opacity}
 .flight-card{position:absolute;inset:0;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;will-change:transform}

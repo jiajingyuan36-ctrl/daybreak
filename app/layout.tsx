@@ -7,16 +7,19 @@ import '../legacy-static/ornaments.css';
 import '../legacy-static/engraved.css';
 import '../legacy-static/fonts/serif-sc.css';
 import {SiteChrome} from '../src/components/site-chrome';
-import type {Metadata} from 'next';
+import type {Metadata,Viewport} from 'next';
 import {BRAND_NAME,BRAND_TITLE,SITE_URL,SITE_HOST,ANALYTICS_ENABLED,UMAMI_WEBSITE_ID} from '../src/site';
 import {pageMeta} from '../src/meta';
 import {InstallHint} from '../src/components/install-hint';
 import {WeChatHint} from '../src/components/wechat-hint';
-const cinzel=Cinzel({subsets:['latin'],weight:['400','500'],variable:'--font-cinzel',display:'swap'});
-const prose=Cormorant_Garamond({subsets:['latin'],weight:['400','500','600'],style:['normal','italic'],variable:'--font-prose',display:'swap'});
+const cinzel=Cinzel({subsets:['latin'],weight:['400','500'],variable:'--font-cinzel',display:'swap',preload:false});
+const prose=Cormorant_Garamond({subsets:['latin'],weight:['400','500','600'],style:['normal','italic'],variable:'--font-prose',display:'swap',preload:false});
+// 两种拉丁装饰字体不预加载（2026-11-20）：它们和首屏样式抢带宽，晚到也只是先用后备字体。
 // 中文衬线字体用自己抽字的两个文件（见 scripts/font-css.mjs），正文先用回退字体绘制。
 // 以前 Google 字体切成上百个分片，每个页面要下 11–22 个；现在一个文件缓存一次，所有页面通用。
 // 链接预览：分享到小红书、Instagram、Facebook、微信、X 时显示的标题、描述和图片。
+// 手机浏览器顶栏的颜色，和页面底色一致
+export const viewport:Viewport={themeColor:[{media:'(prefers-color-scheme: dark)',color:'#09090b'},{media:'(prefers-color-scheme: light)',color:'#efe7d6'}],colorScheme:'dark light'};
 export const metadata:Metadata={
  ...pageMeta('/',null),
  metadataBase:new URL(SITE_URL),

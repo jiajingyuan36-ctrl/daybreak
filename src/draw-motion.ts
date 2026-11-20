@@ -68,7 +68,8 @@ export async function lockStage(ritual:HTMLElement,picked:HTMLElement,faces:Face
  await wait(lift);return {stage,cx,cy,w,h,drift}}
 
 /** 结果页先以“待揭晓”状态渲染：布局照常，大牌和文字暂时透明。 */
-export function holdResult(result:HTMLElement){result.classList.add('reveal-pending','card-pending')}
+/** 牌的「待揭晓」挂在牌自己身上（.tarot.is-pending），揭晓时只重算这张牌，不重算整个结果区（2026-11-20 量过，后者在慢手机上要 60–120ms） */
+export function holdResult(result:HTMLElement){result.classList.add('reveal-pending');result.querySelector('.tarot')?.classList.add('is-pending')}
 
 /** 换一张：旧牌面和解读 200ms 向上淡出，结束后才允许挂新内容。 */
 export async function exitResult(result:HTMLElement){
@@ -124,6 +125,6 @@ async function animateReveal(result:HTMLElement,o:RevealOptions,hold:(stage:HTML
  // 阶段 4：落定前 100ms 开始，正文按模块依次浮现
  await wait(flip-100);o.onPhase?.('revealed');result.classList.remove('reveal-pending');
  result.classList.add('editorial-reveal');
- await wait(100);result.classList.remove('card-pending');stage.remove();
+ await wait(100);target.classList.remove('is-pending');stage.remove();
  await wait(660)}
-function release(result:HTMLElement){result.classList.remove('reveal-pending','card-pending')}
+function release(result:HTMLElement){result.classList.remove('reveal-pending');result.querySelector('.tarot')?.classList.remove('is-pending')}

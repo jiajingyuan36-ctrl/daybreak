@@ -112,7 +112,7 @@ html body .home-primer h2#primer-title::after{content:'';display:block;width:12p
 @media (prefers-reduced-transparency:reduce){html body::before{display:none}}
 /* 揭晓时画框跟着牌一起淡入（浮层上没有画框，撤掉浮层的一瞬间不突然冒出来） */
 html body .minimal-result .tarot::before,html body .minimal-result .tarot::after{transition:opacity .7s cubic-bezier(.22,1,.36,1) .05s}
-html body .minimal-result.card-pending .tarot::before,html body .minimal-result.card-pending .tarot::after{opacity:0;transition:none}
+html body .minimal-result .tarot.is-pending::before,html body .minimal-result .tarot.is-pending::after{opacity:0;transition:none}
 /* 单张牌页的英文牌名：和结果页同一种空格大写 */
 html body .card-head .card-en{font-family:var(--font-cinzel),Georgia,serif!important;font-size:12px!important;letter-spacing:.42em!important;text-transform:uppercase;color:rgba(var(--orn),.72)!important}
 html body .card-head .card-en::before,html body .card-head .card-en::after{content:'·';margin:0 .7em;opacity:.6}
@@ -162,3 +162,76 @@ html body main a:not([class]){text-decoration-thickness:.5px;text-underline-offs
  html body :is(.mood-chip,.ritual-switch,.quiz-option,.codex-search,.codex-segs,.codex-mode,.result-tools button,.review-save,.setting-row button,.export-data,.quiz-secondary,.home-v2 .home-ask button,.ask-row .ask-send,.copy-contact,.card-keys li,.deep-pills li,.insp-bar,.ritual-check,.legal-page input,.legal-page textarea,.consultation-form textarea,.tarot-workbench .spread-choice button,.tarot-workbench .q-examples button){border-width:.5px!important}
  html body :is(.ask-form input,.single-review input,.home-ask-row,.review-block textarea){border-bottom-width:.5px!important}
 }
+
+/* ======== 书签（src/bookmarks.ts） ======== */
+html body .bm-wrap{display:inline-flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center}
+html body .bm-toggle{display:inline-flex!important;align-items:center;gap:9px;min-height:36px!important;height:auto!important;padding:7px 16px!important;border:var(--hair) solid rgba(var(--orn),.36)!important;border-radius:0!important;background:transparent!important;color:rgba(var(--orn),.82)!important;font-size:13px!important;letter-spacing:.2em!important;cursor:pointer;transition:border-color .25s,color .25s,background .25s}
+html body .bm-toggle .bm-icon{flex:none;transition:transform .35s cubic-bezier(.22,1,.36,1)}
+html body .bm-toggle.is-on{border-color:rgba(var(--orn),.8)!important;color:rgb(var(--gold-hi-rgb))!important;background:rgba(var(--orn),.06)!important}
+html body .bm-toggle.is-on .bm-icon{transform:translateY(-1px)}
+@media (hover:hover){html body .bm-toggle:hover{border-color:rgba(var(--orn),.75)!important;color:rgb(var(--gold-hi-rgb))!important}}
+html body .bm-note{font-size:12px;letter-spacing:.14em;color:rgba(var(--orn),.7)!important;text-decoration:none!important;opacity:0;transform:translateX(-4px);transition:opacity .3s,transform .3s;pointer-events:none}
+html body .bm-note.is-shown{opacity:1;transform:none;pointer-events:auto}
+html body .bm-row{margin:18px 0 0;text-align:center}
+html body .card-head .card-bm{margin-top:14px}
+html body .insp-bm{margin:6px 0 14px;justify-content:flex-start}
+
+/* 书签页 */
+html body .bookmarks-page{max-width:640px!important}
+html body .bm-head{text-align:center;margin-bottom:clamp(28px,5vw,44px)}
+html body .bm-head h1{margin:6px 0 0}
+html body .bm-lead{max-width:30em;margin:22px auto 0;color:var(--muted);font-size:.95rem;line-height:1.9}
+html body .bm-segs{display:flex!important;width:fit-content;margin:0 auto 26px!important}
+html body .bm-segs button small{margin-left:.45em;font-size:.72em;opacity:.6;font-family:var(--font-cinzel),Georgia,serif!important}
+html body .bm-segs button.on,html body .bm-segs button[aria-selected=true]{color:rgb(var(--gold-hi-rgb))!important;background:rgba(var(--orn),.08)!important}
+html body .bm-list{list-style:none;margin:0;padding:0;display:grid;gap:0}
+html body .bm-item{display:flex;align-items:center;gap:12px;padding:16px 0;background:linear-gradient(90deg,transparent,rgba(var(--orn),.2) 15%,rgba(var(--orn),.2) 85%,transparent) bottom/100% var(--hair) no-repeat}
+html body .bm-link{flex:1;min-width:0;display:flex;align-items:center;gap:18px;color:inherit!important;text-decoration:none!important}
+html body .bm-thumb{flex:none;position:relative;width:62px;aspect-ratio:160/274;overflow:hidden;outline:var(--hair) solid rgba(var(--orn),.3);outline-offset:3px}
+html body .bm-thumb img{display:block;width:100%;height:100%;object-fit:cover}
+html body .bm-thumb.is-reversed img{transform:rotate(180deg)}
+html body .bm-text{display:grid;gap:3px;min-width:0;text-align:left}
+html body .bm-text small{font-size:11px;letter-spacing:.24em;color:rgba(var(--orn),.6)}
+html body .bm-text b{font-weight:400;font-size:1.06rem;letter-spacing:.1em}
+html body .bm-text b em{font-style:normal;font-size:.78em;margin-left:.8em;color:var(--muted);letter-spacing:.2em}
+html body .bm-en{font-family:var(--font-cinzel),Georgia,serif!important;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:rgba(var(--orn),.5)}
+html body .bm-at{font-size:11px;color:var(--muted);letter-spacing:.08em}
+html body .bm-remove{flex:none;font-size:12px!important;letter-spacing:.2em!important;color:var(--muted)!important;border:0!important;background:none!important;padding:8px 2px!important;min-height:0!important;cursor:pointer}
+@media (hover:hover){html body .bm-remove:hover{color:rgb(var(--gold-hi-rgb))!important}html body .bm-link:hover .bm-thumb{outline-color:rgba(var(--orn),.7)}}
+html body .bm-empty{text-align:center;padding:24px 0 8px}
+html body .bm-empty h2{margin:18px 0 12px;font-size:1.15rem;letter-spacing:.2em;font-weight:400}
+html body .bm-empty p{color:var(--muted);line-height:1.9;max-width:28em;margin:0 auto}
+html body .bm-empty-links{display:flex;gap:14px;justify-content:center;margin-top:26px!important}
+html body .bm-none{text-align:center;color:var(--muted)}
+
+/* ======== 性能与排版（2026-11-20） ======== */
+/* 图鉴：屏幕外的牌先不排版、不绘制，滚到附近才画（78 张一起画曾占主线程好几秒） */
+html body .codex-grid>.codex-card:nth-child(n+13){content-visibility:auto;contain-intrinsic-size:auto 300px}
+/* 中文段落避免最后一行只剩一两个字 */
+html body main :is(p,li,dd,blockquote,h1,h2,h3){text-wrap:pretty}
+
+/* ======== 细节（2026-11-20） ======== */
+::selection{background:rgba(var(--orn),.26);color:var(--fg)}
+html{scrollbar-color:rgba(var(--orn),.28) transparent;scrollbar-width:thin}
+/* 键盘操作时的焦点框：一圈细线，离控件 4px，全站一致 */
+html body :is(a,button,input,select,textarea,summary,[tabindex]):focus-visible{outline:1px solid rgba(var(--orn),.85)!important;outline-offset:4px!important}
+html body :is(input,textarea):focus-visible{outline-offset:2px!important}
+/* 提示条：直角双线，像一张小题签 */
+html body #toast{border-radius:0!important;border:var(--hair) solid rgba(var(--orn),.45)!important;background:rgba(10,10,12,.94)!important;color:var(--fg)!important;letter-spacing:.06em;box-shadow:inset 0 0 0 3px rgba(10,10,12,.94),inset 0 0 0 calc(3px + var(--hair)) rgba(var(--orn),.18),0 14px 40px -12px rgba(0,0,0,.8)!important}
+html:root[data-theme=light] body #toast{background:rgba(244,237,223,.96)!important;box-shadow:inset 0 0 0 3px rgba(244,237,223,.96),inset 0 0 0 calc(3px + var(--hair)) rgba(var(--orn),.2),0 14px 40px -14px rgba(60,45,20,.35)!important}
+/* 404 */
+html body .nf-page{text-align:center;padding-top:10vh!important}
+html body .nf-card{display:block;width:132px;aspect-ratio:240/400;margin:0 auto 36px;transform:rotate(-4deg);outline:var(--hair) solid rgba(var(--orn),.3);outline-offset:6px}
+html body .nf-card svg{display:block;width:100%;height:100%}
+html body .nf-page h1::after{content:'';display:block;width:min(200px,58%);height:15px;margin:16px auto 0;background:rgb(var(--orn));opacity:.7;-webkit-mask:var(--orn-divider) center/contain no-repeat;mask:var(--orn-divider) center/contain no-repeat}
+html body .nf-lead{color:var(--muted);max-width:26em;margin:20px auto 0;line-height:1.9}
+html body .nf-links{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:32px!important}
+/* 图鉴第一屏的牌（前 9 张）不等脚本标记「已加载」就直接显示，免得首屏最大的图要等 JS 下载完 */
+html body .codex-grid>.codex-card:nth-child(-n+9) .codex-face img{opacity:1!important;transition:none!important}
+html body .codex-grid>.codex-card:nth-child(-n+9) .codex-face::after{display:none!important}
+html body .nf-page h1{font-size:clamp(1.5rem,6.4vw,2.3rem)!important;letter-spacing:.12em;word-break:keep-all}
+html body .card-head .card-bm{margin:14px 0 22px}
+/* 「更多」菜单：直角双线框，和按钮一致 */
+html body .more-sheet{border-radius:0!important;border:var(--hair) solid rgba(var(--orn),.4)!important;outline:var(--hair) solid rgba(var(--orn),.14);outline-offset:-5px}
+html body .shared-header .more-sheet a,html body .more-sheet a+a{border-radius:0!important}
+html body .more-sheet a+a{border-top:var(--hair) solid rgba(var(--orn),.12)!important}

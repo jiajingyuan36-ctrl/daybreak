@@ -1,7 +1,8 @@
 // 检查抽牌动画不卡（2026-11-17 用户反馈「抽卡动画有点卡顿感」之后加的）。
 // 做法：模拟 iPhone 13，CPU 降速 4 倍和 6 倍（接近中低端手机），点「抽一张」和走一遍牌扇选牌，
 // 用 Long Animation Frame 记录每一帧主线程被占了多久，对照 draw-motion.ts 打的标记判断：
-//   · 点下去那一帧（动画还没开始）不超过 TAP_MS：太久就是「点了没反应」
+//   · 点下去那一帧（动画还没开始）里网站自己的处理（脚本 + 样式与布局）不超过 TAP_MS：太久就是「点了没反应」。
+//     不用整帧时长：整帧还包括测试浏览器降速后的绘制，同一份代码前后能差一倍（2026-11-20 量过）
 //   · 浮层上浮期间（draw:cover-start → draw:cover-end）允许整页渲染，这时 transform 动画在合成线程上跑，不掉帧；
 //     但浮层的上浮如果在渲染结束前就放完了（draw:cover-overrun），画面会停住，判失败
 //   · 其余时间（飞向大牌、翻面、文字浮现）任何一帧不超过 FRAME_MS
@@ -15,7 +16,7 @@ import {readFile,stat} from 'node:fs/promises';
 import {extname,join,normalize} from 'node:path';
 let pw;try{pw=await import('playwright')}catch{pw=createRequire(import.meta.url)('playwright')}
 const {chromium,devices}=pw;
-const TAP_MS={4:200,6:280},FRAME_MS={4:70,6:100};
+const TAP_MS={4:90,6:130},FRAME_MS={4:70,6:100};
 let base=process.argv[2],server;
 if(!base){
  const types={'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png','.jpg':'image/jpeg','.woff2':'font/woff2','.webmanifest':'application/manifest+json','.txt':'text/plain'};
@@ -38,7 +39,7 @@ async function run(mode,rate){
   await page.waitForTimeout(900)}
  await cdp.send('Emulation.setCPUThrottlingRate',{rate});
  await page.evaluate(()=>{window.__loaf=[];performance.clearMarks();
-  new PerformanceObserver(l=>l.getEntries().forEach(e=>window.__loaf.push({s:e.startTime,d:e.duration}))).observe({type:'long-animation-frame'})});
+  new PerformanceObserver(l=>l.getEntries().forEach(e=>window.__loaf.push({s:e.startTime,d:e.duration,work:e.scripts.reduce((t,x)=>t+x.duration,0)+(e.styleAndLayoutStart?e.startTime+e.duration-e.styleAndLayoutStart:0)}))).observe({type:'long-animation-frame'})});
  const t0=await page.evaluate(()=>performance.now());
  if(mode==='fan'){const box=await page.locator('.fan-card').nth(6).boundingBox();await page.mouse.click(box.x+box.width/2,box.y+box.height/2)}
  else await page.click('button.draw');
@@ -47,7 +48,7 @@ async function run(mode,rate){
  await ctx.close();
  const bad=[];let tap=0;
  for(const f of r.loaf){if(f.s<t0-5)continue;
-  if(r.start!==undefined&&f.s<r.start&&f.s+f.d>=r.start){tap=Math.max(tap,f.d);if(f.d>TAP_MS[rate])bad.push(`点下去那一帧 ${Math.round(f.d)}ms`);continue}
+  if(r.start!==undefined&&f.s<r.start&&f.s+f.d>=r.start){tap=Math.max(tap,f.work);if(f.work>TAP_MS[rate])bad.push(`点下去那一帧的处理 ${Math.round(f.work)}ms`);continue}
   if(r.start!==undefined&&r.end!==undefined&&f.s>=r.start&&f.s<=r.end)continue;
   if(f.d>FRAME_MS[rate])bad.push(`${Math.round(f.s-t0)}ms 处一帧 ${Math.round(f.d)}ms`)}
  if(r.start===undefined||r.end===undefined)bad.push('没有记录到浮层标记（draw-motion.ts 的 mark 被删了？）');
@@ -59,7 +60,7 @@ for(const rate of [4,6])for(const mode of ['quick','fan']){
  const runs=[];for(let i=0;i<3;i++)runs.push(await run(mode,rate));
  const r=runs.filter(x=>!x.skip).sort((a,b)=>a.tap-b.tap)[1]??runs[0];
  if(r.skip){console.log(`${mode} ×${rate}：跳过（${r.skip}）`);continue}
- console.log(`${mode==='fan'?'牌扇选牌':'直接抽一张'} ×${rate}：点击帧 ${r.tap}ms，浮层掩护 ${r.cover}ms，${r.bad.length?'不通过：'+r.bad.join('；'):'通过'}`);
+ console.log(`${mode==='fan'?'牌扇选牌':'直接抽一张'} ×${rate}：点击处理 ${r.tap}ms，浮层掩护 ${r.cover}ms，${r.bad.length?'不通过：'+r.bad.join('；'):'通过'}`);
  if(r.bad.length)failed++}
 await browser.close();server?.close();
 if(failed){console.error(`${failed} 项没通过`);process.exit(1)}else console.log('全部通过');

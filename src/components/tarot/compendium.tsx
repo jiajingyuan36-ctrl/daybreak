@@ -3,6 +3,7 @@
 // 数据全部来自现有的单一来源，不另写一份：牌名与白话文案（src/cards.ts ← src/plain.ts）、牌面符号与原典（src/knowledge.ts）、
 // 星座与元素对应（src/astro.ts）、牌面图（public/rws，1909 年原版扫描，78 张都有）、牌背（src/card-back.ts）。
 // 「我的收集」读每日抽牌的本地记录（localStorage daybreak:v1 的 days），只读不写。
+import {BookmarkButton} from '../bookmark-button';
 import {useCallback,useEffect,useLayoutEffect,useMemo,useRef,useState} from 'react';
 import {cards} from '../../cards';
 import type {Card} from '../../types';
@@ -61,9 +62,9 @@ export function Compendium(){
   </div>
   <p className="codex-progress" aria-live="polite">{mine?<>已经遇见 <b>{met}</b> / 78 张牌</>:<>{list.length} / 78 张</>}</p>
   <div className="codex-grid" key={`${group}|${query}|${mine}`}>{list.map((c,i)=>{const seen=!!history[c.id],hide=mine&&!seen;
-   return <button type="button" key={c.id} className={`codex-card${hide?' is-unmet':''}`} style={{['--i' as string]:Math.min(i,24)}} onClick={()=>setOpen(i)} aria-label={`${c.nameZh}，${c.nameEn}${mine?(seen?'，已遇见':'，还没遇见'):''}`}>
-    <span className="codex-face">{hide?<span className="codex-back" dangerouslySetInnerHTML={{__html:BACK_USE}}/>:<TarotPlate src={cardImageUrl(c.id,true)} alt="" loading="lazy" decoding="async" width={320} height={549} ref={el=>{if(el?.complete&&el.naturalWidth)el.classList.add('is-loaded')}} onLoad={e=>e.currentTarget.classList.add('is-loaded')} onError={e=>e.currentTarget.classList.add('is-loaded')}/>}<span className="codex-badge">{badge(c)}</span>{seen&&mine&&<span className="codex-seen" aria-hidden="true">✦</span>}</span>
-    <span className="codex-name"><b>{c.nameZh}</b><small>{c.nameEn}</small></span></button>})}</div>
+   return <button type="button" key={c.id} className={`codex-card${hide?' is-unmet':''}`} style={{['--i' as string]:Math.min(i,24)}} onClick={()=>setOpen(i)}>
+    <span className="codex-face">{hide?<span className="codex-back" dangerouslySetInnerHTML={{__html:BACK_USE}}/>:<TarotPlate src={cardImageUrl(c.id,true)} alt="" loading={i<9?'eager':'lazy'} fetchPriority={i<3?'high':'auto'} decoding="async" width={320} height={549} ref={el=>{if(el?.complete&&el.naturalWidth)el.classList.add('is-loaded')}} onLoad={e=>e.currentTarget.classList.add('is-loaded')} onError={e=>e.currentTarget.classList.add('is-loaded')}/>}<span className="codex-badge">{badge(c)}</span>{seen&&mine&&<span className="codex-seen" aria-hidden="true">✦</span>}</span>
+    <span className="codex-name"><b>{c.nameZh}</b><small>{c.nameEn}</small>{mine&&<span className="sr-only">{seen?'，已遇见':'，还没遇见'}</span>}</span></button>})}</div>
   {!list.length&&<p className="codex-empty">没有找到这张牌。试试更短的关键词，或换一个牌组。</p>}
   {open!==null&&list[open]&&<CardInspector list={list} index={open} history={history} onIndex={setOpen} onClose={()=>setOpen(null)}/>}
  </main>}
@@ -116,6 +117,7 @@ function CardInspector({list,index,history,onIndex,onClose}:{list:Card[];index:n
     <p className="insp-eyebrow">{eyebrow(c)}</p>
     <h2 id="insp-title">{c.nameZh}<span> · {c.nameEn.toUpperCase()}</span></h2>
     {astro&&<p className="insp-astro">{astro}</p>}
+    <BookmarkButton item={{kind:'card',id:c.id}} className="insp-bm"/>
     <div key={side} className="insp-swap">
      <p className="insp-chips">{keywords.map(w=><span key={w}>{w}</span>)}</p>
      <EditorialSection number="I" title="这张牌在说什么"><p>{c.plainIntro}</p>{k?.symbols&&<p className="insp-symbols">{k.symbols}</p>}</EditorialSection>

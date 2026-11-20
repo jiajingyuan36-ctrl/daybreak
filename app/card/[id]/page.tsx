@@ -1,4 +1,5 @@
 import type {Metadata} from 'next';
+import {BookmarkButton} from '../../../src/components/bookmark-button';
 import {notFound} from 'next/navigation';
 import {pageMeta} from '../../../src/meta';
 import {SITE_URL} from '../../../src/site';
@@ -24,7 +25,7 @@ export default async function CardPage({params}:{params:Promise<{id:string}>}){c
  const group=c.arcanaType==='major'?`大阿卡纳 · ${String(c.number).padStart(2,'0')}`:`小阿卡纳 · ${c.suit}`;
  return <main className="page-shell legal-page card-page">
   <nav className="card-crumb" aria-label="位置"><a href="/encyclopedia/">图鉴</a><span aria-hidden="true">›</span><span>{c.nameZh}</span></nav>
-  <header className="card-head"><TarotPlate className="card-art" src={cardImageUrl(c.id)} alt={`${c.nameZh}（1909 年原版韦特塔罗）`} width={350} height={600}/><div><p className="card-group">{group}</p><h1>{c.nameZh}</h1><p className="card-en">{c.nameEn}</p><p className="card-intro">{c.plainIntro}</p></div></header>
+  <header className="card-head"><TarotPlate className="card-art" fetchPriority="high" loading="eager" src={cardImageUrl(c.id)} alt={`${c.nameZh}（1909 年原版韦特塔罗）`} width={350} height={600}/><div><p className="card-group">{group}</p><h1>{c.nameZh}</h1><p className="card-en">{c.nameEn}</p><BookmarkButton item={{kind:'card',id:c.id}} className="card-bm"/><p className="card-intro">{c.plainIntro}</p></div></header>
   <EditorialSection number="I" title="正位" heading="h2"><ul className="card-keys" aria-label="正位关键词">{c.keywordsUpright.map(x=><li key={x}>{x}</li>)}</ul><p>{c.meaningUpright}</p></EditorialSection>
   <EditorialSection number="II" title="逆位" heading="h2"><ul className="card-keys" aria-label="逆位关键词">{c.keywordsReversed.map(x=><li key={x}>{x}</li>)}</ul><p>{c.meaningReversed}</p></EditorialSection>
   <section><h2>放到生活里</h2><dl className="card-life"><div><dt>关系</dt><dd>{c.lifeAspects.love}</dd></div><div><dt>学业事业</dt><dd>{c.lifeAspects.work}</dd></div><div><dt>资源与精力</dt><dd>{c.lifeAspects.money}</dd></div></dl></section>
