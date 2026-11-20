@@ -6,7 +6,7 @@ import {QUIZ_RESULTS} from '../src/quiz';
 export const dynamic='force-static';
 const pages:[string,MetadataRoute.Sitemap[number]['changeFrequency'],number][]=[
  ['/','daily',1],['/ritual/','daily',.9],['/quiz/','monthly',.8],['/zodiac/','monthly',.8],['/pair/','monthly',.8],['/encyclopedia/','monthly',.8],['/consult/','monthly',.7],
- ['/about/','monthly',.5],['/deep/','monthly',.4],['/feedback/','monthly',.4],['/privacy/','yearly',.2],['/terms/','yearly',.2],
+ ['/about/','monthly',.5],['/install/','monthly',.5],['/deep/','monthly',.4],['/feedback/','monthly',.4],['/privacy/','yearly',.2],['/terms/','yearly',.2],
 ];
 export default function sitemap():MetadataRoute.Sitemap{
  return [...pages.map(([p,changeFrequency,priority])=>({url:SITE_URL+p,changeFrequency,priority})),...cards.map(c=>({url:`${SITE_URL}/card/${c.id}/`,changeFrequency:'yearly' as const,priority:.6})),...Object.keys(QUIZ_RESULTS).map(id=>({url:`${SITE_URL}/quiz/${id}/`,changeFrequency:'yearly' as const,priority:.4}))];

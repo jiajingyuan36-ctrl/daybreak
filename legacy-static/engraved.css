@@ -235,3 +235,41 @@ html body .card-head .card-bm{margin:14px 0 22px}
 html body .more-sheet{border-radius:0!important;border:var(--hair) solid rgba(var(--orn),.4)!important;outline:var(--hair) solid rgba(var(--orn),.14);outline-offset:-5px}
 html body .shared-header .more-sheet a,html body .more-sheet a+a{border-radius:0!important}
 html body .more-sheet a+a{border-top:var(--hair) solid rgba(var(--orn),.12)!important}
+
+/* ======== 添加到桌面（/install/，2026-11-20） ======== */
+/* 已经从桌面打开（全屏模式）时，不再显示「添加到桌面」的入口 */
+@media (display-mode: standalone){.only-browser{display:none!important}}
+html body .home-install{display:block;margin-top:6px}
+html body .install-page{max-width:620px!important;position:relative}
+html body .ins-head{text-align:center}
+html body .ins-icon{width:84px;height:84px;margin:0 auto 22px}
+html body .ins-icon img{display:block;width:100%;height:100%;border-radius:22%!important}
+html body .ins-head h1{margin-top:8px}
+html body .ins-lead{max-width:28em;margin:20px auto 0;color:var(--muted);line-height:1.9}
+html body .ins-why{list-style:none;margin:34px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0}
+html body .ins-why li{display:grid;gap:8px;padding:18px 16px;text-align:center;background:linear-gradient(rgba(var(--orn),.18),rgba(var(--orn),.18)) left center/var(--hair) 60% no-repeat}
+html body .ins-why li:first-child{background:none}
+html body .ins-why b{font-weight:400;letter-spacing:.24em;color:rgb(var(--gold-hi-rgb))}
+html body .ins-why span{font-size:13px;line-height:1.75;color:var(--muted)}
+html body .ins-one{text-align:center;margin:30px 0 4px}
+html body .ins-hint{margin:12px 0 0;font-size:13px;color:var(--muted)}
+html body .ins-steps{position:relative;margin:30px 0 0;padding:24px clamp(18px,4vw,28px);border:var(--hair) solid rgba(var(--orn),.3);outline:var(--hair) solid rgba(var(--orn),.1);outline-offset:4px}
+html body .ins-steps.is-primary{border-color:rgba(var(--orn),.55)}
+html body .ins-steps.is-primary::after{content:'';position:absolute;inset:-4px;pointer-events:none;background:rgb(var(--orn));opacity:.7;-webkit-mask:var(--orn-fan) top left/28px no-repeat,var(--orn-fan-tr) top right/28px no-repeat,var(--orn-fan-bl) bottom left/28px no-repeat,var(--orn-fan-br) bottom right/28px no-repeat;mask:var(--orn-fan) top left/28px no-repeat,var(--orn-fan-tr) top right/28px no-repeat,var(--orn-fan-bl) bottom left/28px no-repeat,var(--orn-fan-br) bottom right/28px no-repeat}
+html body .ins-steps h2{margin:0 0 16px;font-size:1.05rem;font-weight:400;letter-spacing:.2em}
+html body .ins-steps h2 small{display:block;margin-bottom:6px;font-size:11px;letter-spacing:.3em;color:rgba(var(--orn),.6)}
+html body .ins-steps ol{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+html body .ins-steps li{display:grid;grid-template-columns:34px 1fr;align-items:baseline;line-height:1.8}
+html body .ins-no{font-family:var(--font-cinzel),Georgia,serif!important;font-size:13px;letter-spacing:.06em;color:rgba(var(--orn),.6)}
+html body .ins-note{margin:14px 0 0;font-size:13px;line-height:1.8;color:var(--muted)}
+html body .ins-more{margin:34px 0 0}
+html body .ins-more>summary{cursor:pointer;text-align:center;letter-spacing:.2em;color:rgba(var(--orn),.8);list-style:none}
+html body .ins-more>summary::-webkit-details-marker{display:none}
+html body .ins-more>summary::after{content:' ↓';opacity:.6}
+html body .ins-more[open]>summary::after{content:' ↑'}
+html body .ins-done{text-align:center;margin-top:34px}
+html body .ins-done h2{font-weight:400;letter-spacing:.2em;margin:14px 0 10px}
+html body .ins-done p{color:var(--muted)}
+html body .ins-back{width:84px;aspect-ratio:240/400;margin:56px auto 0;opacity:.55;transform:rotate(-6deg);outline:var(--hair) solid rgba(var(--orn),.25);outline-offset:5px}
+html body .ins-back svg{display:block;width:100%;height:100%}
+@media (max-width:560px){html body .ins-why{grid-template-columns:1fr}html body .ins-why li{background:linear-gradient(90deg,transparent,rgba(var(--orn),.16),transparent) top/100% var(--hair) no-repeat;padding:14px 4px}html body .ins-why li:first-child{background:none}}
