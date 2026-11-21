@@ -42,6 +42,8 @@ npm run build
 
 - src/bookmarks.ts、src/components/bookmark-button.tsx、src/components/bookmarks-page.tsx、app/bookmarks/：书签（2026-11-20）。可以收一张牌（牌页、图鉴检视台）或某一天的结果（今日结果页，app.ts 的 dayBookmark）。存在 daybreak:bookmarks:v1，和抽牌记录分开存（React 页面和旧版页面各自读写，互不覆盖）；设置页导出备份时带上 bookmarks，导入时一并恢复。书签页不进 sitemap、不让搜索引擎收录。某一天的书签链到 /history/#day=日期，app.ts 启动时读这个 hash 直接打开那一天。tests/bookmarks.test.ts 覆盖。
 
+- video/：短视频项目（Remotion 4.0.545，2026-11-21 装）。独立的 package.json，在 video/ 里 npm install、npx remotion studio 预览、npx remotion render <id> out/<名>.mp4 出片；和网站的类型检查、构建、部署都分开。Remotion 官方的 AI Skill 装在 .claude/skills/remotion-best-practices/（总入口，其余子 Skill 在它的子目录里，按需读）。src/Check.tsx 只是装好时确认能渲染的测试片。
+
 - src/card-deep.ts：单张牌页的长内容（感情、学业事业的正逆位，是还是否，常见误读，常见问题；常见问题同时写成 FAQPage 结构化数据）。分批写：大阿卡纳和权杖已完成，圣杯、宝剑、星币按花色补；tests/card-deep.test.ts 检查字数、套话、含糊词和重复句。字体缺字时不要绕开常用词：用 Adobe 思源宋体 2.003 的 SubsetOTF/CN/SourceHanSerifCN-Regular.otf，按 serif-sc-core.txt 加新字重新抽字（保留原有 GSUB/GPOS 特性、名字改成 DaybreakSerif），再运行 node scripts/font-css.mjs。
 - src/quiz.ts、src/components/quiz-app.tsx、app/quiz/：性格测试「你是哪张塔罗牌」（/quiz/，结果分享页 /quiz/m0/ … /quiz/m21/）。题目、计分、22 种结果都在 src/quiz.ts（文案走 tests/quiz.test.ts 的套话与字数检查，并模拟随机答题检查 22 种结果分布均匀）；结果图在 src/quiz-poster.ts（牌面人物没穿衣服的 6 张牌改画牌背）；链接预览图由 scripts/build-quiz-og.mjs 生成在 public/og/quiz/。content-kit/quiz/ 里的草稿只是初稿，以 src/quiz.ts 为准。
 - server/tone.mjs：「AI 味」套话清单（别慌、你值得、比想象中更、破折号……），网页文案（tests/plain.test.ts）和 AI 回答共用。AI 回答命中时自动重写一次。新写文案或改提示词前先看这份清单；用户反馈出现新的套话就加进去。
@@ -56,7 +58,7 @@ npm run build
 ## 部署注意
 源码仓库是 jiajingyuan36-ctrl/daybreak，推送到这里不会更新线上。线上由 Render 从 jiajingyuan36-ctrl/cike-yousheng 的 daybreak-render 分支构建（不要修改该仓库的 main，那是其他项目）：Render 把 source.tar.gz.b64 解包到 app，再 npm ci 与 build，发布 app/dist。更新线上需要重新打包并更新 unpack.mjs 中的 SHA256。
 
-打包时文件清单与原包一致：git ls-files 去掉 .gitignore、.gitattributes、.github/、content-kit/、CLAUDE.md、README.md 和 legacy-static/fonts/SourceHanSansCN.woff2（unpack.mjs 部署时另行下载），再加上 prebuild 生成的 src/data/*.json，全部放在 app/ 下。改了前端文件要把 public/sw.js 的缓存版本号加一。**打包时不要用 tar --mtime 把文件时间固定成同一个值**：Render 会保留上一次的构建缓存，构建工具按文件修改时间判断有没有改动，时间不变就会沿用旧页面（sw.js 照样更新，看起来像发布成功）。2026-11-09 因此有三次发布的页面没有更新。验证上线要看页面内容本身，不能只看 sw.js 版本号。CDN 会缓存约 5 分钟；app.js 是模块脚本，浏览器请求带 Origin 头，CDN 单独缓存一份，验证线上时要等它也刷新。
+打包时文件清单与原包一致：git ls-files 去掉 .gitignore、.gitattributes、.github/、.claude/、content-kit/、video/、CLAUDE.md、AGENTS.md、README.md 和 legacy-static/fonts/SourceHanSansCN.woff2（unpack.mjs 部署时另行下载），再加上 prebuild 生成的 src/data/*.json，全部放在 app/ 下。改了前端文件要把 public/sw.js 的缓存版本号加一。**打包时不要用 tar --mtime 把文件时间固定成同一个值**：Render 会保留上一次的构建缓存，构建工具按文件修改时间判断有没有改动，时间不变就会沿用旧页面（sw.js 照样更新，看起来像发布成功）。2026-11-09 因此有三次发布的页面没有更新。验证上线要看页面内容本身，不能只看 sw.js 版本号。CDN 会缓存约 5 分钟；app.js 是模块脚本，浏览器请求带 Origin 头，CDN 单独缓存一份，验证线上时要等它也刷新。
 
 ## 线上测试不要算进访问统计
 用浏览器（Playwright 等）打开线上网站做验证之前，先让 Umami 不统计这次访问：在页面加载前设置 localStorage 的 `umami.disabled` 为 `1`（Playwright：`context.addInitScript(()=>localStorage.setItem('umami.disabled','1'))`）。模拟 iPhone 的测试会被 Umami 当成真实手机用户；2026-11-14 的数据（「美国 18 位、抽牌 9 次」）有一大部分是这样来的测试访问。

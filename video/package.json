@@ -1,0 +1,20 @@
+{
+  "name": "daybreak-video",
+  "private": true,
+  "description": "晨启塔罗的短视频（Remotion）。和网站分开安装、分开构建，不进网站的部署包。",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.545",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.545"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "typescript": "^5.8.3"
+  }
+}
