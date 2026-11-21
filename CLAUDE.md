@@ -65,3 +65,11 @@ npm run build
 epic.css 开头有 `body *{border-radius:0!important;box-shadow:none!important;backdrop-filter:none!important}`，要投影、圆角或毛玻璃必须用更具体的选择器并加 !important；关键帧动画改不动 box-shadow。按压手感统一由 src/tactile.ts（initTactile 挂在 site-chrome，给控件加 .is-pressed/.is-releasing；triggerHaptic 微震；busyButton 菊花→✓）处理；下拉统一用毛玻璃浮层（旧版页面用 src/popover.ts 的 glassSelect 包原生 select，React 头部是 ThemePicker）。抽牌到揭晓（以及换一张）的动画在 src/draw-motion.ts，用 Web Animations API 驱动（全站 CSS 的 !important 规则会吃掉普通 CSS 动画和投影），app.ts 里 drawPhase 不在 idle 时拒绝新的抽牌。**抽牌动画防卡顿（2026-11-17）**：锁定一开始就用浮层 .draw-flight 换下抽中的牌，浮层先浮起再极慢上浮，结果页整页渲染就放在这段上浮里（合成线程上的 transform 动画不受主线程影响），渲染完从浮层当前位置接着飞。动画开始后不要同步读样式或布局，不要给大片元素做 filter: blur，不要在指针移动时改整片牌扇的样式或量 13 张牌，抽牌时不要给牌扇里的牌设 disabled（会重算全部牌背）。改了 draw-motion.ts、app.ts 的抽牌流程或仪式页样式后，先 npm run build 再跑 node scripts/check-draw-jank.mjs（iPhone 13、CPU 降速 4 倍和 6 倍，量点击时网站自己的处理时间、浮层掩护和其余每一帧），不通过不发布。这台测试机的帧时长前后能差一倍，怀疑退化时把上一版也构建出来、在同一台机器上交替跑几次再比较。揭晓时「待揭晓」的类挂在牌自己身上（.tarot.is-pending），不要挂回整个结果区，否则揭晓那一帧要重算整页。视图过渡是“先出后入”（旧 180ms 淡出，新延迟 180ms 淡入），不要改回交叉淡化，否则换一张和换页会叠影。epic.css 给所有 [role=button] 等控件设了 touch-action:manipulation，需要拖动/划动的手势区（牌堆、牌扇、北斗星空）必须用更具体的选择器加 !important 锁回 none，否则一划就被浏览器当成滚动、手势失效。旧版页面还会加载 legacy-static/style.css，其中 .primary 有 min-width 等规则。tests/font.test.ts 会检查源码（含注释）里的每个汉字都在精简字体中，新加汉字前先确认或重新抽字。
 
 包内不含密钥、node_modules、构建缓存或浏览器个人记录。字体及第三方许可证保留。
+
+## 做事与协作底线
+1. 汇报先给结论，再给理由和步骤；短句白描，不空谈。
+2. 禁止迎合我的既定倾向；发现逻辑漏洞、反例或风险直接指出。
+3. 没实际运行或核对过的内容明确标「未验证」，不编造数据、链接或结果。
+4. 禁止擅自增加需求之外的功能；复杂任务先确认使用场景、验收标准和「本次不做什么」再动工。
+5. 修改局部前先看上下游影响；同一问题基于同一前提连续两次修复失败时，立刻停下查根因与底层假设，不再继续打补丁。
+6. 遇到产品立项、开放性方案设计、架构选型、重要决策评审或返工复盘时，主动加载并执行 `uw-mode` Skill。
