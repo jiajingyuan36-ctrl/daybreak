@@ -135,10 +135,11 @@ export const Temperance=()=>{useFonts();const f=useCurrentFrame();
 // 电影版（2026-11-22）：只要前面三段空镜，不要牌和片尾。按素材原生 1280×720 剪、不缩放、不加颗粒，
 // 放大到 1080p 和锐化交给 ffmpeg（lanczos），比浏览器里缩放清楚。
 export const FILM_DURATION=C.from+C.len;
-export const TemperanceFilm=()=>{useFonts();
+// v：用哪一批空镜（v1 是 shot1.mp4…，v2 是 shot1-v2.mp4…）
+export const TemperanceFilm=({v='v1'}:{v?:string})=>{useFonts();const n=(i:number)=>v==='v1'?`shot${i}.mp4`:`shot${i}-${v}.mp4`;
  return <AbsoluteFill style={{background:'#000'}}>
-  <Sequence from={A.from} durationInFrames={A.len}><Shot file="shot1.mp4" len={A.len} src={A.src} fadeIn={s(1.6)} still/></Sequence>
-  <Sequence from={B.from} durationInFrames={B.len}><Shot file="shot2.mp4" len={B.len} src={B.src} vol={.8} still/></Sequence>
-  <Sequence from={C.from} durationInFrames={C.len}><Shot file="shot3.mp4" len={C.len} src={C.src} fadeOut={s(1.4)} still/></Sequence>
+  <Sequence from={A.from} durationInFrames={A.len}><Shot file={n(1)} len={A.len} src={A.src} fadeIn={s(1.6)} still/></Sequence>
+  <Sequence from={B.from} durationInFrames={B.len}><Shot file={n(2)} len={B.len} src={B.src} vol={.8} still/></Sequence>
+  <Sequence from={C.from} durationInFrames={C.len}><Shot file={n(3)} len={C.len} src={C.src} fadeOut={s(1.4)} still/></Sequence>
   <Matte k={2/3} label={false}/>{/* 电影版不在画面里标注，发布时在平台勾选「AI 生成」 */}
  </AbsoluteFill>};
