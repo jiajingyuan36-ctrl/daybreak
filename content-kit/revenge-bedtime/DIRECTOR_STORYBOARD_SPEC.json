@@ -1,0 +1,142 @@
+{
+  "project": "RevengeBedtimePro",
+  "composition_id": "RevengeBedtime",
+  "resolution": "1080x1920",
+  "fps": 30,
+  "target_duration_seconds": "38-42s",
+  "fish_audio_reference_id": "159b7a7b9a8b4a27b21f6d32111718a6",
+  "safe_area_px": {
+    "top": 180,
+    "right": 140,
+    "bottom": 280,
+    "left": 56
+  },
+  "sfx_library": [
+    {
+      "file": "sfx/impact_sub.wav",
+      "duration_sec": 0.45,
+      "use": "痛点砸下、核心概念定锚"
+    },
+    {
+      "file": "sfx/whoosh_soft.wav",
+      "duration_sec": 0.35,
+      "use": "卡片进出场、红线划掉、转场"
+    },
+    {
+      "file": "sfx/pop_glass.wav",
+      "duration_sec": 0.12,
+      "use": "电量提示、催命消息、互动签弹出"
+    },
+    {
+      "file": "sfx/tick_clock.wav",
+      "duration_sec": 0.08,
+      "use": "24小时分段填充、刷视频计数"
+    },
+    {
+      "file": "sfx/alarm_harsh.wav",
+      "duration_sec": 0.9,
+      "use": "Scene 4 早八 07:00 硬切惊醒"
+    },
+    {
+      "file": "sfx/chime_warm.wav",
+      "duration_sec": 1.4,
+      "use": "Scene 5 傍晚暖光治愈转折"
+    }
+  ],
+  "scenes": [
+    {
+      "id": 1,
+      "name": "不是不想睡",
+      "clock": "01:48 AM",
+      "accent_color": "#7CC4FA",
+      "image": "images/stayup_1.jpg",
+      "audio": "audio/stayup_1.mp3",
+      "prosody_speed": 1.1,
+      "tail_pause_sec": 0.12,
+      "narration": "困得手机都砸脸上两次了，你还是死活不肯闭眼。别怪自己没自制力——你不是不想睡，你是觉得，今天压根没替自己活过。",
+      "sfx_cues": [
+        "0.13s: impact_sub",
+        "0.20s: pop_glass",
+        "38%: whoosh_soft",
+        "64%: impact_sub"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "白天被掏空",
+      "clock": "DAYTIME · 14:20",
+      "accent_color": "#C8C5BE",
+      "image": "images/stayup_2.jpg",
+      "audio": "audio/stayup_2.mp3",
+      "prosody_speed": 1.06,
+      "tail_pause_sec": 0.12,
+      "narration": "你想想你的一天：从早起闹钟响那一秒开始，时间全是别人的——老板的、课业的、回不完的消息、干不完的活。你像个借来的工具，转了一整天。",
+      "sfx_cues": [
+        "0%: whoosh_soft",
+        "15%/28%/40%: tick_clock",
+        "50%/64%/78%: pop_glass"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "凌晨主权夺回",
+      "clock": "02:34 AM",
+      "accent_color": "#7CC4FA",
+      "image": "images/stayup_3.jpg",
+      "audio": "audio/stayup_3.mp3",
+      "prosody_speed": 1.06,
+      "tail_pause_sec": 0.12,
+      "narration": "只有等晚上关了灯、世界终于安静下来，你才觉得：哎，从现在开始，这几个小时总算归我了。所以明知道刷的都是没营养的烂视频，你也死活舍不得按那个锁屏键。",
+      "sfx_cues": [
+        "0%: whoosh_soft",
+        "52%/65%/78%/90%: tick_clock"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "早八加倍还债",
+      "clock": "07:00 AM",
+      "accent_color": "#D94A4A",
+      "image": "images/stayup_4.jpg",
+      "audio": "audio/stayup_4.mp3",
+      "prosody_speed": 1.06,
+      "tail_pause_sec": 0.12,
+      "narration": "心理学管这叫「报复性熬夜」。说白了，你是在拿凌晨的困意，去报复白天被偷走的人生。可最扎心的是，你偷回来的自由，第二天早上全得靠黑眼圈加倍还回去。",
+      "sfx_cues": [
+        "0%: alarm_harsh (3帧闪白硬切)",
+        "38%: impact_sub",
+        "68%: whoosh_soft"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "留半小时给自己",
+      "clock": "17:45 PM",
+      "accent_color": "#F2C17D",
+      "image": "images/stayup_5.jpg",
+      "audio": "audio/stayup_5.mp3",
+      "prosody_speed": 0.99,
+      "tail_pause_sec": 0.7,
+      "narration": "所以想早点睡，光靠定闹钟没用。白天哪怕只硬抠出半小时，干点只讨好自己的废柴小事，晚上你才舍得把手机放下。说真的，刷到这条的时候，你那边几点了？",
+      "sfx_cues": [
+        "0%: chime_warm",
+        "62%: pop_glass"
+      ]
+    }
+  ],
+  "douyin_publish_pack": {
+    "bgm_search_keywords": [
+      "深夜情绪 轻缓鼓点纯音乐",
+      "都市孤独 电影感钢琴 BGM",
+      "深夜独白 氛围感纯音乐"
+    ],
+    "bgm_volume": "12%-15%",
+    "titles": [
+      "困得手机砸脸上两次还不肯闭眼？你不是不想睡，是觉得今天没替自己活过。",
+      "白天 96% 的时间都是别人的，所以凌晨两点你才死活舍不得按那个锁屏键。",
+      "说真的，刷到这条的时候，你那边几点了？40秒看懂「报复性熬夜」的真相"
+    ],
+    "hashtags": "#报复性熬夜 #心理学 #熬夜 #精神内耗 #真实写照",
+    "pinned_comment": "先报个时：我剪完这条已经凌晨了……刷到这里的你们，现在几点？"
+  }
+}

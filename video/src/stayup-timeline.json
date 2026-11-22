@@ -3,7 +3,7 @@
  "crossfadeFrames": 12,
  "generated": "2026-11-22",
  "model": "s2.1-pro-free",
- "total": 53.888,
+ "total": 54.678,
  "scenes": [
   {
    "id": 1,
@@ -12,8 +12,8 @@
    "duration": 8.359,
    "speechStart": 0.212,
    "speechEnd": 8.233,
-   "tail": 0.15,
-   "length": 8.509,
+   "tail": 0.12,
+   "length": 8.479,
    "cues": [
     {
      "from": 0,
@@ -37,7 +37,7 @@
     },
     {
      "from": 6.726,
-     "to": 8.509
+     "to": 8.479
     }
    ]
   },
@@ -48,8 +48,8 @@
    "duration": 10.501,
    "speechStart": 0.171,
    "speechEnd": 10.431,
-   "tail": 0.15,
-   "length": 10.651,
+   "tail": 0.12,
+   "length": 10.621,
    "cues": [
     {
      "from": 0,
@@ -77,7 +77,7 @@
     },
     {
      "from": 9.676,
-     "to": 10.651
+     "to": 10.621
     }
    ]
   },
@@ -88,8 +88,8 @@
    "duration": 10.945,
    "speechStart": 0.168,
    "speechEnd": 10.855,
-   "tail": 0.15,
-   "length": 11.095,
+   "tail": 0.12,
+   "length": 11.065,
    "cues": [
     {
      "from": 0,
@@ -121,7 +121,7 @@
     },
     {
      "from": 9.098,
-     "to": 11.095
+     "to": 11.065
     }
    ]
   },
@@ -132,8 +132,8 @@
    "duration": 11.337,
    "speechStart": 0.172,
    "speechEnd": 11.263,
-   "tail": 0.15,
-   "length": 11.487,
+   "tail": 0.12,
+   "length": 11.457,
    "cues": [
     {
      "from": 0,
@@ -165,7 +165,7 @@
     },
     {
      "from": 9.566,
-     "to": 11.487
+     "to": 11.457
     }
    ]
   },
@@ -173,43 +173,43 @@
    "id": 5,
    "audio": "audio/stayup_5.mp3",
    "image": "images/stayup_5.jpg",
-   "duration": 11.546,
-   "speechStart": 0,
-   "speechEnd": 11.393,
-   "tail": 0.6,
-   "length": 12.146,
+   "duration": 12.356,
+   "speechStart": 0.177,
+   "speechEnd": 12.269,
+   "tail": 0.7,
+   "length": 13.056,
    "cues": [
     {
      "from": 0,
-     "to": 1.264
+     "to": 1.525
     },
     {
-     "from": 1.264,
-     "to": 2.72
+     "from": 1.525,
+     "to": 3.018
     },
     {
-     "from": 2.72,
-     "to": 4.709
+     "from": 3.018,
+     "to": 5.103
     },
     {
-     "from": 4.709,
-     "to": 6.78
+     "from": 5.103,
+     "to": 7.344
     },
     {
-     "from": 6.78,
-     "to": 8.62
+     "from": 7.344,
+     "to": 9.331
     },
     {
-     "from": 8.62,
-     "to": 9.335
+     "from": 9.331,
+     "to": 10.025
     },
     {
-     "from": 9.335,
-     "to": 10.593
+     "from": 10.025,
+     "to": 11.377
     },
     {
-     "from": 10.593,
-     "to": 12.146
+     "from": 11.377,
+     "to": 13.056
     }
    ]
   }
