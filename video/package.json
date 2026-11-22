@@ -3,7 +3,9 @@
   "private": true,
   "description": "晨启塔罗的短视频（Remotion）。和网站分开安装、分开构建，不进网站的部署包。",
   "scripts": {
+    "dev": "remotion studio",
     "studio": "remotion studio",
+    "tts": "node scripts/tts.mjs",
     "render": "remotion render",
     "typecheck": "tsc --noEmit"
   },

@@ -5,7 +5,7 @@ import {useFonts} from './kit';
 import {Scene1,Scene2,Scene3,Scene4,Scene5,type SceneTiming} from './scenes';
 
 // 《回避型依恋》EP.02 主 Composition：1080×1920，30fps。
-// 帧数全部从 src/avoidant-timeline.json 算（scripts/avoidant-tts.mjs 生成）：每幕 = 配音时长 + 末尾停顿。
+// 帧数全部从 src/avoidant-timeline.json 算（npm run tts -- avoidant 生成）：每幕 = 配音时长 + 末尾停顿。
 // 配音按幕首尾相接；画面在幕与幕之间做 12 帧交叉溶图（后一幕叠在前一幕上淡入，前一幕多留 12 帧垫底），不挤占配音。
 const COMPONENTS=[Scene1,Scene2,Scene3,Scene4,Scene5];
 const FPS=timeline.fps,XF=timeline.crossfadeFrames;

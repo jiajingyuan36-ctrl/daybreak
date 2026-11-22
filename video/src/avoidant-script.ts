@@ -1,5 +1,5 @@
 // 《回避型依恋》EP.02 口播稿与字幕：唯一来源（来自制作包 content-kit/avoidant/script_and_captions.json）。
-// 改文案只改这里，再跑 node scripts/avoidant-tts.mjs 重新生成配音和时间轴。
+// 改文案只改这里，再跑 npm run tts -- avoidant 重新生成配音和时间轴。
 export type Cue={text:string;highlight:string[]};
 export type SceneScript={id:number;name:string;image:string;audio:string;speed:number;tail:number;narration:string;subtitles:Cue[]};
 export const VOICE="159b7a7b9a8b4a27b21f6d32111718a6";
