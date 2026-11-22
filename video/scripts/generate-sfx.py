@@ -103,8 +103,78 @@ def chime_warm():
         out.append(s * min(1, t / 0.006))
     return fade(out, 0.001, 0.12)
 
+
+# ---------- StarbucksBank 追加 ----------
+def cash_register():
+    # 扫码入账：两声上行的清脆铃（E6→B6），带金属泛音和极短机械咔嗒
+    L = n(0.35); hp = Biquad('hp', 3000, 0.7); out = []
+    for i in range(L):
+        t = i / SR; s = 0.0
+        for st, f in [(0.0, 1318.5), (0.09, 1975.5)]:
+            d = t - st
+            if d >= 0:
+                env = math.exp(-d * 18) * min(1, d / 0.002)
+                s += env * (math.sin(2 * math.pi * f * d) + 0.4 * math.sin(2 * math.pi * f * 2.4 * d) * math.exp(-d * 30))
+        s += hp(rng.uniform(-1, 1)) * math.exp(-t * 400) * 0.6
+        out.append(s)
+    return fade(out, 0.0005, 0.04)
+
+def counter_tick():
+    # 翻牌滴答：比 tick_clock 更短更干，带一点塑料片的低频
+    L = n(0.06); hp = Biquad('hp', 1800, 0.8); out = []
+    for i in range(L):
+        t = i / SR
+        out.append(hp(rng.uniform(-1, 1)) * math.exp(-t * 700) + math.sin(2 * math.pi * 900 * t) * math.exp(-t * 160) * 0.4)
+    return fade(out, 0.0003, 0.008)
+
+def paper_flip():
+    # 纸张翻页：带通噪声，两三次快速起伏的“啪啦”包络
+    L = n(0.25); bp = Biquad('bp', 2500, 0.9); out = []
+    for i in range(L):
+        p = i / L; t = i / SR
+        env = (math.sin(math.pi * p) ** 1.2) * (0.55 + 0.45 * abs(math.sin(2 * math.pi * 7 * t)))
+        bp.set(1800 + 2200 * p)
+        out.append(bp(rng.uniform(-1, 1)) * env)
+    return fade(out, 0.004, 0.03)
+
+def stamp_heavy():
+    # 印章砸纸：120→55Hz 闷击 + 纸面的短促噪声，无回响
+    L = n(0.28); lp = Biquad('lp', 1400, 0.7); ph = 0; out = []
+    for i in range(L):
+        t = i / SR; f = 55 + 65 * math.exp(-t * 30); ph += 2 * math.pi * f / SR
+        thud = math.sin(ph) * math.exp(-t * 16) * min(1, t / 0.0015)
+        slap = lp(rng.uniform(-1, 1)) * math.exp(-t * 90) * 0.9
+        out.append(thud + slap)
+    return fade(out, 0.0005, 0.04)
+
+def whoosh_cinema():
+    # 低频扫风：比 whoosh_soft 更低更厚，带通 150→1100→400Hz
+    L = n(0.32); bp = Biquad('bp', 200, 0.9); lp = Biquad('lp', 2500, 0.7); out = []
+    for i in range(L):
+        p = i / L; f = 150 + 950 * math.sin(math.pi * min(1, p * 1.1)) ** 1.4
+        bp.set(f); env = math.sin(math.pi * p) ** 1.6
+        out.append(lp(bp(rng.uniform(-1, 1))) * env)
+    return fade(out, 0.01, 0.04)
+
+def chime_outro():
+    # 收尾钢琴：D 大三和弦（D3 F#3 A3）轻微错开，长衰减
+    L = n(1.5); out = []
+    notes = [(146.83, 0.0, 1.0), (185.0, 0.03, 0.7), (220.0, 0.06, 0.6)]
+    for i in range(L):
+        t = i / SR; s = 0.0
+        for f0, st, a in notes:
+            d = t - st
+            if d < 0: continue
+            for k, ak, dk in [(1, 1.0, 1.8), (2, 0.4, 2.6), (3, 0.18, 3.8), (4, 0.08, 5.0)]:
+                fk = f0 * k * (1 + 0.0004 * k * k)
+                s += a * ak * math.sin(2 * math.pi * fk * d) * math.exp(-d * dk) * min(1, d / 0.005)
+        out.append(s)
+    return fade(out, 0.001, 0.15)
+
 if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True)
     for name, fn, peak in [('impact_sub.wav', impact_sub, .9), ('whoosh_soft.wav', whoosh_soft, .8), ('pop_glass.wav', pop_glass, .8),
-                           ('tick_clock.wav', tick_clock, .75), ('alarm_harsh.wav', alarm_harsh, .7), ('chime_warm.wav', chime_warm, .8)]:
+                           ('tick_clock.wav', tick_clock, .75), ('alarm_harsh.wav', alarm_harsh, .7), ('chime_warm.wav', chime_warm, .8),
+                           ('cash_register.wav', cash_register, .75), ('counter_tick.wav', counter_tick, .7), ('paper_flip.wav', paper_flip, .75),
+                           ('stamp_heavy.wav', stamp_heavy, .9), ('whoosh_cinema.wav', whoosh_cinema, .8), ('chime_outro.wav', chime_outro, .8)]:
         write(name, fn(), peak); print('写好 public/sfx/' + name)

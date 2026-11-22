@@ -1,0 +1,118 @@
+{
+  "project": "StarbucksInterestFreeBankPro",
+  "composition_id": "StarbucksBank",
+  "resolution": "1080x1920",
+  "fps": 30,
+  "target_duration_seconds": "45-50s",
+  "copyright_status": "100% copyright-safe unbranded custom photography, zero third-party logos",
+  "verified_fy2026_facts": {
+    "stored_value_and_loyalty_liability_usd": 1678700000,
+    "filing_date": "2026-11-12 (FY2026 Form 10-K, as of Sept 27, 2026)",
+    "fdic_banks_exceeded_pct": 85.7,
+    "fdic_banks_exceeded_count": "3,605 of 4,208 FDIC-insured US institutions",
+    "annual_breakage_revenue_usd": 222200000,
+    "interest_paid_to_customers_pct": 0.0
+  },
+  "fish_audio_reference_id": "159b7a7b9a8b4a27b21f6d32111718a6",
+  "safe_area_px": {
+    "top": 180,
+    "right": 140,
+    "bottom": 280,
+    "left": 56
+  },
+  "images": [
+    "images/sbux_1.jpg",
+    "images/sbux_2.jpg",
+    "images/sbux_3.jpg",
+    "images/sbux_vault.jpg",
+    "images/sbux_4.jpg",
+    "images/sbux_5.jpg"
+  ],
+  "sfx_library": [
+    "sfx/cash_register.wav",
+    "sfx/counter_tick.wav",
+    "sfx/impact_sub.wav",
+    "sfx/paper_flip.wav",
+    "sfx/stamp_heavy.wav",
+    "sfx/whoosh_cinema.wav",
+    "sfx/chime_outro.wav"
+  ],
+  "scenes": [
+    {
+      "id": 1,
+      "name": "卖咖啡只是幌子",
+      "images": [
+        "images/sbux_1.jpg"
+      ],
+      "audio": "audio/sbux_1.mp3",
+      "prosody_speed": 1.1,
+      "narration": "你以为星巴克是靠卖 35 块钱一杯的咖啡赚钱？醒醒，咖啡只是它的幌子——它背地里干的，是全美最狠的「无息银行」。",
+      "sfx_cues": [
+        "0.1s: impact_sub",
+        "32%: whoosh_cinema",
+        "42%: paper_flip + impact_sub"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "2026最新财报16.79亿美元",
+      "images": [
+        "images/sbux_2.jpg"
+      ],
+      "audio": "audio/sbux_2.mp3",
+      "prosody_speed": 1.07,
+      "narration": "刚出炉的 2026 年财报披露：全球顾客充在星巴克卡和 App 里、还没花出去的钱，高达 16.79 亿美元——差不多 120 亿人民币，就这么静静躺在它账上。",
+      "sfx_cues": [
+        "0.13s: cash_register",
+        "38%-68%: counter_tick",
+        "70%: impact_sub"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "碾压85.7%银行与零利率金库",
+      "images": [
+        "images/sbux_3.jpg",
+        "images/sbux_vault.jpg"
+      ],
+      "audio": "audio/sbux_3.mp3",
+      "prosody_speed": 1.07,
+      "narration": "这笔钱有多离谱？全美 4200 多家正经银行里，有 85.7% 的银行，总存款还不如星巴克这一张会员卡里的余额多。最绝的是：银行揽储要付利息，星巴克一分利息不给，拿你的钱直接开新店、做理财。",
+      "sfx_cues": [
+        "0%: whoosh_cinema",
+        "65%: whoosh_cinema (cut to sbux_vault)",
+        "72%: stamp_heavy"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "每年白赚2.22亿美元沉睡余额",
+      "images": [
+        "images/sbux_4.jpg"
+      ],
+      "audio": "audio/sbux_4.mp3",
+      "prosody_speed": 1.07,
+      "narration": "还没完。每年总有人充完卡忘花、搬家丢卡、或者卡里剩几块钱懒得凑单。光这笔永远没人来兑的「沉睡余额」，星巴克一年就能白赚 2.22 亿美元——一杯咖啡不用做，纯利润落袋。",
+      "sfx_cues": [
+        "10%/22%/34%: pop_glass",
+        "45%: paper_flip",
+        "55%-72%: counter_tick",
+        "78%: stamp_heavy"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "低手卷产品高手卷现金流",
+      "images": [
+        "images/sbux_5.jpg"
+      ],
+      "audio": "audio/sbux_5.mp3",
+      "prosody_speed": 1.0,
+      "narration": "这就是顶级商业的真相：低手都在卷产品差价，高手早就把你手里的现金流，变成了自己的免费弹药库。说真的，你手机里现在还有多少家店的储值卡，充了钱却一直没花完？",
+      "sfx_cues": [
+        "0%: chime_outro",
+        "62%: cash_register (soft)"
+      ]
+    }
+  ]
+}

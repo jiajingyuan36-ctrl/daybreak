@@ -1,10 +1,11 @@
-import {AbsoluteFill,Audio,Sequence,interpolate,useCurrentFrame,useVideoConfig,staticFile} from 'remotion';
+import {AbsoluteFill,interpolate,useCurrentFrame,useVideoConfig} from 'remotion';
 import type {CSSProperties,ReactNode} from 'react';
 import {C,EASE_CINEMA,EASE_SNAP,FONT,GLASS,SAFE,clamp,pct} from '../design/tokens';
 import {CameraRig,type Shake} from '../engine/CameraRig';
 import {CinemaSubtitle} from '../engine/CinemaSubtitle';
 import {BIG,Focus,Sheen,SpringIn,Strike} from '../engine/KineticText';
 import {Flash,LightLeak,OpticalPolish} from '../engine/OpticalPolish';
+import {Sfx} from '../engine/Sfx';
 import type {SceneScript} from '../avoidant-script';
 
 // 《报复性熬夜》5 幕。规格见 content-kit/revenge-bedtime/CLAUDE_CODE_GOD_MODE_PROMPT.md。
@@ -14,11 +15,6 @@ export type Timing={length:number;cues:{from:number;to:number}[]};
 export type SceneProps={script:SceneScript;timing:Timing};
 const useT=()=>{const f=useCurrentFrame();const {fps}=useVideoConfig();return f/fps;};
 const cue=(tm:Timing,i:number)=>tm.cues[i].from;
-
-// 拟音：在本幕第 at 秒触发
-export const Sfx=({at,name,vol}:{at:number;name:string;vol:number})=>{const {fps}=useVideoConfig();
- return <Sequence from={Math.max(0,Math.round(at*fps))} durationInFrames={Math.round(1.6*fps)} layout="none" name={`♪ ${name}`}>
-  <Audio src={staticFile(`sfx/${name}.wav`)} volume={vol}/></Sequence>};
 
 // 左上角状态栏：等宽电子钟 + 呼吸圆点
 const StatusBar=({text,color}:{text:string;color:string})=>{const t=useT();const b=.45+.55*(.5+.5*Math.sin(t*4.2));

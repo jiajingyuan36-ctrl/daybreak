@@ -26,3 +26,13 @@ export const clamp={extrapolateLeft:'clamp',extrapolateRight:'clamp'} as const;
 export const pct=(v:number)=>Math.min(100,Math.max(0,Math.round(v)));
 // 毛玻璃
 export const GLASS={background:'rgba(20,22,26,0.58)',backdropFilter:'blur(16px)',WebkitBackdropFilter:'blur(16px)',border:'1px solid rgba(255,255,255,0.14)',borderRadius:18} as const;
+
+// 商业纪录片色板（StarbucksBank）
+export const FIN={
+ paper:'#F4EFE6',         // 暖新闻纸白：标题与剪报卡
+ gold:'#D4AF37',          // 香槟金：核心金额与高亮
+ red:'#C84B4B',           // 朱砂红：划掉、印章
+ green:'#1B4332',greenHi:'#2D6A4F', // 深森绿：星巴克条与隐喻色
+ ink:'#141517',           // 炭黑油墨
+ muted:'rgba(244,239,230,0.62)',
+};

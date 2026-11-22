@@ -3,6 +3,7 @@ import {Check} from './Check';
 import {Temperance,TemperanceFilm,DURATION,FILM_DURATION,FPS} from './Temperance';
 import {AvoidantAttachment,calcAvoidant,AVOIDANT_FRAMES} from './avoidant/AvoidantAttachment';
 import {RevengeBedtime,calcRevenge,REVENGE_FRAMES} from './revenge/RevengeBedtime';
+import {StarbucksBank,calcSbux,SBUX_FRAMES} from './sbux/StarbucksBank';
 // 每条视频在这里登记一个 Composition。Check 只是装好以后用来确认能渲染的 3 秒测试片。
 export const RemotionRoot=()=><>
  <Composition id="Check" component={Check} durationInFrames={90} fps={30} width={1080} height={1920}/>
@@ -13,4 +14,6 @@ export const RemotionRoot=()=><>
  <Composition id="AvoidantAttachment" component={AvoidantAttachment} calculateMetadata={calcAvoidant} defaultProps={{bgm:false}} durationInFrames={AVOIDANT_FRAMES} fps={30} width={1080} height={1920}/>
  {/* 《报复性熬夜》RevengeBedtime（竖屏）。帧数由 src/stayup-timeline.json 决定，改稿后跑 npm run tts -- stayup */}
  <Composition id="RevengeBedtime" component={RevengeBedtime} calculateMetadata={calcRevenge} defaultProps={{bgm:false}} durationInFrames={REVENGE_FRAMES} fps={30} width={1080} height={1920}/>
+ {/* 《星巴克：不付利息的「银行」》StarbucksBank（竖屏）。帧数由 src/sbux-timeline.json 决定，改稿后跑 npm run tts -- sbux */}
+ <Composition id="StarbucksBank" component={StarbucksBank} calculateMetadata={calcSbux} defaultProps={{bgm:false}} durationInFrames={SBUX_FRAMES} fps={30} width={1080} height={1920}/>
 </>;

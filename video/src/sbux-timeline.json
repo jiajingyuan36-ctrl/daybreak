@@ -1,0 +1,221 @@
+{
+ "fps": 30,
+ "crossfadeFrames": 12,
+ "generated": "2026-11-22",
+ "model": "s2.1-pro-free",
+ "total": 56.599,
+ "scenes": [
+  {
+   "id": 1,
+   "audio": "audio/sbux_1.mp3",
+   "image": "images/sbux_1.jpg",
+   "duration": 7.21,
+   "speechStart": 0.173,
+   "speechEnd": 7.21,
+   "tail": 0.15,
+   "length": 7.36,
+   "cues": [
+    {
+     "from": 0,
+     "to": 1.105
+    },
+    {
+     "from": 1.105,
+     "to": 3.313
+    },
+    {
+     "from": 3.313,
+     "to": 4.008
+    },
+    {
+     "from": 4.008,
+     "to": 5.216
+    },
+    {
+     "from": 5.216,
+     "to": 6.122
+    },
+    {
+     "from": 6.122,
+     "to": 7.36
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "audio": "audio/sbux_2.mp3",
+   "image": "images/sbux_2.jpg",
+   "duration": 11.442,
+   "speechStart": 0.167,
+   "speechEnd": 11.442,
+   "tail": 0.15,
+   "length": 11.592,
+   "cues": [
+    {
+     "from": 0,
+     "to": 2.318
+    },
+    {
+     "from": 2.318,
+     "to": 4.323
+    },
+    {
+     "from": 4.323,
+     "to": 5.414
+    },
+    {
+     "from": 5.414,
+     "to": 6.759
+    },
+    {
+     "from": 6.759,
+     "to": 8.614
+    },
+    {
+     "from": 8.614,
+     "to": 10.336
+    },
+    {
+     "from": 10.336,
+     "to": 11.592
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "audio": "audio/sbux_3.mp3",
+   "image": "images/sbux_3.jpg",
+   "duration": 11.311,
+   "speechStart": 0.171,
+   "speechEnd": 11.311,
+   "tail": 0.15,
+   "length": 11.461,
+   "cues": [
+    {
+     "from": 0,
+     "to": 1.443
+    },
+    {
+     "from": 1.443,
+     "to": 3.65
+    },
+    {
+     "from": 3.65,
+     "to": 4.41
+    },
+    {
+     "from": 4.41,
+     "to": 6.173
+    },
+    {
+     "from": 6.173,
+     "to": 7.357
+    },
+    {
+     "from": 7.357,
+     "to": 8.143
+    },
+    {
+     "from": 8.143,
+     "to": 9.62
+    },
+    {
+     "from": 9.62,
+     "to": 11.461
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "audio": "audio/sbux_4.mp3",
+   "image": "images/sbux_4.jpg",
+   "duration": 13.061,
+   "speechStart": 0.176,
+   "speechEnd": 13.061,
+   "tail": 0.15,
+   "length": 13.211,
+   "cues": [
+    {
+     "from": 0,
+     "to": 0.956
+    },
+    {
+     "from": 0.956,
+     "to": 3.016
+    },
+    {
+     "from": 3.016,
+     "to": 4.27
+    },
+    {
+     "from": 4.27,
+     "to": 6.314
+    },
+    {
+     "from": 6.314,
+     "to": 7.865
+    },
+    {
+     "from": 7.865,
+     "to": 8.769
+    },
+    {
+     "from": 8.769,
+     "to": 10.459
+    },
+    {
+     "from": 10.459,
+     "to": 11.874
+    },
+    {
+     "from": 11.874,
+     "to": 13.211
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "audio": "audio/sbux_5.mp3",
+   "image": "images/sbux_5.jpg",
+   "duration": 12.225,
+   "speechStart": 0,
+   "speechEnd": 12.114,
+   "tail": 0.75,
+   "length": 12.975,
+   "cues": [
+    {
+     "from": 0,
+     "to": 1.876
+    },
+    {
+     "from": 1.876,
+     "to": 3.631
+    },
+    {
+     "from": 3.631,
+     "to": 5.597
+    },
+    {
+     "from": 5.597,
+     "to": 7.413
+    },
+    {
+     "from": 7.413,
+     "to": 8.166
+    },
+    {
+     "from": 8.166,
+     "to": 10.042
+    },
+    {
+     "from": 10.042,
+     "to": 10.653
+    },
+    {
+     "from": 10.653,
+     "to": 12.975
+    }
+   ]
+  }
+ ]
+}
