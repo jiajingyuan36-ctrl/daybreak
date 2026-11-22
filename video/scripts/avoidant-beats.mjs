@@ -10,4 +10,5 @@ const ends=[...err.matchAll(/silence_end: ([\d.]+) \| silence_duration: ([\d.]+)
 const two=ends.sort((a,b)=>b.len-a.len).slice(0,2).sort((a,b)=>a.end-b.end);
 console.log('配音时长',dur.toFixed(3),'秒；句中停顿',ends.map(s=>`${(s.end-s.len).toFixed(2)}–${s.end.toFixed(2)}`).join('，'));
 if(two.length<2){console.log('没找到两处停顿，手动听一下');process.exit(1)}
-console.log(`DEFAULT_BEATS={flip:${two[0].end.toFixed(2)},alarm:${two[1].end.toFixed(2)},end:${dur.toFixed(2)}}`);
+const first=ends.sort((a,b)=>a.end-b.end)[0];
+console.log(`DEFAULT_BEATS={cut1:${first.end.toFixed(2)},flip:${two[0].end.toFixed(2)},alarm:${two[1].end.toFixed(2)},end:${dur.toFixed(2)}}`);
