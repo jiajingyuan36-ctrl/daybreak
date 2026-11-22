@@ -110,10 +110,10 @@ const Outro=()=>{const f=useCurrentFrame();const o=Math.min(interpolate(f,[END+s
  </AbsoluteFill>};
 
 // 空镜段的宽银幕遮幅（2:1）和 AI 标注
-const Matte=({k=1}:{k?:number})=>{const f=useCurrentFrame();const o=interpolate(f,[C.from+C.len-s(1),C.from+C.len],[1,0],clamp);
+const Matte=({k=1,label=true}:{k?:number;label?:boolean})=>{const f=useCurrentFrame();const o=interpolate(f,[C.from+C.len-s(1),C.from+C.len],[1,0],clamp);
  return <AbsoluteFill style={{opacity:o,pointerEvents:'none'}}>
   <div style={{position:'absolute',left:0,right:0,top:0,height:60*k,background:'#000'}}/><div style={{position:'absolute',left:0,right:0,bottom:0,height:60*k,background:'#000'}}/>
-  <div style={{position:'absolute',right:36*k,bottom:20*k,fontFamily:serif,fontSize:17*k,letterSpacing:'.2em',color:ash,opacity:.75}}>画面由 AI 生成</div>
+  {label&&  <div style={{position:'absolute',right:36*k,bottom:20*k,fontFamily:serif,fontSize:17*k,letterSpacing:'.2em',color:ash,opacity:.75}}>画面由 AI 生成</div>}
  </AbsoluteFill>};
 
 export const Temperance=()=>{useFonts();const f=useCurrentFrame();
@@ -140,5 +140,5 @@ export const TemperanceFilm=()=>{useFonts();
   <Sequence from={A.from} durationInFrames={A.len}><Shot file="shot1.mp4" len={A.len} src={A.src} fadeIn={s(1.6)} still/></Sequence>
   <Sequence from={B.from} durationInFrames={B.len}><Shot file="shot2.mp4" len={B.len} src={B.src} vol={.8} still/></Sequence>
   <Sequence from={C.from} durationInFrames={C.len}><Shot file="shot3.mp4" len={C.len} src={C.src} fadeOut={s(1.4)} still/></Sequence>
-  <Matte k={2/3}/>
+  <Matte k={2/3} label={false}/>{/* 电影版不在画面里标注，发布时在平台勾选「AI 生成」 */}
  </AbsoluteFill>};
