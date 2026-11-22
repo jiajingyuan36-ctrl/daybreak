@@ -30,10 +30,10 @@ const useFonts=()=>{const [h]=useState(()=>delayRender('fonts'));
  useEffect(()=>{Promise.all(fonts.map(([n,f])=>new FontFace(n,`url(${staticFile('fonts/'+f)})`).load().then(ff=>{document.fonts.add(ff)}))).then(()=>continueRender(h))},[h]);};
 
 // 一段空镜：淡入 XF 帧、淡出 XF 帧（第一段从黑里淡入更慢，最后一段淡到黑）
-const Shot=({file,len,src,fadeIn=XF,fadeOut=XF,vol=1}:{file:string;len:number;src:number;fadeIn?:number;fadeOut?:number;vol?:number})=>{
+const Shot=({file,len,src,fadeIn=XF,fadeOut=XF,vol=1,still=false}:{file:string;len:number;src:number;fadeIn?:number;fadeOut?:number;vol?:number;still?:boolean})=>{
  const f=useCurrentFrame();
  const o=Math.min(interpolate(f,[0,fadeIn],[0,1],clamp),interpolate(f,[len-fadeOut,len],[1,0],clamp));
- const push=interpolate(f,[0,len],[1.02,1.06]); // 很慢的推近，补一点呼吸感
+ const push=still?1:interpolate(f,[0,len],[1.02,1.06]); // 很慢的推近，补一点呼吸感（电影版不推，保住清晰度）
  return <AbsoluteFill style={{opacity:o}}>
   <OffthreadVideo src={staticFile('footage/'+file)} startFrom={src} style={{width:'100%',height:'100%',objectFit:'cover',transform:`scale(${push})`}}
    volume={(v)=>vol*Math.min(interpolate(v,[0,fadeIn],[0,1],clamp),interpolate(v,[len-fadeOut,len],[1,0],clamp))}/>
@@ -110,10 +110,10 @@ const Outro=()=>{const f=useCurrentFrame();const o=Math.min(interpolate(f,[END+s
  </AbsoluteFill>};
 
 // 空镜段的宽银幕遮幅（2:1）和 AI 标注
-const Matte=()=>{const f=useCurrentFrame();const o=interpolate(f,[C.from+C.len-s(1),C.from+C.len],[1,0],clamp);
+const Matte=({k=1}:{k?:number})=>{const f=useCurrentFrame();const o=interpolate(f,[C.from+C.len-s(1),C.from+C.len],[1,0],clamp);
  return <AbsoluteFill style={{opacity:o,pointerEvents:'none'}}>
-  <div style={{position:'absolute',left:0,right:0,top:0,height:60,background:'#000'}}/><div style={{position:'absolute',left:0,right:0,bottom:0,height:60,background:'#000'}}/>
-  <div style={{position:'absolute',right:36,bottom:20,fontFamily:serif,fontSize:17,letterSpacing:'.2em',color:ash,opacity:.75}}>画面由 AI 生成</div>
+  <div style={{position:'absolute',left:0,right:0,top:0,height:60*k,background:'#000'}}/><div style={{position:'absolute',left:0,right:0,bottom:0,height:60*k,background:'#000'}}/>
+  <div style={{position:'absolute',right:36*k,bottom:20*k,fontFamily:serif,fontSize:17*k,letterSpacing:'.2em',color:ash,opacity:.75}}>画面由 AI 生成</div>
  </AbsoluteFill>};
 
 export const Temperance=()=>{useFonts();const f=useCurrentFrame();
@@ -130,4 +130,15 @@ export const Temperance=()=>{useFonts();const f=useCurrentFrame();
   <Card/><Text/><Outro/>
   <Matte/>
   <Vignette/><Grain/>
+ </AbsoluteFill>};
+
+// 电影版（2026-11-22）：只要前面三段空镜，不要牌和片尾。按素材原生 1280×720 剪、不缩放、不加颗粒，
+// 放大到 1080p 和锐化交给 ffmpeg（lanczos），比浏览器里缩放清楚。
+export const FILM_DURATION=C.from+C.len;
+export const TemperanceFilm=()=>{useFonts();
+ return <AbsoluteFill style={{background:'#000'}}>
+  <Sequence from={A.from} durationInFrames={A.len}><Shot file="shot1.mp4" len={A.len} src={A.src} fadeIn={s(1.6)} still/></Sequence>
+  <Sequence from={B.from} durationInFrames={B.len}><Shot file="shot2.mp4" len={B.len} src={B.src} vol={.8} still/></Sequence>
+  <Sequence from={C.from} durationInFrames={C.len}><Shot file="shot3.mp4" len={C.len} src={C.src} fadeOut={s(1.4)} still/></Sequence>
+  <Matte k={2/3}/>
  </AbsoluteFill>};
