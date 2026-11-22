@@ -1,0 +1,149 @@
+{
+ "fps": 30,
+ "crossfadeFrames": 12,
+ "generated": "2026-11-22",
+ "model": "s2.1-pro-free",
+ "total": 44.153,
+ "scenes": [
+  {
+   "id": 1,
+   "audio": "audio/avoid_1.mp3",
+   "image": "images/bg_1.jpg",
+   "duration": 7.001,
+   "speechStart": 0.167,
+   "speechEnd": 7.001,
+   "tail": 0.2,
+   "length": 7.201,
+   "cues": [
+    {
+     "from": 0,
+     "to": 1.218
+    },
+    {
+     "from": 1.218,
+     "to": 3.63
+    },
+    {
+     "from": 3.63,
+     "to": 4.706
+    },
+    {
+     "from": 4.706,
+     "to": 7.201
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "audio": "audio/avoid_2.mp3",
+   "image": "images/bg_2.jpg",
+   "duration": 8.307,
+   "speechStart": 0.169,
+   "speechEnd": 8.247,
+   "tail": 0.2,
+   "length": 8.507,
+   "cues": [
+    {
+     "from": 0,
+     "to": 3.778
+    },
+    {
+     "from": 3.778,
+     "to": 5.378
+    },
+    {
+     "from": 5.378,
+     "to": 6.965
+    },
+    {
+     "from": 6.965,
+     "to": 8.507
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "audio": "audio/avoid_3.mp3",
+   "image": "images/bg_3.jpg",
+   "duration": 9.639,
+   "speechStart": 0.171,
+   "speechEnd": 9.578,
+   "tail": 0.2,
+   "length": 9.839,
+   "cues": [
+    {
+     "from": 0,
+     "to": 2.317
+    },
+    {
+     "from": 2.317,
+     "to": 5.112
+    },
+    {
+     "from": 5.112,
+     "to": 7.074
+    },
+    {
+     "from": 7.074,
+     "to": 9.839
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "audio": "audio/avoid_4.mp3",
+   "image": "images/bg_4.jpg",
+   "duration": 8.751,
+   "speechStart": 0.174,
+   "speechEnd": 8.673,
+   "tail": 0.2,
+   "length": 8.951,
+   "cues": [
+    {
+     "from": 0,
+     "to": 2.684
+    },
+    {
+     "from": 2.684,
+     "to": 4.084
+    },
+    {
+     "from": 4.084,
+     "to": 6.16
+    },
+    {
+     "from": 6.16,
+     "to": 8.951
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "audio": "audio/avoid_5.mp3",
+   "image": "images/bg_5.jpg",
+   "duration": 8.855,
+   "speechStart": 0.175,
+   "speechEnd": 8.765,
+   "tail": 0.8,
+   "length": 9.655,
+   "cues": [
+    {
+     "from": 0,
+     "to": 2.327
+    },
+    {
+     "from": 2.327,
+     "to": 3.886
+    },
+    {
+     "from": 3.886,
+     "to": 6.018
+    },
+    {
+     "from": 6.018,
+     "to": 9.655
+    }
+   ]
+  }
+ ]
+}

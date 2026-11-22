@@ -1,0 +1,12 @@
+// 《回避型依恋》EP.02 口播稿与字幕：唯一来源（来自制作包 content-kit/avoidant/script_and_captions.json）。
+// 改文案只改这里，再跑 node scripts/avoidant-tts.mjs 重新生成配音和时间轴。
+export type Cue={text:string;highlight:string[]};
+export type SceneScript={id:number;name:string;image:string;audio:string;speed:number;tail:number;narration:string;subtitles:Cue[]};
+export const VOICE="159b7a7b9a8b4a27b21f6d32111718a6";
+export const SCENES:SceneScript[]=[
+ {"id": 1, "name": "亲密警报", "image": "images/bg_1.jpg", "audio": "audio/avoid_1.mp3", "speed": 1.08, "tail": 0.2, "narration": "对方越对你好，你越想把手机扣过去、突然冷掉。别骂自己冷血——其实，是你的大脑拉响了「亲密警报」。", "subtitles": [{"text": "对方越对你好，", "highlight": ["对你好"]}, {"text": "你越想把手机扣过去、突然冷掉。", "highlight": ["突然冷掉"]}, {"text": "别骂自己冷血——", "highlight": ["冷血"]}, {"text": "其实是大脑拉响了「亲密警报」。", "highlight": ["亲密警报"]}]},
+ {"id": 2, "name": "安全距离边界", "image": "images/bg_2.jpg", "audio": "audio/avoid_2.mp3", "speed": 1.05, "tail": 0.2, "narration": "这不是不爱，在心理学里，这叫「回避型依恋」。他们不是不需要亲密，而是大脑把「靠得太近」，悄悄标记成了危险。", "subtitles": [{"text": "这不是不爱，心理学里叫「回避型依恋」。", "highlight": ["回避型依恋"]}, {"text": "他们不是不需要亲密，", "highlight": ["不需要亲密"]}, {"text": "而是大脑把「靠得太近」，", "highlight": ["靠得太近"]}, {"text": "悄悄标记成了危险。", "highlight": ["危险"]}]},
+ {"id": 3, "name": "早年防御铠甲", "image": "images/bg_3.jpg", "audio": "audio/avoid_3.mp3", "speed": 1.05, "tail": 0.2, "narration": "这种本能往往藏在很早以前。当一个人反复经历过「表达脆弱却落空」，大脑就会学会一套终极防御：只要我不依赖任何人，我就不会再失望。", "subtitles": [{"text": "这种本能，往往藏在很早以前。", "highlight": ["很早以前"]}, {"text": "当一个人反复经历「表达脆弱却落空」，", "highlight": ["表达脆弱却落空"]}, {"text": "大脑就会学会一套终极防御：", "highlight": ["终极防御"]}, {"text": "只要我不依赖任何人，就不会再失望。", "highlight": ["不依赖", "不会再失望"]}]},
+ {"id": 4, "name": "撕裂感", "image": "images/bg_4.jpg", "audio": "audio/avoid_4.mp3", "speed": 1.05, "tail": 0.2, "narration": "所以回避型最痛的从来不是孤独，而是那种撕裂感——一边用沉默把对方越推越远，一边又在深夜里，比谁都害怕彻底失去。", "subtitles": [{"text": "回避型最痛的从来不是孤独，", "highlight": ["不是孤独"]}, {"text": "而是那种撕裂感——", "highlight": ["撕裂感"]}, {"text": "一边用沉默把对方越推越远，", "highlight": ["越推越远"]}, {"text": "一边又在深夜里，比谁都怕彻底失去。", "highlight": ["彻底失去"]}]},
+ {"id": 5, "name": "留一条缝", "image": "images/bg_5.jpg", "audio": "audio/avoid_5.mp3", "speed": 0.98, "tail": 0.8, "narration": "安全感从来不是筑起高墙，而是试着留一条缝，让真正对你好的人走进来。你身边有这样的人，或者你自己就是吗？", "subtitles": [{"text": "安全感从来不是筑起高墙，", "highlight": ["筑起高墙"]}, {"text": "而是试着留一条缝，", "highlight": ["留一条缝"]}, {"text": "让真正对你好的人走进来。", "highlight": ["走进来"]}, {"text": "你身边有这样的人，或者你自己就是吗？", "highlight": ["你自己就是吗"]}]},
+];
