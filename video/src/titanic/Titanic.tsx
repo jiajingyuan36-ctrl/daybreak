@@ -6,7 +6,6 @@ import {clamp} from '../design/tokens';
 
 // 《两小时四十分》泰坦尼克号历史重现短片。分镜见 content-kit/titanic/两小时四十分-分镜脚本.md，
 // 剪辑表在 titanic-shots.json；素材先跑 python3 scripts/film-prep.py titanic <素材目录>，声音跑 scripts/generate-titanic-audio.py。
-// 现在是第一批样片（Muse 第一批 6 个镜头）；后两批到了以后按分镜往表里插镜头即可。
 type Shot={id:string;name:string;src:string;in:number;dur:number;x:number;gap?:number;fade?:number;fadeOut?:number;y?:number;lightsOut?:number};
 const FPS=cfg.fps;
 const TAIL=12;
@@ -43,8 +42,8 @@ const Caption=({lines,from,len,center=false,big=false}:{lines:string[];from:numb
   {lines.map((l,i)=><div key={i} style={{fontSize:big?(i===0?30:46):(i===0?30:24)}}>{l}</div>)}
  </div>};
 
-export const TITLE_AT=sh('t19').from-(sh('t19').gap??0)+s(.5);
-export const LIGHTS_OUT=sh('t16').from+s(sh('t16').lightsOut!);
+export const TITLE_AT=sh('s18').from-(sh('s18').gap??0)+s(.5);
+export const LIGHTS_OUT=sh('s16').from+s(sh('s16').lightsOut!);
 
 export const Titanic=({captions=true}:{captions?:boolean})=>
  <AbsoluteFill style={{background:'#000'}}>
@@ -55,13 +54,20 @@ export const Titanic=({captions=true}:{captions?:boolean})=>
    <div style={{position:'absolute',left:0,right:0,bottom:0,height:BAR,background:'#000'}}/>
   </AbsoluteFill>
   {captions&&<>
-   <Caption lines={['北大西洋　水下 3800 米']} from={sh('t02').from+s(.8)} len={s(3.5)}/>
-   <Caption lines={['1912 年 4 月 10 日','泰坦尼克号从南安普敦出发，首航纽约']} from={sh('t03b').from+s(.4)} len={s(4.6)}/>
-   <Caption lines={['4 月 14 日 23:40　撞上冰山','引擎停了']} from={sh('t12').from+s(.3)} len={s(2.8)}/>
+   <Caption lines={['北大西洋　水下 3800 米']} from={sh('s01').from+s(.8)} len={s(3.5)}/>
+   <Caption lines={['1912 年 4 月 10 日','泰坦尼克号从南安普敦出发，首航纽约']} from={sh('s03b').from+s(.4)} len={s(4.6)}/>
+   <Caption lines={['船上约 2224 人']} from={sh('s05').from+s(1)} len={s(3.5)}/>
+   <Caption lines={['4 月 14 日　晚']} from={sh('s06').from+s(1)} len={s(3)}/>
+   <Caption lines={['23:39','没有月亮，没有风，海面平得像镜子']} from={sh('s07').from+s(1)} len={s(4.5)}/>
+   <Caption lines={['23:40']} from={sh('s10').from+s(1)} len={s(3)}/>
+   <Caption lines={['引擎停了']} from={sh('s12').from+s(1.5)} len={s(3)}/>
+   <Caption lines={['00:45','第一颗求救火箭，一共打了八颗']} from={sh('s13').from+s(.5)} len={s(4.5)}/>
+   <Caption lines={['幸存者说，乐队一直演奏到最后']} from={sh('s15').from+s(1)} len={s(4)}/>
    <Caption lines={['02:18']} from={LIGHTS_OUT-s(1.6)} len={s(2.6)}/>
-   <Caption lines={['02:20']} from={sh('t17b').from+s(.3)} len={s(2.4)}/>
-   <Caption lines={['1985 年 9 月 1 日','人们在 3800 米深处找到了她']} from={sh('t19').from+s(.4)} len={s(3)}/>
+   <Caption lines={['02:20']} from={sh('s17b').from+s(.3)} len={s(2.4)}/>
+   <Caption lines={['4 月 15 日清晨　卡帕西亚号赶到','约 700 人生还，1500 多人遇难']} from={sh('s18').from+s(1)} len={s(5)}/>
+   <Caption lines={['1985 年 9 月 1 日','人们在 3800 米深处找到了她']} from={sh('s19').from+s(.6)} len={s(2.8)}/>
   </>}
-  <Caption lines={['23:40 → 02:20','两小时四十分']} from={TITLE_AT} len={s(4)} center big/>
+  <Caption lines={['23:40 → 02:20','两小时四十分']} from={TITLE_AT} len={s(3.4)} center big/>
   <Audio src={staticFile('audio/titanic_mix.wav')}/>
  </AbsoluteFill>;

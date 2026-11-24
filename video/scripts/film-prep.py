@@ -24,7 +24,23 @@ for s in cfg['shots']:
     vf += [f"eq=saturation={s.get('sat',1)}:gamma={s.get('gam',1)}:brightness={s.get('bri',0)}:contrast={s.get('con',1)}",
            'scale=1920:1080:flags=lanczos', 'unsharp=5:5:0.35:5:5:0' if hd else 'unsharp=5:5:0.55:5:5:0', 'fps=24', 'format=yuv420p']
     dst = os.path.join(OUT, s['id'] + '.mp4')
-    cmd = ['ffmpeg', '-v', 'error', '-y', '-ss', str(s['in']), '-t', str(take), '-i', src,
-           '-an', '-vf', ','.join(vf), '-c:v', 'libx264', '-preset', 'slow', '-crf', '14', dst]
+    inputs = ['-ss', str(s['in']), '-t', str(take), '-i', src]
+    if s.get('blur'):
+        # 画面里不该有的字（例如提示词里的胶片型号被画成了文字）：只在这个多边形里模糊
+        import numpy as np
+        poly = np.array(s['blur'], float); yy, xx = np.mgrid[0:1080, 0:1920]; inside = np.zeros((1080, 1920), bool)
+        for (x1, y1), (x2, y2) in zip(poly, np.roll(poly, -1, 0)):
+            cond = ((y1 > yy) != (y2 > yy)) & (xx < (x2 - x1) * (yy - y1) / (y2 - y1 + 1e-9) + x1)
+            inside ^= cond
+        mask = os.path.join(OUT, s['id'] + '-mask.pgm')
+        with open(mask, 'wb') as f: f.write(b'P5 1920 1080 255\n' + (inside * 255).astype(np.uint8).tobytes())
+        inputs += ['-loop', '1', '-i', mask]
+        graph = f"[0:v]{','.join(vf)},split[a][b];[b]boxblur=10:2[bl];[1:v]format=gray,boxblur=4[m];[bl][m]alphamerge[bm];[a][bm]overlay=shortest=1,format=yuv420p[v]"
+        cmd = ['ffmpeg', '-v', 'error', '-y', *inputs, '-filter_complex', graph, '-map', '[v]', '-c:v', 'libx264', '-preset', 'slow', '-crf', '14', dst]
+    else:
+        cmd = ['ffmpeg', '-v', 'error', '-y', *inputs, '-an', '-vf', ','.join(vf), '-c:v', 'libx264', '-preset', 'slow', '-crf', '14', dst]
     subprocess.run(cmd, check=True)
+    if s.get('audio'):                     # 素材自带的同期声（例如小提琴），给声音脚本混进去
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', str(s['in']), '-t', str(take), '-i', src, '-vn', '-ac', '2', '-ar', '48000',
+                        os.path.join(OUT, s['id'] + '.wav')], check=True)
     print(s['id'], s['src'], f'{w}px', '->', dst)
