@@ -39,7 +39,7 @@ const Caption=({lines,from,len,center=false}:{lines:string[];from:number;len:num
  const pos:React.CSSProperties=center?{left:0,right:0,top:0,bottom:0,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}
   :{left:'6%',bottom:BAR+Math.round(1080*0.06)};
  return <div style={{position:'absolute',...pos,opacity:o*.85,transform:`translateY(${dy}px)`,fontFamily:serif,fontWeight:300,color:'#fff',
-  letterSpacing:'.25em',textShadow:'0 1px 10px rgba(0,0,0,.55),0 0 2px rgba(0,0,0,.35)',lineHeight:1.7,textAlign:center?'center':'left'}}>
+  letterSpacing:'.25em',textShadow:'0 1px 14px rgba(0,0,0,.75),0 0 3px rgba(0,0,0,.55)',lineHeight:1.7,textAlign:center?'center':'left'}}>
   {lines.map((l,i)=><div key={i} style={{fontSize:i===0?30:24}}>{l}</div>)}
  </div>};
 
