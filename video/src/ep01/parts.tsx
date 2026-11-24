@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill,Easing,interpolate,random,useCurrentFrame,useVideoConfig} from 'remotion';
-import {C,SANS,SERIF,SPOT,tw} from './theme';
+import {C,SANS,SERIF,SPOT,mix,tw} from './theme';
 import {CAPTIONS,SOURCE_TAGS} from './copy';
 
 // ── 屏幕空间（不随摄像机缩放）────────────────────────────
@@ -66,6 +66,8 @@ export const SourceTag:React.FC=()=>{const f=useCurrentFrame();const {fps}=useVi
 // ── 场景（世界坐标，放在摄像机容器里）──────────────────
 export const G=820; // 地面
 export const Defs:React.FC=()=><defs>
+ {/* 角色只画在地面以上（下蹲时身体不穿到地下） */}
+ <clipPath id="above" clipPathUnits="userSpaceOnUse"><rect x="-3000" y="-3000" width="9000" height={3000+G+1}/></clipPath>
  <filter id="halo" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="6"/></filter>
  <filter id="bloom" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="20"/></filter>
  <filter id="soft" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="16"/></filter>
@@ -77,6 +79,7 @@ export const Defs:React.FC=()=><defs>
  <mask id="reflMask" maskUnits="userSpaceOnUse" x="-2000" y={G} width="6000" height="200"><rect x="-2000" y={G} width="6000" height="200" fill="url(#reflFade)"/></mask>
  <linearGradient id="horizon" x1="0" x2="1"><stop offset="0" stopColor={C.ivory} stopOpacity="0"/><stop offset="0.5" stopColor={C.ivory} stopOpacity="0.10"/><stop offset="1" stopColor={C.ivory} stopOpacity="0"/></linearGradient>
  <radialGradient id="doorInside" cx="0.5" cy="0.55" r="0.7"><stop offset="0" stopColor={C.red} stopOpacity="0.6"/><stop offset="0.6" stopColor={C.red} stopOpacity="0.25"/><stop offset="1" stopColor={C.red} stopOpacity="0.06"/></radialGradient>
+ <radialGradient id="doorInsideA" cx="0.5" cy="0.55" r="0.7"><stop offset="0" stopColor={C.amber} stopOpacity="0.6"/><stop offset="0.6" stopColor={C.amber} stopOpacity="0.25"/><stop offset="1" stopColor={C.amber} stopOpacity="0.06"/></radialGradient>
 </defs>;
 
 // 三层发光：40px 大范围柔光（0.12）+ 12px 外辉光（0.35）+ 2px 实线。children 是一组只描边的形状。
@@ -161,27 +164,32 @@ export const Knob:React.FC<{x:number;y:number;angle:number;opacity:number;light:
 
 // 门：竖长圆角矩形门框（琥珀细描边，draw 0..1 描出来），门板以右边为轴；slit 是左侧门缝的宽度（px），
 // open 0..1 是门板被冲开的程度，leak 是门缝里光的颜色（暗红或琥珀），light 是光的强度。
-export const Door:React.FC<{x:number;w:number;h:number;draw:number;slit:number;open:number;light:number;leak:string;frame?:number}>=({x,w,h,draw,slit,open,light,leak,frame=1})=>{
+// warm 0..1：门里的光从暗红换成琥珀。inside 控制门里整片光，beam 0..1 让门缝那条竖光往中间收成一个点。
+export const Door:React.FC<{x:number;w:number;h:number;draw:number;slit:number;open:number;light:number;warm?:number;frame?:number;inside?:number;beam?:number}>=({x,w,h,draw,slit,open,light,warm=0,frame=1,inside=1,beam=1})=>{
  if(draw<0.01)return null;
  const L=x-w/2,R=x+w/2,T=G-h,r=18;
+ const leak=mix(C.red,C.amber,warm),core=mix('#F0A090','#FFE2A8',warm);
  const frameD=`M ${L} ${G} V ${T+r} Q ${L} ${T} ${L+r} ${T} H ${R-r} Q ${R} ${T} ${R} ${T+r} V ${G}`;
  const pl=L+4+slit+open*(w-8-slit)*0.82,inset=open*44;
  const panel=`M ${pl} ${T+6+inset} L ${R-4} ${T+6} L ${R-4} ${G} L ${pl} ${G-inset*0.3} Z`;
- const gap=pl-(L+4);
+ const gap=pl-(L+4),lx=L+4+gap/2;
+ const mid=(T+14+G)/2,half=Math.max(3,(G-T-14)/2*beam);
+ const io=0.5*light*Math.min(1,gap/40+open)*inside;
  return <g>
   {/* 门里的光（被门板挡住的部分看不见） */}
-  <rect x={L+4} y={T+6} width={w-8} height={h-6} fill="url(#doorInside)" opacity={0.5*light*Math.min(1,gap/40+open)} rx={12}/>
-  <rect x={L+4} y={T+6} width={Math.max(0,Math.min(gap,14))} height={h-6} fill={leak} opacity={0.9*light} filter="url(#halo)"/>
+  {warm<1&&<rect x={L+4} y={T+6} width={w-8} height={h-6} fill="url(#doorInside)" opacity={io*(1-warm)} rx={12}/>}
+  {warm>0&&<rect x={L+4} y={T+6} width={w-8} height={h-6} fill="url(#doorInsideA)" opacity={io*warm} rx={12}/>}
+  <rect x={L+4} y={T+6} width={Math.max(0,Math.min(gap,14))} height={h-6} fill={leak} opacity={0.9*light*inside} filter="url(#halo)"/>
   {/* 门缝的光：一条竖亮线 + 柔光，往外漏到地面 */}
-  <line x1={L+4+gap/2} y1={T+10} x2={L+4+gap/2} y2={G} stroke={leak} strokeWidth={Math.max(1.5,Math.min(gap,14))} opacity={light} filter="url(#halo)"/>
-  <line x1={L+4+gap/2} y1={T+14} x2={L+4+gap/2} y2={G} stroke={mixLight(leak)} strokeWidth={Math.max(1,Math.min(3,gap*0.4))} opacity={light}/>
-  <ellipse cx={L+gap/2} cy={G+6} rx={60+gap*3} ry={10} fill={leak} opacity={0.35*light} filter="url(#halo)"/>
+  <line x1={lx} y1={mid-half} x2={lx} y2={mid+half} stroke={leak} strokeWidth={Math.max(1.5,Math.min(gap,14))} opacity={light} filter="url(#halo)"/>
+  <line x1={lx} y1={mid-half} x2={lx} y2={mid+half} stroke={core} strokeWidth={Math.max(1,Math.min(3,gap*0.4))} opacity={light} strokeLinecap="round"/>
+  {beam<1&&<circle cx={lx} cy={mid} r={10+8*(1-beam)} fill={leak} opacity={light*(1-beam)*0.8} filter="url(#halo)"/>}
+  <ellipse cx={L+gap/2} cy={G+6} rx={60+gap*3} ry={10} fill={leak} opacity={0.35*light*inside} filter="url(#halo)"/>
   {/* 门板 */}
-  <path d={panel} fill="rgba(22,17,13,0.55)" stroke={C.amber} strokeWidth={1.4} strokeOpacity={0.45*frame} opacity={draw}/>
+  <path d={panel} fill="rgba(22,17,13,0.55)" stroke={C.amber} strokeWidth={1.4} strokeOpacity={0.45*frame} opacity={draw*frame}/>
   {/* 门框 */}
   <g opacity={frame}><Glow color={C.amber} glow={0.8}><path d={frameD} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1-draw}/></Glow></g>
  </g>};
-const mixLight=(c:string)=>c===C.red?'#F0A090':'#FFE2A8';
 
 // 念头：暗红色细字，轻微抖动（每 3 帧换一次每个字的小偏移和角度，像手写的颤）。trail 给运动模糊（沿速度方向的几层残影）。
 export const Thought:React.FC<{text:string;x:number;y:number;opacity:number;anchor?:'start'|'end'|'middle';size?:number;rot?:number;seed:string;trail?:[number,number];jitter?:number}>=({text,x,y,opacity,anchor='start',size=36,rot=0,seed,trail,jitter=1})=>{
@@ -195,11 +203,20 @@ export const Thought:React.FC<{text:string;x:number;y:number;opacity:number;anch
   {T(0,0,1,0)}
  </g>};
 
-// 「记住这串数字」的重箱子：米白描边方块。
-export const MemoryBox:React.FC<{x:number;y:number;rot:number;opacity:number;lines:string[]}>=({x,y,rot,opacity,lines})=>opacity<0.01?null:
+// 压在 B 头肩上的重物：不写字，冷灰描边的砝码形状（梯形块 + 顶上的提环）。
+export const Weight:React.FC<{x:number;y:number;rot:number;opacity:number}>=({x,y,rot,opacity})=>opacity<0.01?null:
  <g transform={`translate(${x} ${y}) rotate(${rot})`} opacity={opacity}>
-  <rect x={-150} y={-56} width={300} height={112} rx={10} fill="rgba(10,10,11,0.85)"/>
-  <Glow color={C.ivory} glow={0.6}><rect x={-150} y={-56} width={300} height={112} rx={10}/></Glow>
-  <text x={0} y={-10} textAnchor="middle" fontFamily={SANS} fontSize={28} fill={C.ivory} letterSpacing="2">{lines[0]}</text>
-  <text x={0} y={34} textAnchor="middle" fontFamily={SANS} fontSize={34} fill={C.ivory} letterSpacing="4">{lines[1]}</text>
+  <path d="M -62 -40 L 62 -40 L 96 58 L -96 58 Z" fill="rgba(18,19,21,0.92)"/>
+  <Glow color={C.cold} glow={0.7} width={2.6}>
+   <path d="M -62 -40 L 62 -40 L 96 58 L -96 58 Z"/>
+   <path d="M -30 -40 C -30 -92 30 -92 30 -40"/>
+  </Glow>
+  <line x1={-70} y1={-14} x2={70} y2={-14} stroke={C.cold} strokeWidth={1.2} opacity={0.35}/>
  </g>;
+
+// 片尾来源：黑底上居中淡入，思源黑体 28px，透明度 0.7。期刊名用斜体。
+export const EndCard:React.FC<{opacity:number;sources:string[];disclaimer:string}>=({opacity,sources,disclaimer})=>opacity<0.01?null:
+ <AbsoluteFill style={{justifyContent:'center',alignItems:'center',opacity:0.7*opacity,fontFamily:SANS,fontSize:28,lineHeight:1.7,color:C.ivory,textAlign:'center',padding:'0 80px'}}>
+  {sources.map(s=>{const i=s.indexOf('JPSP');return <div key={s} style={{marginBottom:22,whiteSpace:'nowrap'}}>{s.slice(0,i)}<i>JPSP</i>{s.slice(i+4)}</div>})}
+  <div style={{marginTop:36}}>{disclaimer}</div>
+ </AbsoluteFill>;

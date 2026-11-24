@@ -22,7 +22,6 @@ export const BUBBLE_A='今天好想见你';
 export const BUBBLE_B='嗯';
 export const KNOB_LABEL='在乎';
 export const THOUGHTS=['他会走吗','我是不是不够好','别靠太近'];
-export const BOX_LINES=['记住这串数字：','7 3 9 1 4 6 2'];
 // 研究出处：画面右下角的小字，和片尾的完整来源（片尾逐字照抄，不要改拼写）。
 export const SOURCE_TAGS:{from:number;to:number;text:string}[]=[
  {from:15.5,to:28.2,text:'Fraley & Shaver, 1997'},
