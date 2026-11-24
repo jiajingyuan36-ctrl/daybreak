@@ -6,7 +6,7 @@ import {CAPTIONS,SOURCE_TAGS} from './copy';
 // ── 屏幕空间（不随摄像机缩放）────────────────────────────
 // 背景：中性暖黑底 + 跟着摄像机焦点走的暖色聚光（中心 #33261A，半径 55% 画面宽，中心一段持平再柔和衰减）。
 export const Backdrop:React.FC<{spotX:number;spotY:number;gain?:number}>=({spotX,spotY,gain=1})=><AbsoluteFill style={{background:C.bg}}>
- <AbsoluteFill style={{opacity:gain,background:`radial-gradient(circle 1056px at ${spotX}px ${spotY}px, ${SPOT} 0%, ${SPOT} 34%, rgba(51,38,26,0.55) 62%, rgba(51,38,26,0.15) 82%, rgba(10,10,11,0) 100%)`}}/>
+ <AbsoluteFill style={{opacity:gain,background:`radial-gradient(circle 1056px at ${spotX}px ${spotY}px, ${SPOT} 0%, ${SPOT} 50%, rgba(51,38,26,0.55) 72%, rgba(51,38,26,0.15) 88%, rgba(10,10,11,0) 100%)`}}/>
 </AbsoluteFill>;
 
 // 浮尘：50 颗，半径 1–2px，透明度 0.05–0.15，慢慢漂；depth 越大离镜头越近，跟着摄像机平移得越多（视差）。
