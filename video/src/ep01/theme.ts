@@ -13,3 +13,8 @@ export const loadFonts=()=>{if(loaded||typeof document==='undefined')return;load
  const h=delayRender('fonts');
  Promise.all(FONTS.map(([fam,file,w])=>{const ff=new FontFace(fam,`url(${staticFile('fonts/'+file)})`,{weight:w});return ff.load().then(x=>{document.fonts.add(x)})}))
   .then(()=>continueRender(h)).catch(e=>{console.error(e);continueRender(h)});};
+// 两个 #RRGGBB 颜色按 t（0..1）混合。
+export const mix=(a:string,b:string,t:number)=>{const p=(h:string)=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));const x=p(a),y=p(b);
+ return '#'+x.map((v,i)=>Math.round(v+(y[i]-v)*Math.max(0,Math.min(1,t))).toString(16).padStart(2,'0')).join('')};
+export const COLD='#8E949A'; // 「嗯」气泡的冷灰
+export const SPOT='#2A1F14'; // 聚光中心色
