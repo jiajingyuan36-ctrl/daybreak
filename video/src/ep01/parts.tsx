@@ -177,7 +177,7 @@ export const Door:React.FC<{x:number;w:number;h:number;draw:number;slit:number;o
   <line x1={L+4+gap/2} y1={T+14} x2={L+4+gap/2} y2={G} stroke={mixLight(leak)} strokeWidth={Math.max(1,Math.min(3,gap*0.4))} opacity={light}/>
   <ellipse cx={L+gap/2} cy={G+6} rx={60+gap*3} ry={10} fill={leak} opacity={0.35*light} filter="url(#halo)"/>
   {/* 门板 */}
-  <path d={panel} fill="#14100D" stroke={C.amber} strokeWidth={1.4} strokeOpacity={0.45*frame} opacity={draw}/>
+  <path d={panel} fill="rgba(22,17,13,0.55)" stroke={C.amber} strokeWidth={1.4} strokeOpacity={0.45*frame} opacity={draw}/>
   {/* 门框 */}
   <g opacity={frame}><Glow color={C.amber} glow={0.8}><path d={frameD} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1-draw}/></Glow></g>
  </g>};
