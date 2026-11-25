@@ -50,4 +50,5 @@ description: 为 AI 视频模型（Muse、Sora、Veo、可灵、Seedance、Runwa
 - references/models.md：各模型的规格和脾气
 - references/examples.md：带批注的好例子和坏例子（含 Gemini 西藏全文）
 - references/failure-log.md：本项目踩过的坑，以及每条规则的证据范围
+- references/stills.md：写实照片、定妆照（视频首帧）怎么写
 - content-kit/Muse提示词指南.md（在视频工作分支上，main 里可能没有）：给 Muse 写需求文件的格式和流程
